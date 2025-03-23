@@ -63,9 +63,12 @@ class Dino:
 
 class Obstacle:
     def __init__(self):
-        self.type = random.choice(["small", "large", "double"])
-        self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (20, 90)
-        self.image = pygame.image.load(f'textures/cactus_{1 if self.type == "small" else 2 if self.type == "large" else 3}.png')
+        self.type = random.choice(["small", "large", "double", "bird"])
+        self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (20, 90) if self.type == "double" else (40, 40)
+        if self.type == "bird":
+            self.image = pygame.image.load(f'textures/bird.png')
+        else:
+            self.image = pygame.image.load(f'textures/cactus_{1 if self.type == "small" else 2 if self.type == "large" else 3}.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.x = SCREEN_WIDTH + random.randint(50, 300)
         self.y = GROUND_LEVEL - self.height
