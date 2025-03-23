@@ -80,7 +80,7 @@ class Obstacle:
         return self.x + self.width < 0
 
     def collides_with(self, dino):
-        return dino.x < self.x + self.width and dino.x + dino.width > self.x and dino.y + dino.height > self.y
+        return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and dino.y + dino.hitbox_height > self.y
 
 
 class Game:
