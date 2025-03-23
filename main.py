@@ -148,6 +148,7 @@ class Game:
         for obstacle in self.obstacles:
             obstacle.draw()
 
+        color = WHITE if self.pause or self.game_over else BLACK
 
         if self.game_over:
             screen.fill(BLACK)
@@ -167,9 +168,9 @@ class Game:
             screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
             screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
 
-        score_text = font.render(f"Score: {self.score}", True, BLACK)
+        score_text = font.render(f"Score: {self.score}", True, color)
         screen.blit(score_text, (10, 10))
-        highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, BLACK)
+        highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 35))
 
         pygame.display.flip()
