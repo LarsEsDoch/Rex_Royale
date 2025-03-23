@@ -74,9 +74,7 @@ class Obstacle:
         self.x -= speed
 
     def draw(self):
-        pygame.draw.rect(screen, BLACK, (self.x, self.y, self.width, self.height))
-        if self.type == "double":
-            pygame.draw.rect(screen, BLACK, (self.x, self.y - self.height, self.width, self.height))
+        screen.blit(self.image, (self.x, self.y))
 
     def off_screen(self):
         return self.x + self.width < 0
