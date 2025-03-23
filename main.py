@@ -32,6 +32,8 @@ class Dino:
     def __init__(self):
         self.width = 150
         self.height = 150
+        self.hitbox_width = 120
+        self.hitbox_height = 120
         self.x = 50
         self.y = GROUND_LEVEL - self.height
         self.velocity_y = 0
