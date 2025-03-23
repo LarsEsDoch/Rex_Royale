@@ -175,8 +175,9 @@ class Game:
         pygame.display.flip()
 
     def save_score(self):
-        with open("highscore.txt", "w") as file:
-            file.write(str(self.score))
+        if self.score > self.high_score:
+            with open("highscore.txt", "w") as file:
+                file.write(str(self.score))
 
     def load_score(self):
         if os.path.exists("highscore.txt"):
