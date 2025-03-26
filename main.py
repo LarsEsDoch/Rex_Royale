@@ -75,6 +75,8 @@ class Obstacle:
         self.x = SCREEN_WIDTH + random.randint(50, 300)
 
     def update(self, speed):
+        if self.type == "bird":
+            self.x -= speed * 1.5
         self.x -= speed
 
     def draw(self):
