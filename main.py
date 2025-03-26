@@ -84,6 +84,8 @@ class Obstacle:
         return self.x + self.width < 0
 
     def collides_with(self, dino):
+        if self.type == "bird":
+            return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and self.y < dino.y + dino.hitbox_height < self.y + self.height
         return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and dino.y + dino.hitbox_height > self.y
 
 
