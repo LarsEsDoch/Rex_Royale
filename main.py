@@ -67,7 +67,7 @@ class Obstacle:
         self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (20, 90) if self.type == "double" else (40, 40)
         if self.type == "bird":
             self.image = pygame.image.load(f'textures/bird.png')
-            self.y = GROUND_LEVEL - self.height + 170
+            self.y = GROUND_LEVEL - self.height - 170
         else:
             self.image = pygame.image.load(f'textures/cactus_{1 if self.type == "small" else 2 if self.type == "large" else 3}.png')
             self.y = GROUND_LEVEL - self.height
