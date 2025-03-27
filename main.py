@@ -68,14 +68,19 @@ class Obstacle:
         if self.type == "bird":
             self.image = pygame.image.load(f'textures/bird.png')
             self.y = GROUND_LEVEL - self.height - 170
+            self.x = SCREEN_WIDTH + random.randint(50, 300)
         else:
             self.image = pygame.image.load(f'textures/cactus_{1 if self.type == "small" else 2 if self.type == "large" else 3}.png')
             self.y = GROUND_LEVEL - self.height
+            self.x = SCREEN_WIDTH + random.randint(50, 300)
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        self.x = SCREEN_WIDTH + random.randint(50, 300)
+        self.first_drawn = False
 
     def update(self, speed):
         if self.type == "bird":
+            if not self.first_drawn:
+                self.x = SCREEN_WIDTH*2.5
+                self.first_drawn = True
             self.x -= speed * 1.5
         self.x -= speed
 
