@@ -106,6 +106,7 @@ class Game:
         self.dino = Dino()
         self.obstacles = []
         self.high_score = 0
+        self.spacing = 0
         self.load_score()
 
     def reset(self):
@@ -136,7 +137,8 @@ class Game:
             return
 
         self.dino.update(self.score)
-        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(300, 600):
+        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(300, 600) - self.spacing:
+            self.spacing += 2
             self.obstacles.append(Obstacle())
 
         for obstacle in self.obstacles[:]:
@@ -148,6 +150,7 @@ class Game:
                 print(self.score)
                 print(self.obstacle_speed)
                 print(self.dino.gravity_multiplier)
+                print(self.spacing)
 
             if obstacle.collides_with(self.dino):
                 self.save_score()
