@@ -62,8 +62,11 @@ class Dino:
 
 
 class Obstacle:
-    def __init__(self):
-        self.type = random.choice(["small", "large", "double", "bird"])
+    def __init__(self, score):
+        if score < 5000:
+            self.type = random.choice(["small", "large", "double"])
+        else:
+            self.type = random.choice(["small", "large", "double", "bird"])
         self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (20, 90) if self.type == "double" else (40, 40)
         if self.type == "bird":
             self.image = pygame.image.load(f'textures/bird.png')
@@ -139,7 +142,7 @@ class Game:
         self.dino.update(self.score)
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(300, 600) - self.spacing:
             self.spacing += 2
-            self.obstacles.append(Obstacle())
+            self.obstacles.append(Obstacle(self.score))
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
