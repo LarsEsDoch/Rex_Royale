@@ -136,6 +136,9 @@ class Game:
         self.unlocked_user = False
         self.spacing = 0
         self.cursor_tick = 0
+        self.background_day = pygame.image.load('textures/desert_day_background.png')
+        self.background_night = pygame.image.load('textures/desert_night_background.png')
+        self.background_x = 0
         print("Prepared game")
 
     def reset(self):
@@ -243,8 +246,15 @@ class Game:
             self.cursor_tick = 0
 
 
+        screen.fill(BLACK)
 
-        screen.fill(WHITE)
+        if not self.pause and not self.game_over:
+            self.background_x -= self.obstacle_speed * 0.25
+            if self.background_x <= -SCREEN_WIDTH:
+                self.background_x = 0
+
+        screen.blit(self.background_day, (self.background_x, 0))
+        screen.blit(self.background_day, (self.background_x + SCREEN_WIDTH, 0))
         pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 3)
         self.dino.draw()
 
