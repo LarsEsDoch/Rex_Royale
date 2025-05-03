@@ -44,7 +44,6 @@ class Dino:
         self.image = pygame.image.load('textures/dino_texture.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.gravity_multiplier = 1.1
-        print("Spawned Dino")
 
     def update(self, score):
         if self.jump:
@@ -166,6 +165,7 @@ class Game:
                 if event.key == pygame.K_SPACE:
                     if self.pause and self.username_existing:
                         self.pause = False
+                        print("Resumed")
                     elif self.game_over:
                         self.reset()
                         print("Reset")
