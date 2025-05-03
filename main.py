@@ -20,6 +20,8 @@ print("Initialized clock")
 
 WHITE = (255, 255, 255)
 BLACK = (40, 40, 40)
+RED = (255, 0, 0)
+DARK_RED = (150, 0, 0)
 print("Initialized colors")
 
 GRAVITY = 0.9
@@ -133,6 +135,7 @@ class Game:
         self.checked_username = False
         self.unlocked_user = False
         self.spacing = 0
+        self.cursor_tick = 0
         print("Prepared game")
 
     def reset(self):
@@ -166,8 +169,11 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False if self.game_over or self.pause else True
                     self.pause = not self.pause
-                    self.save_scores()
-                    print("Exit")
+                    if not self.running:
+                        self.save_scores()
+                        print("Exit")
+                    else:
+                        print("Paused")
 
                 if event.key == pygame.K_SPACE:
                     if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
@@ -187,6 +193,7 @@ class Game:
                         self.username = self.username[:-1]
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
                         self.username += event.unicode
+                    self.cursor_tick = 0
 
                 if event.type == pygame.KEYDOWN and self.username_existing and not self.checked_username:
                     if event.key == pygame.K_RETURN and self.password.strip() != "":
@@ -197,6 +204,7 @@ class Game:
                         self.password = self.password[:-1]
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
                         self.password += event.unicode
+                    self.cursor_tick = 0
 
 
     def update(self):
@@ -226,6 +234,16 @@ class Game:
                 self.game_over = True
 
     def draw(self):
+        if self.cursor_tick < 30:
+            cursor = "|"
+        else:
+            cursor = " "
+        self.cursor_tick += 1
+        if self.cursor_tick >= 60:
+            self.cursor_tick = 0
+
+
+
         screen.fill(WHITE)
         pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 3)
         self.dino.draw()
@@ -266,7 +284,7 @@ class Game:
             screen.fill(BLACK)
 
             pause_text = font.render("Enter your username!", True, WHITE)
-            username_text = font.render(f"Username: {self.username}", True, WHITE)
+            username_text = font.render(f"Username: {self.username}{cursor}", True, WHITE)
             enter_text = font.render("Press enter to confirm", True, WHITE)
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             screen.blit(username_text, username_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
@@ -278,9 +296,9 @@ class Game:
             if self.username in self.accounts:
                 pause_text = font.render("User exists already!", True, WHITE)
             else:
-                pause_text = font.render("Enter your password for your new account!", True, WHITE)
+                pause_text = font.render("Creating new account!", True, WHITE)
             info_text = font.render("Enter password to proceed", True, WHITE)
-            password_text = font.render(f"Password: {self.password}", True, WHITE)
+            password_text = font.render(f"Password: {self.password}{cursor}", True, WHITE)
             enter_text = font.render("Press enter to confirm", True, WHITE)
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             screen.blit(info_text, info_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
@@ -337,7 +355,16 @@ class Game:
                 print(f"Loaded highscore ({self.high_score}) for user ({self.username}) out of storage")
             else:
                 print("Wrong password")
+
+                screen.fill(BLACK)
+                enter_text = font.render("Wrong password!", True, RED)
+                screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+
+
+                pygame.display.flip()
+                clock.tick(1)
                 self.reset()
+                clock.tick(60)
                 return
         self.pause = False
         self.checked_username = True
