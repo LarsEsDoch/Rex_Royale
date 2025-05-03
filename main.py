@@ -140,16 +140,24 @@ class Game:
                 self.running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if self.pause:
+                    if self.pause and self.username_existing:
                         self.pause = False
                     elif self.game_over:
                         self.reset()
                         print("Reset")
                     else:
                         self.dino.start_jump()
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False if self.game_over or self.pause else True
-                    self.pause = not self.pause
+
+                if event.type == pygame.KEYDOWN and not self.username_existing:
+                    if event.key == pygame.K_RETURN and self.username.strip() != "":
+                        self.username_existing = True
+                        print(f"Got username: {self.username}")
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.username = self.username[:-1]
+                    elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
+                        self.username += event.unicode
+
+
 
     def update(self):
         if self.pause or self.game_over:
