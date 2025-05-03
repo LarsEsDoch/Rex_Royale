@@ -31,6 +31,7 @@ print("Set font")
 
 
 class Dino:
+
     def __init__(self):
         self.width = 150
         self.height = 150
@@ -48,9 +49,12 @@ class Dino:
     def update(self, score):
         if self.jump:
             self.y += self.velocity_y
+
             if score > 4000:
                 self.gravity_multiplier = min(1.1 + score / 40000, 2)
+
             self.velocity_y += GRAVITY * self.gravity_multiplier
+
             if self.y >= GROUND_LEVEL - self.height:
                 self.y = GROUND_LEVEL - self.height
                 self.jump = False
@@ -65,12 +69,15 @@ class Dino:
 
 
 class Obstacle:
+
     def __init__(self, score):
         if score < 5000:
             self.type = random.choice(["small", "large", "double"])
         else:
             self.type = random.choice(["small", "large", "double", "bird"])
+
         self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (20, 90) if self.type == "double" else (40, 40)
+
         if self.type == "bird":
             self.image = pygame.image.load(f'textures/bird.png')
             self.y = GROUND_LEVEL - self.height - 170
@@ -79,6 +86,7 @@ class Obstacle:
             self.image = pygame.image.load(f'textures/cactus_{1 if self.type == "small" else 2 if self.type == "large" else 3}.png')
             self.y = GROUND_LEVEL - self.height
             self.x = SCREEN_WIDTH + random.randint(50, 300)
+
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.first_drawn = False
         print("Spawned obstacle")
@@ -89,6 +97,7 @@ class Obstacle:
                 self.x = SCREEN_WIDTH*2.5
                 self.first_drawn = True
             self.x -= speed * 1.5
+
         self.x -= speed
 
     def draw(self):
@@ -100,10 +109,12 @@ class Obstacle:
     def collides_with(self, dino):
         if self.type == "bird":
             return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and self.y < dino.y + dino.hitbox_height < self.y + self.height
+
         return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and dino.y + dino.hitbox_height > self.y
 
 
 class Game:
+
     def __init__(self):
         self.running = True
         self.pause = False
@@ -145,12 +156,14 @@ class Game:
             return
 
         self.dino.update(self.score)
+
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(300, 600) - self.spacing:
             self.spacing += 2
             self.obstacles.append(Obstacle(self.score))
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
+
             if obstacle.off_screen():
                 self.obstacles.remove(obstacle)
                 self.score += 100
@@ -169,6 +182,7 @@ class Game:
         screen.fill(WHITE)
         pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 3)
         self.dino.draw()
+
         for obstacle in self.obstacles:
             obstacle.draw()
 
@@ -176,6 +190,7 @@ class Game:
 
         if self.game_over:
             screen.fill(BLACK)
+
             game_over_text = font.render("Game Over", True, WHITE)
             restart_text = font.render("Press space to restart", True, WHITE)
             escape_text = font.render("Press escape to exit", True, WHITE)
@@ -185,6 +200,7 @@ class Game:
 
         if self.pause:
             screen.fill(BLACK)
+
             pause_text = font.render("Paused", True, WHITE)
             continue_text = font.render("Press space to continue", True, WHITE)
             escape_text = font.render("Press escape to exit", True, WHITE)
