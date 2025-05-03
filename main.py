@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 import json
+import hashlib
 
 pygame.init()
 print("Initialized pygame successful")
@@ -122,12 +123,15 @@ class Game:
         self.obstacle_speed = OBSTACLE_SPEED
         self.dino = Dino()
         self.obstacles = []
-        self.high_scores = {}
+        self.accounts = {}
         self.load_scores()
         self.high_score = 0
         self.username = ""
+        self.password = ""
+        self.hashed_password = ""
         self.username_existing = False
         self.checked_username = False
+        self.unlocked_user = False
         self.spacing = 0
         print("Prepared game")
 
@@ -139,12 +143,15 @@ class Game:
         self.obstacle_speed = OBSTACLE_SPEED
         self.dino = Dino()
         self.obstacles.clear()
-        self.high_scores = {}
+        self.accounts = {}
         self.load_scores()
         self.high_score = 0
         self.username = ""
+        self.password = ""
+        self.hashed_password = ""
         self.username_existing = False
         self.checked_username = False
+        self.unlocked_user = False
         self.spacing = 0
         print("Game was reset and prepared")
 
@@ -163,7 +170,7 @@ class Game:
                     print("Exit")
 
                 if event.key == pygame.K_SPACE:
-                    if self.pause and self.username_existing:
+                    if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                         self.pause = False
                         print("Resumed")
                     elif self.game_over:
@@ -181,6 +188,15 @@ class Game:
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
                         self.username += event.unicode
 
+                if event.type == pygame.KEYDOWN and self.username_existing and not self.checked_username:
+                    if event.key == pygame.K_RETURN and self.password.strip() != "":
+                        print(f"Got password: {self.password}")
+                        self.unlock_user()
+
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.password = self.password[:-1]
+                    elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
+                        self.password += event.unicode
 
 
     def update(self):
@@ -246,46 +262,94 @@ class Game:
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
 
-        if not self.username_existing:
+        if not self.username_existing and not self.unlocked_user and not self.checked_username:
             screen.fill(BLACK)
 
             pause_text = font.render("Enter your username!", True, WHITE)
-            continue_text = font.render(f"Username: {self.username}", True, WHITE)
-            escape_text = font.render("Press enter to confirm", True, WHITE)
+            username_text = font.render(f"Username: {self.username}", True, WHITE)
+            enter_text = font.render("Press enter to confirm", True, WHITE)
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
-            screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
-            screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+            screen.blit(username_text, username_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
+            screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
 
-        if self.username_existing and not self.checked_username:
+        if not self.unlocked_user and self.username_existing:
+            screen.fill(BLACK)
+
+            if self.username in self.accounts:
+                pause_text = font.render("User exists already!", True, WHITE)
+            else:
+                pause_text = font.render("Enter your password for your new account!", True, WHITE)
+            info_text = font.render("Enter password to proceed", True, WHITE)
+            password_text = font.render(f"Password: {self.password}", True, WHITE)
+            enter_text = font.render("Press enter to confirm", True, WHITE)
+            screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+            screen.blit(info_text, info_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
+            screen.blit(password_text, password_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+            screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
+
+
+        if self.username_existing and not self.checked_username and not self.unlocked_user:
             self.check_username()
+        if self.username_existing and self.checked_username and not self.unlocked_user:
+            self.unlock_user()
 
         pygame.display.flip()
 
     def save_scores(self):
-        scores = self.high_scores
+        if self.username == "":
+            return
+        scores = self.accounts
+        if not self.username in scores:
+            scores[self.username] = {
+                "score": self.score,
+                "password": self.hashed_password
+            }
+        elif self.score > scores[self.username]["score"]:
+            scores[self.username]["score"] = self.score
+            scores[self.username]["password"] = self.hashed_password
 
-        if self.score > scores.get(self.username, 0):
-            scores[self.username] = self.score
-
+        if not self.username in scores or self.score > self.high_score:
             with open("highscores.json", "w") as file:
                 json.dump(scores, file, indent=4)
             print(f"Saved highscore: {self.score} for user: {self.username}")
+        else:
+            print(f"No new highscore: user: {self.username}")
 
 
     def load_scores(self):
         if os.path.exists("highscores.json"):
             with open("highscores.json", "r") as file:
-                self.high_scores = json.load(file)
+                self.accounts = json.load(file)
 
-        print(f"Loaded all highscores")
+        print(f"Loaded all accounts")
 
     def check_username(self):
-        if self.username in self.high_scores:
-            self.high_score = self.high_scores.get(self.username, 0)
-            print(f"Set highscore ({self.high_score}) for user ({self.username}) out of storage")
+        if self.username in self.accounts:
+            self.unlocked_user = False
+
+
+    def unlock_user(self):
+        self.create_password()
+
+        if self.username in self.accounts:
+            if self.hashed_password == self.accounts[self.username]["password"]:
+                self.high_score = self.accounts[self.username]["score"]
+                print(f"Loaded highscore ({self.high_score}) for user ({self.username}) out of storage")
+            else:
+                print("Wrong password")
+                self.reset()
+                return
         self.pause = False
         self.checked_username = True
+        self.unlocked_user = True
+        print(f"Started game")
 
+
+
+
+
+    def create_password(self):
+        self.hashed_password = hashlib.sha512(self.password.encode('utf-8')).hexdigest()
 
     def run(self):
         while self.running:
