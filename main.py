@@ -195,7 +195,20 @@ class Game:
         score_text = font.render(f"Score: {self.score}", True, color)
         screen.blit(score_text, (10, 10))
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
-        screen.blit(highest_score_text, (10, 35))
+        screen.blit(highest_score_text, (10, 60))
+
+        if not self.username_existing:
+            screen.fill(BLACK)
+
+            pause_text = font.render("Enter your username!", True, WHITE)
+            continue_text = font.render(f"Username: {self.username}", True, WHITE)
+            escape_text = font.render("Press enter to confirm", True, WHITE)
+            screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+            screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
+            screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+
+        if self.username_existing and not self.checked_username:
+            self.check_username()
 
         pygame.display.flip()
 
