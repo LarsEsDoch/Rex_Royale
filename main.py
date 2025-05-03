@@ -128,11 +128,21 @@ class Game:
         print("Prepared game")
 
     def reset(self):
+        self.running = True
+        self.pause = True
         self.game_over = False
-        self.dino = Dino()
         self.score = 0
         self.obstacle_speed = OBSTACLE_SPEED
+        self.dino = Dino()
         self.obstacles.clear()
+        self.high_scores = {}
+        self.load_scores()
+        self.high_score = 0
+        self.username = ""
+        self.username_existing = False
+        self.checked_username = False
+        self.spacing = 0
+        print("Game was reset and prepared")
 
     def handle_events(self):
         for event in pygame.event.get():
