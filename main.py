@@ -117,13 +117,18 @@ class Game:
 
     def __init__(self):
         self.running = True
-        self.pause = False
+        self.pause = True
         self.game_over = False
         self.score = 0
         self.obstacle_speed = OBSTACLE_SPEED
         self.dino = Dino()
         self.obstacles = []
+        self.high_scores = {}
+        self.load_scores()
         self.high_score = 0
+        self.username = ""
+        self.username_existing = False
+        self.checked_username = False
         self.spacing = 0
         print("Prepared game")
 
