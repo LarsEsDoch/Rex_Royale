@@ -89,7 +89,6 @@ class Obstacle:
 
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.first_drawn = False
-        print("Spawned obstacle")
 
     def update(self, speed):
         if self.type == "bird":
@@ -208,7 +207,6 @@ class Game:
                 print("Dino collided")
 
                 self.save_scores()
-                self.high_score = max(self.score, self.high_score)
                 self.game_over = True
 
     def draw(self):
