@@ -2,30 +2,32 @@ import pygame
 import random
 import os
 
-# Initialize Pygame
 pygame.init()
+print("Initialized pygame successful")
 
-# Screen dimensions
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Dino Game")
+print("Set screen dimensions")
 
-# Clock for controlling FPS
+
 clock = pygame.time.Clock()
+print("Initialized clock")
 
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (40, 40, 40)
+print("Initialized colors")
 
-# Game constants
 GRAVITY = 0.9
 GROUND_LEVEL = SCREEN_HEIGHT - 50
 OBSTACLE_SPEED = 7
 SPEED_INCREMENT = 0.1
+print("Initialized game constants")
 
-# Fonts
 font = pygame.font.Font(None, 36)
+print("Set font")
 
 
 class Dino:
@@ -41,6 +43,7 @@ class Dino:
         self.image = pygame.image.load('textures/dino_texture.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.gravity_multiplier = 1.1
+        print("Spawned Dino")
 
     def update(self, score):
         if self.jump:
@@ -78,6 +81,7 @@ class Obstacle:
             self.x = SCREEN_WIDTH + random.randint(50, 300)
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.first_drawn = False
+        print("Spawned obstacle")
 
     def update(self, speed):
         if self.type == "bird":
@@ -110,7 +114,7 @@ class Game:
         self.obstacles = []
         self.high_score = 0
         self.spacing = 0
-        self.load_score()
+        print("Prepared game")
 
     def reset(self):
         self.game_over = False
@@ -129,6 +133,7 @@ class Game:
                         self.pause = False
                     elif self.game_over:
                         self.reset()
+                        print("Reset")
                     else:
                         self.dino.start_jump()
                 if event.key == pygame.K_ESCAPE:
@@ -150,13 +155,13 @@ class Game:
                 self.obstacles.remove(obstacle)
                 self.score += 100
                 self.obstacle_speed += SPEED_INCREMENT
-                print(self.score)
-                print(self.obstacle_speed)
-                print(self.dino.gravity_multiplier)
-                print(self.spacing)
+
+                print(f"Score: {self.score}")
 
             if obstacle.collides_with(self.dino):
-                self.save_score()
+                print("Dino collided")
+
+                self.save_scores()
                 self.high_score = max(self.score, self.high_score)
                 self.game_over = True
 
