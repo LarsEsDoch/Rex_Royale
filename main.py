@@ -194,6 +194,8 @@ class Game:
 
         score_text = font.render(f"Score: {self.score}", True, color)
         screen.blit(score_text, (10, 10))
+        username_text = font.render(f"User: {self.username}", True, color)
+        screen.blit(username_text, (10, 35))
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
 
