@@ -153,7 +153,16 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+                self.save_scores()
+                print("Exit")
+
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.running = False if self.game_over or self.pause else True
+                    self.pause = not self.pause
+                    self.save_scores()
+                    print("Exit")
+
                 if event.key == pygame.K_SPACE:
                     if self.pause and self.username_existing:
                         self.pause = False
