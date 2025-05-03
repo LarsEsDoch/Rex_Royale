@@ -199,15 +199,31 @@ class Game:
 
         pygame.display.flip()
 
-    def save_score(self):
-        if self.score > self.high_score:
-            with open("highscore.txt", "w") as file:
-                file.write(str(self.score))
+    def save_scores(self):
+        scores = self.high_scores
 
-    def load_score(self):
-        if os.path.exists("highscore.txt"):
-            with open("highscore.txt", "r") as file:
-                self.high_score = int(file.read())
+        if self.score > scores.get(self.username, 0):
+            scores[self.username] = self.score
+
+            with open("highscores.json", "w") as file:
+                json.dump(scores, file, indent=4)
+            print(f"Saved highscore: {self.score} for user: {self.username}")
+
+
+    def load_scores(self):
+        if os.path.exists("highscores.json"):
+            with open("highscores.json", "r") as file:
+                self.high_scores = json.load(file)
+
+        print(f"Loaded all highscores")
+
+    def check_username(self):
+        if self.username in self.high_scores:
+            self.high_score = self.high_scores.get(self.username, 0)
+            print(f"Set highscore ({self.high_score}) for user ({self.username}) out of storage")
+        self.pause = False
+        self.checked_username = True
+
 
     def run(self):
         while self.running:
