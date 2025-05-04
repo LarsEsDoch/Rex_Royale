@@ -43,7 +43,7 @@ RED = (255, 0, 0)
 DARK_RED = (150, 0, 0)
 print("Initialized colors")
 
-GRAVITY = 0.9
+GRAVITY = 0.5
 GROUND_LEVEL = SCREEN_HEIGHT - 50
 OBSTACLE_SPEED = 7
 SPEED_INCREMENT = 0.1
@@ -52,9 +52,6 @@ print("Initialized game constants")
 
 font = pygame.font.Font(None, 36)
 print("Set font")
-
-def ease_out_quad(t):
-    return 1 - (1 - t) ** 2
 
 def ease_out_cubic(t):
     return 1 - (1 - t)**3
@@ -98,7 +95,7 @@ class Dino:
     def start_jump(self):
         if not self.jump:
             self.jump = True
-            self.velocity_y = -20
+            self.velocity_y = -16
 
 
 class Obstacle:
@@ -147,7 +144,10 @@ class Obstacle:
             screen.blit(self.frame_images[0], (self.x, self.y))
 
     def off_screen(self):
-        return self.x + self.width < 0
+        return self.x + self.width < 50
+
+    def complete_off_screen(self):
+        return self.x + self.width < -200
 
     def collides_with(self, dino):
         if self.type == "bird":
@@ -283,15 +283,18 @@ class Game:
 
         self.dino.update(self.score)
 
-        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(300, 600) - self.spacing:
+        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(500, 800) - self.spacing:
             self.spacing += 2
             self.obstacles.append(Obstacle(self.score))
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
 
-            if obstacle.off_screen():
+            if obstacle.complete_off_screen():
                 self.obstacles.remove(obstacle)
+
+            if obstacle.off_screen() and not obstacle.got_counted:
+                obstacle.got_counted = True
                 self.score += 100
                 self.obstacle_speed += SPEED_INCREMENT
 
@@ -376,7 +379,6 @@ class Game:
             game_over_screen = pygame.transform.scale(self.game_over_image, (min(scaled_width,1100), min(scaled_height, 600)))
             game_over_screen.set_alpha(opacity)
             screen.blit(game_over_screen, game_over_screen.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
-            print(scaled_width, scaled_height)
 
             if scaled_width > 1100:
                 self.blend_in_time += clock.get_time() / 500.0
