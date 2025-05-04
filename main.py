@@ -93,9 +93,8 @@ class Dino:
         screen.blit(self.image, (self.x, self.y))
 
     def start_jump(self):
-        self.velocity_y = -16
-        if self.y >= GROUND_LEVEL - self.height - 50:
-            self.velocity_y = -16
+        if self.y >= GROUND_LEVEL - self.height - 60 and self.velocity_y >= 1:
+            self.velocity_y = -15
         if not self.jump:
             self.jump = True
             self.velocity_y = -16
@@ -131,7 +130,7 @@ class Obstacle:
 
     def update(self, speed):
         if self.type == "bird":
-            self.x -= speed * 1.5
+            self.x -= speed * 1.2
         self.x -= speed
 
     def draw(self):
@@ -202,7 +201,7 @@ class Game:
         self.background_x_3 = 0
         print("Prepared game")
 
-    def reset(self):
+    def hard_reset(self):
         self.running = True
         self.pause = True
         self.game_over = False
@@ -219,6 +218,25 @@ class Game:
         self.username_existing = False
         self.checked_username = False
         self.unlocked_user = False
+        self.spacing = 0
+        self.background_flip = True
+        self.background_flip_2 = True
+        self.background_flip_3 = True
+        self.background_x = 0
+        self.background_x_2 = 0
+        self.background_x_3 = 0
+        self.game_over_scale = 1
+        self.game_over_time = 0
+        print("Cache cleared and game was reset and prepared")
+
+    def reset(self):
+        self.running = True
+        self.pause = False
+        self.game_over = False
+        self.score = 0
+        self.obstacle_speed = OBSTACLE_SPEED
+        self.dino = Dino()
+        self.obstacles.clear()
         self.spacing = 0
         self.background_flip = True
         self.background_flip_2 = True
@@ -247,13 +265,21 @@ class Game:
                     else:
                         print("Paused")
 
+                if event.key == pygame.K_BACKSPACE and self.game_over or event.key == pygame.K_BACKSPACE and self.pause:
+                    self.hard_reset()
+                    print("Reset")
+
+                if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause:
+                    self.reset()
+                    print("Reset Score")
+
                 if event.key == pygame.K_SPACE:
                     if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                         self.pause = False
                         print("Resumed")
                     elif self.game_over:
                         self.reset()
-                        print("Reset")
+                        print("Reset Score")
                     else:
                         self.dino.start_jump()
 
@@ -389,7 +415,7 @@ class Game:
                 opacity_text = int(255 * opacity_eased_text)
                 text_color = (255, 255, 255, opacity_text)
 
-                restart_text = font.render("Press space to restart", True, text_color)
+                restart_text = font.render("Press space or enter to try again", True, text_color)
                 escape_text = font.render("Press escape to exit", True, text_color)
 
                 restart_text.set_alpha(opacity_text)
@@ -399,13 +425,16 @@ class Game:
 
         if self.pause:
             screen.fill(BLACK)
-
             pause_text = font.render("Paused", True, WHITE)
             continue_text = font.render("Press space to continue", True, WHITE)
             escape_text = font.render("Press escape to exit", True, WHITE)
+            restart_text = font.render("Press enter to start from beginning", True, WHITE)
+            hard_restart_text = font.render("Press backspace to change account", True, WHITE)
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
             screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+            screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
+            screen.blit(hard_restart_text, hard_restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200)))
 
         score_text = font.render(f"Score: {self.score}", True, color)
         screen.blit(score_text, (10, 10))
@@ -434,10 +463,12 @@ class Game:
             info_text = font.render("Enter password to proceed", True, WHITE)
             password_text = font.render(f"Password: {self.password}{cursor}", True, WHITE)
             enter_text = font.render("Press enter to confirm", True, WHITE)
+            restart_text = font.render("Press backspace to use another account", True, WHITE)
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             screen.blit(info_text, info_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
             screen.blit(password_text, password_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
             screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
+            screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200)))
 
 
         if self.username_existing and not self.checked_username and not self.unlocked_user:
@@ -495,7 +526,7 @@ class Game:
 
                 pygame.display.flip()
                 clock.tick(1)
-                self.reset()
+                self.hard_reset()
                 clock.tick(FRAME_RATE)
                 return
         self.pause = False
