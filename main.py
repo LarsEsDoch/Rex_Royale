@@ -7,6 +7,25 @@ import hashlib
 pygame.init()
 print("Initialized pygame successful")
 
+BIRD_FRAMES = []
+for i in range(17):
+    frame_path = f"textures/bird/frame_{i+1}.png"
+    image = pygame.image.load(frame_path)
+    image = pygame.transform.scale(image, (130, 115))
+    BIRD_FRAMES.append(image)
+CACTUS_SMALL = []
+for i in range(3):
+    frame_path = f"textures/cactus_small/cactus_small_{i+1}.png"
+    image = pygame.image.load(frame_path)
+    image = pygame.transform.scale(image, (60, 70))
+    CACTUS_SMALL.append(image)
+CACTUS_LARGE = []
+for i in range(3):
+    frame_path = f"textures/cactus_large/cactus_large_{i+1}.png"
+    image = pygame.image.load(frame_path)
+    image = pygame.transform.scale(image, (40, 110))
+    CACTUS_LARGE.append(image)
+print("Loaded textures")
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -85,24 +104,29 @@ class Dino:
 class Obstacle:
 
     def __init__(self, score):
+        self.frame_images = []
         if score < 5000:
             self.type = random.choice(["small", "large"])
         else:
             self.type = random.choice(["small", "large", "bird"])
 
-        self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (40, 40)
+        self.width, self.height = (60, 70) if self.type == "small" else (40, 110) if self.type == "large" else (130, 115)
 
         if self.type == "bird":
-            self.image = pygame.image.load(f'textures/bird.png')
-            self.y = GROUND_LEVEL - self.height - 170
-            self.x = SCREEN_WIDTH + random.randint(50, 300)
+            frame_images = BIRD_FRAMES
+            for bird_image in frame_images:
+                self.frame_images.append(bird_image)
+        elif self.type == "small":
+            self.frame_images = [CACTUS_SMALL[random.randint(0, len(CACTUS_SMALL) - 1)]]
         else:
-            self.image = pygame.image.load(f'textures/cactus_{self.type}_{random.randint(1, 4)}.png')
-            self.y = GROUND_LEVEL - self.height
-            self.x = SCREEN_WIDTH + random.randint(50, 300)
+            self.frame_images = [CACTUS_LARGE[random.randint(0, len(CACTUS_LARGE) - 1)]]
 
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.y = GROUND_LEVEL - self.height - 200 if self.type == "bird" else GROUND_LEVEL - self.height
+        self.x = SCREEN_WIDTH + random.randint(50, 400)
         self.first_drawn = False
+        self.current_frame = 0
+        self.animation_timer = 0
+        self.got_counted = False
 
     def update(self, speed):
         if self.type == "bird":
@@ -110,11 +134,17 @@ class Obstacle:
                 self.x = SCREEN_WIDTH*2.5
                 self.first_drawn = True
             self.x -= speed * 1.5
-
         self.x -= speed
 
     def draw(self):
-        screen.blit(self.image, (self.x, self.y))
+        if self.type == "bird":
+            self.animation_timer += clock.get_time()
+            self.current_frame = int(self.animation_timer / 100) % len(self.frame_images)
+            screen.blit(self.frame_images[self.current_frame], (self.x, self.y))
+            if self.current_frame == 17:
+                self.current_frame = 0
+        else:
+            screen.blit(self.frame_images[0], (self.x, self.y))
 
     def off_screen(self):
         return self.x + self.width < 0
