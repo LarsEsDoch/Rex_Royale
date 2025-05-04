@@ -34,6 +34,16 @@ print("Initialized game constants")
 font = pygame.font.Font(None, 36)
 print("Set font")
 
+def ease_out_quad(t):
+    return 1 - (1 - t) ** 2
+
+def ease_out_cubic(t):
+    return 1 - (1 - t)**3
+
+def ease_out_sine(t):
+    from math import sin, pi
+    return sin((t * pi) / 2)
+print("Initialized math functions")
 
 class Dino:
 
@@ -137,6 +147,9 @@ class Game:
         self.unlocked_user = False
         self.spacing = 0
         self.cursor_tick = 0
+        self.game_over_scale = 1
+        self.game_over_time = 0
+        self.blend_in_time = 0
 
         self.background_day = pygame.image.load('textures/desert_day_background.png')
         self.background_day_flipped = pygame.transform.flip(self.background_day, True, False)
@@ -147,6 +160,9 @@ class Game:
 
         self.background_night = pygame.image.load('textures/desert_night_background.png')
         self.background_night_flipped = pygame.transform.flip(self.background_night, True, False)
+
+        self.game_over_image = pygame.image.load('textures/game_over.png')
+
         self.background_flip = True
         self.background_flip_2 = True
         self.background_flip_3 = True
@@ -179,6 +195,8 @@ class Game:
         self.background_x = 0
         self.background_x_2 = 0
         self.background_x_3 = 0
+        self.game_over_scale = 1
+        self.game_over_time = 0
         print("Game was reset and prepared")
 
     def handle_events(self):
@@ -249,11 +267,11 @@ class Game:
 
                 print(f"Score: {self.score}")
 
-            #if obstacle.collides_with(self.dino):
-                #print("Dino collided")
+            if obstacle.collides_with(self.dino):
+                print("Dino collided")
 
-                #self.save_scores()
-                #self.game_over = True
+                self.save_scores()
+                self.game_over = True
 
     def draw(self):
         if self.cursor_tick < 30:
@@ -307,16 +325,43 @@ class Game:
             obstacle.draw()
 
         color = WHITE if self.pause or self.game_over else BLACK
-
+        
         if self.game_over:
             screen.fill(BLACK)
 
-            game_over_text = font.render("Game Over", True, WHITE)
-            restart_text = font.render("Press space to restart", True, WHITE)
-            escape_text = font.render("Press escape to exit", True, WHITE)
-            screen.blit(game_over_text, game_over_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
-            screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
-            screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+            self.game_over_time += clock.get_time() / 500.0
+            progress = min(self.game_over_time / 8.0, 1.0)
+            scale_eased = ease_out_cubic(progress)
+            opacity_eased = ease_out_sine(progress)
+
+            self.game_over_scale = 1 + scale_eased * 8
+            opacity = int(255 * opacity_eased)
+
+            original_width = self.game_over_image.get_width()
+            original_height = self.game_over_image.get_height()
+            aspect_ratio = original_width / original_height
+            scaled_height = int(70 * self.game_over_scale)
+            scaled_width = int(scaled_height * aspect_ratio)
+
+            game_over_screen = pygame.transform.scale(self.game_over_image, (min(scaled_width,1100), min(scaled_height, 600)))
+            game_over_screen.set_alpha(opacity)
+            screen.blit(game_over_screen, game_over_screen.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+            print(scaled_width, scaled_height)
+
+            if scaled_width > 1100:
+                self.blend_in_time += clock.get_time() / 500.0
+                progress_text = min(self.blend_in_time / 4.0, 1.0)
+                opacity_eased_text = ease_out_sine(progress_text)
+                opacity_text = int(255 * opacity_eased_text)
+                text_color = (255, 255, 255, opacity_text)
+
+                restart_text = font.render("Press space to restart", True, text_color)
+                escape_text = font.render("Press escape to exit", True, text_color)
+
+                restart_text.set_alpha(opacity_text)
+                escape_text.set_alpha(opacity_text)
+                screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 250)))
+                screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300)))
 
         if self.pause:
             screen.fill(BLACK)
