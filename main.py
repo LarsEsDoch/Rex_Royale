@@ -265,11 +265,12 @@ class Game:
                     else:
                         print("Paused")
 
-                if event.key == pygame.K_BACKSPACE and self.game_over or event.key == pygame.K_BACKSPACE and self.pause:
+                if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing:
                     self.hard_reset()
                     print("Reset")
 
-                if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause:
+                if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
+                    self.save_scores()
                     self.reset()
                     print("Reset Score")
 
@@ -417,11 +418,14 @@ class Game:
 
                 restart_text = font.render("Press space or enter to try again", True, text_color)
                 escape_text = font.render("Press escape to exit", True, text_color)
+                change_account_text = font.render("Press backspace to change account", True, text_color)
 
                 restart_text.set_alpha(opacity_text)
                 escape_text.set_alpha(opacity_text)
-                screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 250)))
-                screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300)))
+                change_account_text.set_alpha(opacity_text)
+                screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 230)))
+                screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 280)))
+                screen.blit(change_account_text, change_account_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 330)))
 
         if self.pause:
             screen.fill(BLACK)
