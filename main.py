@@ -76,18 +76,18 @@ class Obstacle:
 
     def __init__(self, score):
         if score < 5000:
-            self.type = random.choice(["small", "large", "double"])
+            self.type = random.choice(["small", "large"])
         else:
-            self.type = random.choice(["small", "large", "double", "bird"])
+            self.type = random.choice(["small", "large", "bird"])
 
-        self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (20, 90) if self.type == "double" else (40, 40)
+        self.width, self.height = (40, 50) if self.type == "small" else (30, 80) if self.type == "large" else (40, 40)
 
         if self.type == "bird":
             self.image = pygame.image.load(f'textures/bird.png')
             self.y = GROUND_LEVEL - self.height - 170
             self.x = SCREEN_WIDTH + random.randint(50, 300)
         else:
-            self.image = pygame.image.load(f'textures/cactus_{1 if self.type == "small" else 2 if self.type == "large" else 3}.png')
+            self.image = pygame.image.load(f'textures/cactus_{self.type}_{random.randint(1, 4)}.png')
             self.y = GROUND_LEVEL - self.height
             self.x = SCREEN_WIDTH + random.randint(50, 300)
 
