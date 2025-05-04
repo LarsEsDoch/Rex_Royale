@@ -110,26 +110,24 @@ class Obstacle:
         self.width, self.height = (60, 70) if self.type == "small" else (40, 110) if self.type == "large" else (130, 115)
 
         if self.type == "bird":
+            self.x = SCREEN_WIDTH*2.2
             frame_images = BIRD_FRAMES
             for bird_image in frame_images:
                 self.frame_images.append(bird_image)
         elif self.type == "small":
+            self.x = SCREEN_WIDTH + random.randint(50, 400)
             self.frame_images = [CACTUS_SMALL[random.randint(0, len(CACTUS_SMALL) - 1)]]
         else:
+            self.x = SCREEN_WIDTH + random.randint(50, 500)
             self.frame_images = [CACTUS_LARGE[random.randint(0, len(CACTUS_LARGE) - 1)]]
 
         self.y = GROUND_LEVEL - self.height - 200 if self.type == "bird" else GROUND_LEVEL - self.height
-        self.x = SCREEN_WIDTH + random.randint(50, 400)
-        self.first_drawn = False
         self.current_frame = 0
         self.animation_timer = 0
         self.got_counted = False
 
     def update(self, speed):
         if self.type == "bird":
-            if not self.first_drawn:
-                self.x = SCREEN_WIDTH*2.5
-                self.first_drawn = True
             self.x -= speed * 1.5
         self.x -= speed
 
@@ -256,7 +254,7 @@ class Game:
                     else:
                         self.dino.start_jump()
 
-                if event.type == pygame.KEYDOWN and not self.username_existing:
+                if not self.username_existing:
                     if event.key == pygame.K_RETURN and self.username.strip() != "":
                         self.username_existing = True
                         print(f"Got username: {self.username}")
@@ -266,7 +264,7 @@ class Game:
                         self.username += event.unicode
                     self.cursor_tick = 0
 
-                if event.type == pygame.KEYDOWN and self.username_existing and not self.checked_username:
+                if self.username_existing and not self.checked_username:
                     if event.key == pygame.K_RETURN and self.password.strip() != "":
                         print(f"Got password: {self.password}")
                         self.unlock_user()
