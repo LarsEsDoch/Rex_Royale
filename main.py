@@ -23,7 +23,7 @@ CACTUS_LARGE = []
 for i in range(3):
     frame_path = f"textures/cactus_large/cactus_large_{i+1}.png"
     image = pygame.image.load(frame_path)
-    image = pygame.transform.scale(image, (40, 110))
+    image = pygame.transform.scale(image, (40, 130))
     CACTUS_LARGE.append(image)
 print("Loaded textures")
 
@@ -46,7 +46,7 @@ print("Initialized colors")
 GRAVITY = 0.5
 GROUND_LEVEL = SCREEN_HEIGHT - 50
 OBSTACLE_SPEED = 7
-SPEED_INCREMENT = 0.1
+SPEED_INCREMENT = 0.001
 FRAME_RATE = 60
 print("Initialized game constants")
 
@@ -93,6 +93,9 @@ class Dino:
         screen.blit(self.image, (self.x, self.y))
 
     def start_jump(self):
+        self.velocity_y = -16
+        if self.y >= GROUND_LEVEL - self.height - 50:
+            self.velocity_y = -16
         if not self.jump:
             self.jump = True
             self.velocity_y = -16
@@ -107,7 +110,7 @@ class Obstacle:
         else:
             self.type = random.choice(["small", "large", "bird"])
 
-        self.width, self.height = (60, 70) if self.type == "small" else (40, 110) if self.type == "large" else (130, 115)
+        self.width, self.height = (60, 70) if self.type == "small" else (40, 130) if self.type == "large" else (130, 115)
 
         if self.type == "bird":
             self.x = SCREEN_WIDTH*2.2
@@ -281,7 +284,7 @@ class Game:
 
         self.dino.update(self.score)
 
-        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(500, 800) - self.spacing:
+        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
             self.spacing += 2
             self.obstacles.append(Obstacle(self.score))
 
@@ -294,7 +297,6 @@ class Game:
             if obstacle.off_screen() and not obstacle.got_counted:
                 obstacle.got_counted = True
                 self.score += 100
-                self.obstacle_speed += SPEED_INCREMENT
 
                 print(f"Score: {self.score}")
 
@@ -303,6 +305,8 @@ class Game:
 
                 self.save_scores()
                 self.game_over = True
+
+            self.obstacle_speed += SPEED_INCREMENT
 
     def draw(self):
         if self.cursor_tick < 30:
