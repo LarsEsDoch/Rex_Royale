@@ -28,6 +28,7 @@ GRAVITY = 0.9
 GROUND_LEVEL = SCREEN_HEIGHT - 50
 OBSTACLE_SPEED = 7
 SPEED_INCREMENT = 0.1
+FRAME_RATE = 60
 print("Initialized game constants")
 
 font = pygame.font.Font(None, 36)
@@ -136,9 +137,22 @@ class Game:
         self.unlocked_user = False
         self.spacing = 0
         self.cursor_tick = 0
+
         self.background_day = pygame.image.load('textures/desert_day_background.png')
+        self.background_day_flipped = pygame.transform.flip(self.background_day, True, False)
+        self.background_day_2 = pygame.image.load('textures/desert_day_background_2.png')
+        self.background_day_2_flipped = pygame.transform.flip(self.background_day_2, True, False)
+        self.background_day_3 = pygame.image.load('textures/desert_day_background_3.png')
+        self.background_day_3_flipped = pygame.transform.flip(self.background_day_3, True, False)
+
         self.background_night = pygame.image.load('textures/desert_night_background.png')
+        self.background_night_flipped = pygame.transform.flip(self.background_night, True, False)
+        self.background_flip = True
+        self.background_flip_2 = True
+        self.background_flip_3 = True
         self.background_x = 0
+        self.background_x_2 = 0
+        self.background_x_3 = 0
         print("Prepared game")
 
     def reset(self):
@@ -159,6 +173,12 @@ class Game:
         self.checked_username = False
         self.unlocked_user = False
         self.spacing = 0
+        self.background_flip = True
+        self.background_flip_2 = True
+        self.background_flip_3 = True
+        self.background_x = 0
+        self.background_x_2 = 0
+        self.background_x_3 = 0
         print("Game was reset and prepared")
 
     def handle_events(self):
@@ -209,7 +229,6 @@ class Game:
                         self.password += event.unicode
                     self.cursor_tick = 0
 
-
     def update(self):
         if self.pause or self.game_over:
             return
@@ -230,11 +249,11 @@ class Game:
 
                 print(f"Score: {self.score}")
 
-            if obstacle.collides_with(self.dino):
-                print("Dino collided")
+            #if obstacle.collides_with(self.dino):
+                #print("Dino collided")
 
-                self.save_scores()
-                self.game_over = True
+                #self.save_scores()
+                #self.game_over = True
 
     def draw(self):
         if self.cursor_tick < 30:
@@ -249,13 +268,39 @@ class Game:
         screen.fill(BLACK)
 
         if not self.pause and not self.game_over:
-            self.background_x -= self.obstacle_speed * 0.25
-            if self.background_x <= -SCREEN_WIDTH:
+            self.background_x -= self.obstacle_speed * 0.20
+            if self.background_x <= -SCREEN_WIDTH - 800:
                 self.background_x = 0
+                self.background_flip = not self.background_flip
+            self.background_x_2 -= self.obstacle_speed * 0.25
+            if self.background_x_2 <= -SCREEN_WIDTH - 800:
+                self.background_x_2 = 0
+                self.background_flip_2 = not self.background_flip_2
+            self.background_x_3 -= self.obstacle_speed * 0.30
+            if self.background_x_3 <= -SCREEN_WIDTH - 800:
+                self.background_x_3 = 0
+                self.background_flip_3 = not self.background_flip_3
 
-        screen.blit(self.background_day, (self.background_x, 0))
-        screen.blit(self.background_day, (self.background_x + SCREEN_WIDTH, 0))
-        pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 3)
+        if not self.background_flip:
+            screen.blit(self.background_day_flipped, (self.background_x, 0))
+            screen.blit(self.background_day, (self.background_x + SCREEN_WIDTH + 800, 0))
+        else:
+            screen.blit(self.background_day, (self.background_x, 0))
+            screen.blit(self.background_day_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
+
+        if not self.background_flip_2:
+            screen.blit(self.background_day_2_flipped, (self.background_x_2, 410))
+            screen.blit(self.background_day_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+        else:
+            screen.blit(self.background_day_2, (self.background_x_2, 410))
+            screen.blit(self.background_day_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+
+        if not self.background_flip_3:
+            screen.blit(self.background_day_3_flipped, (self.background_x_3, 550))
+            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 550))
+        else:
+            screen.blit(self.background_day_3, (self.background_x_3, 550))
+            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 550))
         self.dino.draw()
 
         for obstacle in self.obstacles:
@@ -343,7 +388,6 @@ class Game:
         else:
             print(f"No new highscore: user: {self.username}")
 
-
     def load_scores(self):
         if os.path.exists("highscores.json"):
             with open("highscores.json", "r") as file:
@@ -354,7 +398,6 @@ class Game:
     def check_username(self):
         if self.username in self.accounts:
             self.unlocked_user = False
-
 
     def unlock_user(self):
         self.create_password()
@@ -374,16 +417,12 @@ class Game:
                 pygame.display.flip()
                 clock.tick(1)
                 self.reset()
-                clock.tick(60)
+                clock.tick(FRAME_RATE)
                 return
         self.pause = False
         self.checked_username = True
         self.unlocked_user = True
         print(f"Started game")
-
-
-
-
 
     def create_password(self):
         self.hashed_password = hashlib.sha512(self.password.encode('utf-8')).hexdigest()
@@ -393,7 +432,7 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            clock.tick(60)
+            clock.tick(FRAME_RATE)
         pygame.quit()
 
 
