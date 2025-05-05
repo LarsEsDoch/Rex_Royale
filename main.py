@@ -72,7 +72,7 @@ class Dino:
         self.y = GROUND_LEVEL - self.height
         self.velocity_y = 0
         self.jump = False
-        self.image = pygame.image.load('textures/dino_texture.png')
+        self.image = pygame.image.load('textures/dino/dino_texture.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.gravity_multiplier = 1.1
 
@@ -181,24 +181,28 @@ class Game:
         self.game_over_time = 0
         self.blend_in_time = 0
 
-        self.background_day = pygame.image.load('textures/desert_day_background.png')
+        self.background_day = pygame.image.load('textures/desert_day/desert_day_background.png')
         self.background_day_flipped = pygame.transform.flip(self.background_day, True, False)
-        self.background_day_2 = pygame.image.load('textures/desert_day_background_2.png')
+        self.background_day_2 = pygame.image.load('textures/desert_day/desert_day_background_2.png')
         self.background_day_2_flipped = pygame.transform.flip(self.background_day_2, True, False)
-        self.background_day_3 = pygame.image.load('textures/desert_day_background_3.png')
+        self.background_day_3 = pygame.image.load('textures/desert_day/desert_day_background_3.png')
         self.background_day_3_flipped = pygame.transform.flip(self.background_day_3, True, False)
+        self.background_day_4 = pygame.image.load('textures/desert_day/desert_day_background_4.png')
+        self.background_day_4_flipped = pygame.transform.flip(self.background_day_4, True, False)
 
-        self.background_night = pygame.image.load('textures/desert_night_background.png')
+        self.background_night = pygame.image.load('textures/deser_night/desert_night_background.png')
         self.background_night_flipped = pygame.transform.flip(self.background_night, True, False)
 
-        self.game_over_image = pygame.image.load('textures/game_over.png')
+        self.game_over_image = pygame.image.load('textures/texts/game_over.png')
 
         self.background_flip = True
         self.background_flip_2 = True
         self.background_flip_3 = True
+        self.background_flip_4 = True
         self.background_x = 0
         self.background_x_2 = 0
         self.background_x_3 = 0
+        self.background_x_4 = 0
         print("Prepared game")
 
     def hard_reset(self):
@@ -222,9 +226,11 @@ class Game:
         self.background_flip = True
         self.background_flip_2 = True
         self.background_flip_3 = True
+        self.background_flip_4 = True
         self.background_x = 0
         self.background_x_2 = 0
         self.background_x_3 = 0
+        self.background_x_4 = 0
         self.game_over_scale = 1
         self.game_over_time = 0
         print("Cache cleared and game was reset and prepared")
@@ -241,9 +247,11 @@ class Game:
         self.background_flip = True
         self.background_flip_2 = True
         self.background_flip_3 = True
+        self.background_flip_4 = True
         self.background_x = 0
         self.background_x_2 = 0
         self.background_x_3 = 0
+        self.background_x_4 = 0
         self.game_over_scale = 1
         self.game_over_time = 0
         print("Game was reset and prepared")
@@ -356,10 +364,14 @@ class Game:
             if self.background_x_2 <= -SCREEN_WIDTH - 800:
                 self.background_x_2 = 0
                 self.background_flip_2 = not self.background_flip_2
-            self.background_x_3 -= self.obstacle_speed * 0.30
+            self.background_x_3 -= self.obstacle_speed * 0.50
             if self.background_x_3 <= -SCREEN_WIDTH - 800:
                 self.background_x_3 = 0
                 self.background_flip_3 = not self.background_flip_3
+            self.background_x_4 -= self.obstacle_speed
+            if self.background_x_4 <= -SCREEN_WIDTH - 800:
+                self.background_x_4 = 0
+                self.background_flip_4 = not self.background_flip_4
 
         if not self.background_flip:
             screen.blit(self.background_day_flipped, (self.background_x, 0))
@@ -376,11 +388,19 @@ class Game:
             screen.blit(self.background_day_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
 
         if not self.background_flip_3:
-            screen.blit(self.background_day_3_flipped, (self.background_x_3, 550))
-            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 550))
+            screen.blit(self.background_day_3_flipped, (self.background_x_3, 540))
+            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 540))
         else:
-            screen.blit(self.background_day_3, (self.background_x_3, 550))
-            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 550))
+            screen.blit(self.background_day_3, (self.background_x_3, 540))
+            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 540))
+
+        if not self.background_flip_4:
+            screen.blit(self.background_day_4_flipped, (self.background_x_4, GROUND_LEVEL-70))
+            screen.blit(self.background_day_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL-70))
+        else:
+            screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL-70))
+            screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL-70))
+
         self.dino.draw()
 
         for obstacle in self.obstacles:
