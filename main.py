@@ -44,10 +44,10 @@ DARK_RED = (150, 0, 0)
 print("Initialized colors")
 
 GRAVITY = 0.5
-GROUND_LEVEL = SCREEN_HEIGHT - 50
+GROUND_LEVEL = SCREEN_HEIGHT - 40
 OBSTACLE_SPEED = 7
 SPEED_INCREMENT = 0.001
-FRAME_RATE = 60
+FRAME_RATE = 90
 print("Initialized game constants")
 
 font = pygame.font.Font(None, 36)
@@ -192,6 +192,12 @@ class Game:
 
         self.background_night = pygame.image.load('textures/deser_night/desert_night_background.png')
         self.background_night_flipped = pygame.transform.flip(self.background_night, True, False)
+        self.background_night_2 = pygame.image.load('textures/deser_night/desert_night_background_2.png')
+        self.background_night_2_flipped = pygame.transform.flip(self.background_night_2, True, False)
+        self.background_night_3 = pygame.image.load('textures/deser_night/desert_night_background_3.png')
+        self.background_night_3_flipped = pygame.transform.flip(self.background_night_3, True, False)
+        self.background_night_4 = pygame.image.load('textures/deser_night/desert_night_background_4.png')
+        self.background_night_4_flipped = pygame.transform.flip(self.background_night_4, True, False)
 
         self.game_over_image = pygame.image.load('textures/texts/game_over.png')
 
@@ -203,6 +209,9 @@ class Game:
         self.background_x_2 = 0
         self.background_x_3 = 0
         self.background_x_4 = 0
+
+        self.day_to_night_transition_progress = 0
+        self.transition_speed = 0.01
         print("Prepared game")
 
     def hard_reset(self):
@@ -233,6 +242,9 @@ class Game:
         self.background_x_4 = 0
         self.game_over_scale = 1
         self.game_over_time = 0
+
+        self.day_to_night_transition_progress = 0
+        self.transition_speed = 0.01
         print("Cache cleared and game was reset and prepared")
 
     def reset(self):
@@ -254,6 +266,9 @@ class Game:
         self.background_x_4 = 0
         self.game_over_scale = 1
         self.game_over_time = 0
+
+        self.day_to_night_transition_progress = 0
+        self.transition_speed = 0.01
         print("Game was reset and prepared")
 
     def handle_events(self):
@@ -314,14 +329,42 @@ class Game:
                     self.cursor_tick = 0
 
     def update(self):
+        self.cursor_tick += 1
+        if self.cursor_tick >= 60:
+            self.cursor_tick = 0
+
         if self.pause or self.game_over:
             return
 
         self.dino.update(self.score)
 
+        if not self.pause and not self.game_over:
+            self.background_x -= self.obstacle_speed * 0.20
+            if self.background_x <= -SCREEN_WIDTH - 800:
+                self.background_x = 0
+                self.background_flip = not self.background_flip
+            self.background_x_2 -= self.obstacle_speed * 0.25
+            if self.background_x_2 <= -SCREEN_WIDTH - 800:
+                self.background_x_2 = 0
+                self.background_flip_2 = not self.background_flip_2
+            self.background_x_3 -= self.obstacle_speed * 0.50
+            if self.background_x_3 <= -SCREEN_WIDTH - 800:
+                self.background_x_3 = 0
+                self.background_flip_3 = not self.background_flip_3
+            self.background_x_4 -= self.obstacle_speed
+            if self.background_x_4 <= -SCREEN_WIDTH - 800:
+                self.background_x_4 = 0
+                self.background_flip_4 = not self.background_flip_4
+
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
             self.spacing += 2
             self.obstacles.append(Obstacle(self.score))
+
+
+        if self.score >= 200 and self.background_x <= -400:
+            self.day_to_night_transition_progress = min(self.day_to_night_transition_progress + self.transition_speed, 1)
+        else:
+            self.day_to_night_transition_progress = max(self.day_to_night_transition_progress - self.transition_speed, 0)
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
@@ -344,34 +387,7 @@ class Game:
             self.obstacle_speed += SPEED_INCREMENT
 
     def draw(self):
-        if self.cursor_tick < 30:
-            cursor = "|"
-        else:
-            cursor = " "
-        self.cursor_tick += 1
-        if self.cursor_tick >= 60:
-            self.cursor_tick = 0
-
-
         screen.fill(BLACK)
-
-        if not self.pause and not self.game_over:
-            self.background_x -= self.obstacle_speed * 0.20
-            if self.background_x <= -SCREEN_WIDTH - 800:
-                self.background_x = 0
-                self.background_flip = not self.background_flip
-            self.background_x_2 -= self.obstacle_speed * 0.25
-            if self.background_x_2 <= -SCREEN_WIDTH - 800:
-                self.background_x_2 = 0
-                self.background_flip_2 = not self.background_flip_2
-            self.background_x_3 -= self.obstacle_speed * 0.50
-            if self.background_x_3 <= -SCREEN_WIDTH - 800:
-                self.background_x_3 = 0
-                self.background_flip_3 = not self.background_flip_3
-            self.background_x_4 -= self.obstacle_speed
-            if self.background_x_4 <= -SCREEN_WIDTH - 800:
-                self.background_x_4 = 0
-                self.background_flip_4 = not self.background_flip_4
 
         if not self.background_flip:
             screen.blit(self.background_day_flipped, (self.background_x, 0))
@@ -388,18 +404,58 @@ class Game:
             screen.blit(self.background_day_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
 
         if not self.background_flip_3:
-            screen.blit(self.background_day_3_flipped, (self.background_x_3, 540))
-            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 540))
+            screen.blit(self.background_day_3_flipped, (self.background_x_3, 500))
+            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
         else:
-            screen.blit(self.background_day_3, (self.background_x_3, 540))
-            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 540))
+            screen.blit(self.background_day_3, (self.background_x_3, 500))
+            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
 
         if not self.background_flip_4:
-            screen.blit(self.background_day_4_flipped, (self.background_x_4, GROUND_LEVEL-70))
-            screen.blit(self.background_day_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL-70))
+            screen.blit(self.background_day_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
+            screen.blit(self.background_day_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
         else:
-            screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL-70))
-            screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL-70))
+            screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL - 80))
+            screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
+
+        if not self.background_flip:
+            screen.blit(self.background_night_flipped, (self.background_x, 0))
+            screen.blit(self.background_night, (self.background_x + SCREEN_WIDTH + 800, 0))
+        else:
+            screen.blit(self.background_night, (self.background_x, 0))
+            screen.blit(self.background_night_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
+
+        if not self.background_flip_2:
+            screen.blit(self.background_night_2_flipped, (self.background_x_2, 410))
+            screen.blit(self.background_night_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+        else:
+            screen.blit(self.background_night_2, (self.background_x_2, 410))
+            screen.blit(self.background_night_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+
+        if not self.background_flip_3:
+            screen.blit(self.background_night_3_flipped, (self.background_x_3, 500))
+            screen.blit(self.background_night_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+        else:
+            screen.blit(self.background_night_3, (self.background_x_3, 500))
+            screen.blit(self.background_night_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+
+        if not self.background_flip_4:
+            screen.blit(self.background_night_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
+            screen.blit(self.background_night_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
+        else:
+            screen.blit(self.background_night_4, (self.background_x_4, GROUND_LEVEL - 80))
+            screen.blit(self.background_night_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
+
+        day_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        day_surf.blit(self.background_day if self.background_flip else self.background_day_flipped,
+                      (self.background_x, 0))
+        day_surf.set_alpha(int((1 - self.day_to_night_transition_progress) * 255))
+        screen.blit(day_surf, (0, 0))
+
+        night_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        night_surf.blit(self.background_night if self.background_flip else self.background_night_flipped,
+                        (self.background_x, 0))
+        night_surf.set_alpha(int(self.day_to_night_transition_progress * 255))
+        screen.blit(night_surf, (0, 0))
 
         self.dino.draw()
 
@@ -466,6 +522,11 @@ class Game:
         screen.blit(username_text, (10, 35))
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
+
+        if self.cursor_tick < 30:
+            cursor = "|"
+        else:
+            cursor = " "
 
         if not self.username_existing and not self.unlocked_user and not self.checked_username:
             screen.fill(BLACK)
