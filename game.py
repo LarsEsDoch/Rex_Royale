@@ -5,10 +5,12 @@ import json
 
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
     GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, FRAME_RATE, \
-    SCREEN_HEIGHT, ease_out_sine, ease_out_cubic
+    SCREEN_HEIGHT
+from utils import ease_out_sine, ease_out_cubic
 from resources import screen, clock, font, pygame
 from dino import Dino
 from obstacle import Obstacle
+from resources import logging
 
 class Game:
 
@@ -67,7 +69,7 @@ class Game:
         self.transition = False
         self.day_to_night_transition_progress = 0
         self.transition_speed = 0.02
-        print("Prepared game")
+        logging.info("Prepared game")
 
     def hard_reset(self):
         self.running = True
@@ -101,7 +103,7 @@ class Game:
         self.transition = False
         self.day_to_night_transition_progress = 0
         self.transition_speed = 0.01
-        print("Cache cleared and game was reset and prepared")
+        logging.info("Cache cleared and game was reset and prepared")
 
     def reset(self):
         self.running = True
@@ -126,14 +128,14 @@ class Game:
         self.transition = False
         self.day_to_night_transition_progress = 0
         self.transition_speed = 0.01
-        print("Game was reset and prepared")
+        logging.info("Game was reset and prepared")
 
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
                 self.save_scores()
-                print("Exit")
+                logging.info("Exit")
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -141,33 +143,33 @@ class Game:
                     self.pause = not self.pause
                     if not self.running:
                         self.save_scores()
-                        print("Exit")
+                        logging.info("Exit")
                     else:
-                        print("Paused")
+                        logging.info("Paused")
 
                 if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing:
                     self.hard_reset()
-                    print("Reset")
+                    logging.info("Reset")
 
                 if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
                     self.save_scores()
                     self.reset()
-                    print("Reset Score")
+                    logging.info("Reset Score")
 
                 if event.key == pygame.K_SPACE:
                     if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                         self.pause = False
-                        print("Resumed")
+                        logging.info("Resumed")
                     elif self.game_over:
                         self.reset()
-                        print("Reset Score")
+                        logging.info("Reset Score")
                     else:
                         self.dino.start_jump()
 
                 if not self.username_existing:
                     if event.key == pygame.K_RETURN and self.username.strip() != "":
                         self.username_existing = True
-                        print(f"Got username: {self.username}")
+                        logging.info(f"Got username: {self.username}")
                     elif event.key == pygame.K_BACKSPACE:
                         self.username = self.username[:-1]
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
@@ -176,7 +178,7 @@ class Game:
 
                 if self.username_existing and not self.checked_username:
                     if event.key == pygame.K_RETURN and self.password.strip() != "":
-                        print(f"Got password: {self.password}")
+                        logging.info(f"Got password: {self.password}")
                         self.unlock_user()
 
                     elif event.key == pygame.K_BACKSPACE:
@@ -242,13 +244,13 @@ class Game:
                 obstacle.got_counted = True
                 self.score += 100
 
-                print(f"Score: {self.score}")
+                logging.info(f"Score: {self.score}")
 
             if obstacle.collides_with(self.dino):
-                print("Dino collided")
+                logging.info("Dino collided")
 
-                #self.save_scores()
-                #self.game_over = True
+                self.save_scores()
+                self.game_over = True
 
             self.obstacle_speed += SPEED_INCREMENT
 
@@ -441,16 +443,16 @@ class Game:
         if not self.username in scores or self.score > self.high_score:
             with open("highscores.json", "w") as file:
                 json.dump(scores, file, indent=4)
-            print(f"Saved highscore: {self.score} for user: {self.username}")
+            logging.info(f"Saved highscore: {self.score} for user: {self.username}")
         else:
-            print(f"No new highscore: user: {self.username}")
+            logging.info(f"No new highscore: user: {self.username}")
 
     def load_scores(self):
         if os.path.exists("highscores.json"):
             with open("highscores.json", "r") as file:
                 self.accounts = json.load(file)
 
-        print(f"Loaded all accounts")
+        logging.info(f"Loaded all accounts")
 
     def check_username(self):
         if self.username in self.accounts:
@@ -462,9 +464,9 @@ class Game:
         if self.username in self.accounts:
             if self.hashed_password == self.accounts[self.username]["password"]:
                 self.high_score = self.accounts[self.username]["score"]
-                print(f"Loaded highscore ({self.high_score}) for user ({self.username}) out of storage")
+                logging.info(f"Loaded highscore ({self.high_score}) for user ({self.username}) out of storage")
             else:
-                print("Wrong password")
+                logging.info("Wrong password")
 
                 screen.fill(BLACK)
                 enter_text = font.render("Wrong password!", True, RED)
@@ -479,7 +481,7 @@ class Game:
         self.pause = False
         self.checked_username = True
         self.unlocked_user = True
-        print(f"Started game")
+        logging.info(f"Started game")
 
     def create_password(self):
         self.hashed_password = hashlib.sha512(self.password.encode('utf-8')).hexdigest()

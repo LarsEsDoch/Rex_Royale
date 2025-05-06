@@ -1,14 +1,9 @@
 import os
-import logging
 import argparse
 
-import pygame
-
+from resources import logging
 from config import SCREEN_HEIGHT, SCREEN_WIDTH, FULLSCREEN
 from game import Game
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s: %(message)s")
-
 
 def validate_resources():
     logging.info("Validating resources...")
@@ -31,10 +26,9 @@ def validate_resources():
 
     if missing_files:
         logging.error(f"Missing required files: {', '.join(missing_files)}")
-        print(f"Missing required files: {', '.join(missing_files)}")
+        logging.info(f"Missing required files: {', '.join(missing_files)}")
         exit(1)
     logging.info("All resources validated successfully.")
-    print("All resources validated successfully.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the Dino Game")
@@ -49,7 +43,7 @@ if __name__ == "__main__":
     if args.debug:
         logging.getLogger().setLevel(logging.DEBUG)
         logging.debug("Debug mode enabled.")
-        print("Debug mode enabled.")
+        logging.info("Debug mode enabled.")
 
     validate_resources()
 
@@ -57,11 +51,10 @@ if __name__ == "__main__":
         SCREEN_WIDTH = 1920
         SCREEN_HEIGHT = 1080
         FULLSCREEN = True
-        print("Running in fullscreen mode...")
+        logging.info("Running in fullscreen mode...")
 
-    print(f"Difficulty level set to: {args.difficulty}")
-    print(f"Running the game at {args.fps} FPS")
+    logging.info(f"Difficulty level set to: {args.difficulty}")
+    logging.info(f"Running the game at {args.fps} FPS")
 
     logging.info("Starting the game...")
-    print("Starting the game...")
     Game().run()

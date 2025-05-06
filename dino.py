@@ -1,5 +1,6 @@
 from resources import screen, pygame
 from config import GROUND_LEVEL, GRAVITY
+from resources import logging
 
 class Dino:
 
@@ -15,6 +16,7 @@ class Dino:
         self.image = pygame.image.load('textures/dino/dino_texture.png')
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.gravity_multiplier = 1.1
+        logging.info("Initialized dino")
 
     def update(self, score):
         if self.jump:
@@ -33,7 +35,7 @@ class Dino:
         screen.blit(self.image, (self.x, self.y))
 
     def start_jump(self):
-        if self.y >= GROUND_LEVEL - self.height - 60 and self.velocity_y >= 1:
+        if self.y >= GROUND_LEVEL - self.height - 70 and self.velocity_y >= 1:
             self.velocity_y = -15
         if not self.jump:
             self.jump = True

@@ -1,10 +1,10 @@
 import pygame
 
+from config import logging
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
 
-
 pygame.init()
-print("Initialized pygame successful")
+logging.info("Initialized pygame successful")
 
 BIRD_FRAMES = []
 for i in range(17):
@@ -24,22 +24,22 @@ for i in range(3):
     image = pygame.image.load(frame_path)
     image = pygame.transform.scale(image, (40, 130))
     CACTUS_LARGE.append(image)
-print("Loaded textures")
+logging.info("Loaded textures")
 
 if FULLSCREEN:
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
 else:
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-print("Set screen dimensions")
+logging.info("Set screen dimensions")
 
 pygame.display.set_caption("Dino Game")
-print("Set window caption")
+logging.info("Set window caption")
 
 #pygame.display.set_icon(pygame.image.load("textures/icon.png"))
-print("Set window icon")
+logging.info("Set window icon")
 
 clock = pygame.time.Clock()
-print("Initialized clock")
+logging.info("Initialized clock")
 
 font = pygame.font.Font(None, 36)
-print("Set font")
+logging.info("Set font")
