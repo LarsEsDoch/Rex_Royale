@@ -47,7 +47,7 @@ GRAVITY = 0.5
 GROUND_LEVEL = SCREEN_HEIGHT - 40
 OBSTACLE_SPEED = 7
 SPEED_INCREMENT = 0.001
-FRAME_RATE = 90
+FRAME_RATE = 60
 print("Initialized game constants")
 
 font = pygame.font.Font(None, 36)
@@ -210,8 +210,9 @@ class Game:
         self.background_x_3 = 0
         self.background_x_4 = 0
 
+        self.transition = False
         self.day_to_night_transition_progress = 0
-        self.transition_speed = 0.01
+        self.transition_speed = 0.02
         print("Prepared game")
 
     def hard_reset(self):
@@ -243,6 +244,7 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
 
+        self.transition = False
         self.day_to_night_transition_progress = 0
         self.transition_speed = 0.01
         print("Cache cleared and game was reset and prepared")
@@ -267,6 +269,7 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
 
+        self.transition = False
         self.day_to_night_transition_progress = 0
         self.transition_speed = 0.01
         print("Game was reset and prepared")
@@ -360,11 +363,20 @@ class Game:
             self.spacing += 2
             self.obstacles.append(Obstacle(self.score))
 
+        if -300 >= self.background_x:
+            self.transition = True
 
-        if self.score >= 200 and self.background_x <= -400:
-            self.day_to_night_transition_progress = min(self.day_to_night_transition_progress + self.transition_speed, 1)
-        else:
-            self.day_to_night_transition_progress = max(self.day_to_night_transition_progress - self.transition_speed, 0)
+        if self.background_x <= -500 and (self.day_to_night_transition_progress == 1 or self.day_to_night_transition_progress == 0) :
+            self.transition = False
+
+        if self.transition:
+            if 5000 <= self.score <= 7000:
+                self.day_to_night_transition_progress = min(
+                    self.day_to_night_transition_progress + self.transition_speed, 1)
+            if self.score >= 10000:
+                self.day_to_night_transition_progress = max(
+                    self.day_to_night_transition_progress - self.transition_speed, 0)
+
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
@@ -381,8 +393,8 @@ class Game:
             if obstacle.collides_with(self.dino):
                 print("Dino collided")
 
-                self.save_scores()
-                self.game_over = True
+                #self.save_scores()
+                #self.game_over = True
 
             self.obstacle_speed += SPEED_INCREMENT
 
@@ -417,6 +429,8 @@ class Game:
             screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL - 80))
             screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
 
+        self.background_night.set_alpha(int(self.day_to_night_transition_progress * 255))
+        self.background_night_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip:
             screen.blit(self.background_night_flipped, (self.background_x, 0))
             screen.blit(self.background_night, (self.background_x + SCREEN_WIDTH + 800, 0))
@@ -424,6 +438,8 @@ class Game:
             screen.blit(self.background_night, (self.background_x, 0))
             screen.blit(self.background_night_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
 
+        self.background_night_2.set_alpha(int(self.day_to_night_transition_progress * 255))
+        self.background_night_2_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip_2:
             screen.blit(self.background_night_2_flipped, (self.background_x_2, 410))
             screen.blit(self.background_night_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
@@ -431,6 +447,8 @@ class Game:
             screen.blit(self.background_night_2, (self.background_x_2, 410))
             screen.blit(self.background_night_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
 
+        self.background_night_3.set_alpha(int(self.day_to_night_transition_progress * 255))
+        self.background_night_3_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip_3:
             screen.blit(self.background_night_3_flipped, (self.background_x_3, 500))
             screen.blit(self.background_night_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
@@ -438,6 +456,8 @@ class Game:
             screen.blit(self.background_night_3, (self.background_x_3, 500))
             screen.blit(self.background_night_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
 
+        self.background_night_4.set_alpha(int(self.day_to_night_transition_progress * 255))
+        self.background_night_4_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip_4:
             screen.blit(self.background_night_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
             screen.blit(self.background_night_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
@@ -445,25 +465,13 @@ class Game:
             screen.blit(self.background_night_4, (self.background_x_4, GROUND_LEVEL - 80))
             screen.blit(self.background_night_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
 
-        day_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-        day_surf.blit(self.background_day if self.background_flip else self.background_day_flipped,
-                      (self.background_x, 0))
-        day_surf.set_alpha(int((1 - self.day_to_night_transition_progress) * 255))
-        screen.blit(day_surf, (0, 0))
-
-        night_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-        night_surf.blit(self.background_night if self.background_flip else self.background_night_flipped,
-                        (self.background_x, 0))
-        night_surf.set_alpha(int(self.day_to_night_transition_progress * 255))
-        screen.blit(night_surf, (0, 0))
-
-        self.dino.draw()
-
         for obstacle in self.obstacles:
             obstacle.draw()
 
+        self.dino.draw()
+
         color = WHITE if self.pause or self.game_over else BLACK
-        
+
         if self.game_over:
             screen.fill(BLACK)
 
