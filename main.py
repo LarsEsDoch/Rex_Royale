@@ -393,8 +393,8 @@ class Game:
             if obstacle.collides_with(self.dino):
                 print("Dino collided")
 
-                self.save_scores()
-                self.game_over = True
+                #self.save_scores()
+                #self.game_over = True
 
             self.obstacle_speed += SPEED_INCREMENT
 
