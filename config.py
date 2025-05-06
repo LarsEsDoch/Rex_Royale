@@ -1,10 +1,14 @@
 import logging
+import os
+
+from datetime import datetime
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("logs/game.log"),
+        logging.FileHandler(
+            f"logs/{datetime.now().strftime('%d.%m.%Y')}_{len([f for f in os.listdir('logs') if f.startswith(datetime.now().strftime('%d.%m.%Y'))]) + 1}.log"),
         logging.StreamHandler()
     ]
 )
