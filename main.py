@@ -1,8 +1,8 @@
 import os
 import argparse
 
-from resources import logging
-from config import SCREEN_HEIGHT, SCREEN_WIDTH, FULLSCREEN
+import config
+from config import logging
 from game import Game
 
 def validate_resources():
@@ -42,15 +42,14 @@ if __name__ == "__main__":
 
     if args.debug:
         logging.getLogger().setLevel(logging.DEBUG)
-        logging.debug("Debug mode enabled.")
         logging.info("Debug mode enabled.")
 
     validate_resources()
 
     if args.fullscreen:
-        SCREEN_WIDTH = 1920
-        SCREEN_HEIGHT = 1080
-        FULLSCREEN = True
+        config.SCREEN_WIDTH = 1920
+        config.SCREEN_HEIGHT = 1080
+        config.FULLSCREEN = True
         logging.info("Running in fullscreen mode...")
 
     logging.info(f"Difficulty level set to: {args.difficulty}")
