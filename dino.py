@@ -1,5 +1,5 @@
 from resources import screen, pygame
-from config import GROUND_LEVEL, GRAVITY
+from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY
 from resources import logging
 
 class Dino:
@@ -36,7 +36,7 @@ class Dino:
 
     def start_jump(self):
         if self.y >= GROUND_LEVEL - self.height - 70 and self.velocity_y >= 1:
-            self.velocity_y = -16
+            self.velocity_y = DINO_VELOCITY + 1
         if not self.jump:
             self.jump = True
-            self.velocity_y = -17
+            self.velocity_y = DINO_VELOCITY

@@ -8,19 +8,22 @@ from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
     SCREEN_HEIGHT
 from utils import ease_out_sine, ease_out_cubic
 from resources import screen, clock, font, pygame
-from dino import Dino
 from obstacle import Obstacle
 from resources import logging
 
 class Game:
 
-    def __init__(self, show_fps):
+    def __init__(self, show_fps, custom_obstacle_speed):
         logging.info("Initializing game...")
         self.running = True
         self.pause = True
         self.game_over = False
         self.score = 0
-        self.obstacle_speed = OBSTACLE_SPEED
+        if custom_obstacle_speed is None:
+            self.obstacle_speed = OBSTACLE_SPEED
+        else:
+            self.obstacle_speed = custom_obstacle_speed
+        from dino import Dino
         self.dino = Dino()
         self.obstacles = []
         self.accounts = {}

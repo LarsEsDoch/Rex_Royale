@@ -28,6 +28,7 @@ logging.info("Initialized colors")
 GRAVITY = 0.6
 GROUND_LEVEL = SCREEN_HEIGHT - 40
 OBSTACLE_SPEED = 7
+DINO_VELOCITY = -17
 SPEED_INCREMENT = 0.001
 FRAME_RATE = 60
 logging.info("Initialized game constants")

@@ -1,10 +1,7 @@
 import os
 import argparse
 
-import pygame
-
 import config
-import resources
 from config import logging
 from game import Game
 
@@ -48,12 +45,30 @@ if __name__ == "__main__":
 
     validate_resources()
 
+    difficulty_speeds = {
+        "easy": 5,
+        "normal": 7,
+        "hard": 9
+    }
+    difficulty_gravity = {
+        "easy": 0.4,
+        "normal": 0.6,
+        "hard": 0.9
+    }
+    difficulty_velocity = {
+        "easy": -18,
+        "normal": -17,
+        "hard": -16
+    }
+    custom_obstacle_speed = difficulty_speeds[args.difficulty]
+    config.GRAVITY = difficulty_gravity[args.difficulty]
+    config.VELOCITY = difficulty_velocity[args.difficulty]
+    logging.info(f"Set OBSTACLE_SPEED to: {config.OBSTACLE_SPEED}")
     config.FRAME_RATE = args.fps
-
-    show_fps = True if args.show_fps else False
 
     logging.info(f"Difficulty level set to: {args.difficulty}")
     logging.info(f"Running the game at {args.fps} FPS")
 
     logging.info("Starting the game...")
-    Game(show_fps).run()
+
+    Game(args.show_fps, custom_obstacle_speed).run()
