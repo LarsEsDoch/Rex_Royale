@@ -25,7 +25,7 @@ RED = (255, 0, 0)
 DARK_RED = (150, 0, 0)
 logging.info("Initialized colors")
 
-GRAVITY = 0.6
+GRAVITY = 0.5
 GROUND_LEVEL = SCREEN_HEIGHT - 40
 OBSTACLE_SPEED = 7
 DINO_VELOCITY = -17
