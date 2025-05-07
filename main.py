@@ -2,7 +2,7 @@ import os
 import argparse
 
 import config
-from config import logging, FRAME_RATE
+from config import logging, FRAME_RATE, DINO_VELOCITY, GRAVITY, OBSTACLE_SPEED
 from game import Game
 
 def validate_resources():
@@ -47,17 +47,17 @@ if __name__ == "__main__":
 
     difficulty_speeds = {
         "easy": 5,
-        "normal": 7,
+        "normal": OBSTACLE_SPEED,
         "hard": 9
     }
     difficulty_gravity = {
         "easy": 0.4,
-        "normal": 0.6,
+        "normal": GRAVITY,
         "hard": 0.9
     }
     difficulty_velocity = {
         "easy": -18,
-        "normal": -17,
+        "normal": DINO_VELOCITY,
         "hard": -16
     }
     custom_obstacle_speed = difficulty_speeds[args.difficulty]
