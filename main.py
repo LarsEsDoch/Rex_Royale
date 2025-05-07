@@ -2,7 +2,7 @@ import os
 import argparse
 
 import config
-from config import logging
+from config import logging, FRAME_RATE
 from game import Game
 
 def validate_resources():
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     parser.add_argument("--show-fps", action="store_true", help="Show fps in the game window")
     parser.add_argument("--difficulty", choices=["easy", "normal", "hard"], default="normal",
                         help="Set the difficulty level (default: normal)")
-    parser.add_argument("--fps", type=int, default=60, help="Set the frame rate (FPS) for the game (default: 60)")
+    parser.add_argument("--fps", type=int, default=FRAME_RATE, help="Set the frame rate (FPS) for the game (default: 60)")
 
     args = parser.parse_args()
 
@@ -64,11 +64,11 @@ if __name__ == "__main__":
     config.GRAVITY = difficulty_gravity[args.difficulty]
     config.VELOCITY = difficulty_velocity[args.difficulty]
     logging.info(f"Set OBSTACLE_SPEED to: {config.OBSTACLE_SPEED}")
-    config.FRAME_RATE = args.fps
+    fps = args.fps
 
     logging.info(f"Difficulty level set to: {args.difficulty}")
     logging.info(f"Running the game at {args.fps} FPS")
 
     logging.info("Starting the game...")
 
-    Game(args.show_fps, custom_obstacle_speed).run()
+    Game(args.show_fps, custom_obstacle_speed, fps).run()

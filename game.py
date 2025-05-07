@@ -3,6 +3,7 @@ import hashlib
 import os
 import json
 
+import config
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
     GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, FRAME_RATE, \
     SCREEN_HEIGHT
@@ -13,8 +14,9 @@ from resources import logging
 
 class Game:
 
-    def __init__(self, show_fps, custom_obstacle_speed):
+    def __init__(self, show_fps, custom_obstacle_speed, fps):
         logging.info("Initializing game...")
+        self.fps = fps
         self.running = True
         self.pause = True
         self.game_over = False
@@ -82,6 +84,7 @@ class Game:
         self.game_over = False
         self.score = 0
         self.obstacle_speed = OBSTACLE_SPEED
+        from dino import Dino
         self.dino = Dino()
         self.obstacles.clear()
         self.accounts = {}
@@ -116,6 +119,7 @@ class Game:
         self.game_over = False
         self.score = 0
         self.obstacle_speed = OBSTACLE_SPEED
+        from dino import Dino
         self.dino = Dino()
         self.obstacles.clear()
         self.spacing = 0
@@ -498,5 +502,5 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            clock.tick(FRAME_RATE)
+            clock.tick(self.fps)
         pygame.quit()
