@@ -14,7 +14,8 @@ from resources import logging
 
 class Game:
 
-    def __init__(self):
+    def __init__(self, show_fps):
+        logging.info("Initializing game...")
         self.running = True
         self.pause = True
         self.game_over = False
@@ -193,6 +194,11 @@ class Game:
         if self.cursor_tick >= 60:
             self.cursor_tick = 0
 
+        if self.username_existing and not self.checked_username and not self.unlocked_user:
+            self.check_username()
+        if self.username_existing and self.checked_username and not self.unlocked_user:
+            self.unlock_user()
+
         if self.pause or self.game_over:
             return
 
@@ -233,7 +239,6 @@ class Game:
             if self.score >= 10000:
                 self.day_to_night_transition_progress = max(
                     self.day_to_night_transition_progress - self.transition_speed, 0)
-
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
@@ -420,11 +425,9 @@ class Game:
             screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
             screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200)))
 
-
-        if self.username_existing and not self.checked_username and not self.unlocked_user:
-            self.check_username()
-        if self.username_existing and self.checked_username and not self.unlocked_user:
-            self.unlock_user()
+        if self.show_fps:
+            fps_text = font.render(f"FPS: {int(clock.get_fps())}", True, color)
+            screen.blit(fps_text, (SCREEN_WIDTH - 110, 10))
 
         pygame.display.flip()
 

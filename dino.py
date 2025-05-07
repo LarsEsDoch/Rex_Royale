@@ -36,7 +36,7 @@ class Dino:
 
     def start_jump(self):
         if self.y >= GROUND_LEVEL - self.height - 70 and self.velocity_y >= 1:
-            self.velocity_y = -15
+            self.velocity_y = -16
         if not self.jump:
             self.jump = True
-            self.velocity_y = -16
+            self.velocity_y = -17
