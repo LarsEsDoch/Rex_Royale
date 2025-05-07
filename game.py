@@ -36,24 +36,25 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
         self.blend_in_time = 0
+        self.show_fps = show_fps
 
-        self.background_day = pygame.image.load('textures/desert_day/desert_day_background.png')
-        self.background_day_flipped = pygame.transform.flip(self.background_day, True, False)
-        self.background_day_2 = pygame.image.load('textures/desert_day/desert_day_background_2.png')
-        self.background_day_2_flipped = pygame.transform.flip(self.background_day_2, True, False)
-        self.background_day_3 = pygame.image.load('textures/desert_day/desert_day_background_3.png')
-        self.background_day_3_flipped = pygame.transform.flip(self.background_day_3, True, False)
-        self.background_day_4 = pygame.image.load('textures/desert_day/desert_day_background_4.png')
-        self.background_day_4_flipped = pygame.transform.flip(self.background_day_4, True, False)
+        self.background_day = pygame.image.load('textures/desert_day/desert_day_background.png').convert_alpha()
+        self.background_day_flipped = pygame.transform.flip(self.background_day, True, False).convert_alpha()
+        self.background_day_2 = pygame.image.load('textures/desert_day/desert_day_background_2.png').convert_alpha()
+        self.background_day_2_flipped = pygame.transform.flip(self.background_day_2, True, False).convert_alpha()
+        self.background_day_3 = pygame.image.load('textures/desert_day/desert_day_background_3.png').convert_alpha()
+        self.background_day_3_flipped = pygame.transform.flip(self.background_day_3, True, False).convert_alpha()
+        self.background_day_4 = pygame.image.load('textures/desert_day/desert_day_background_4.png').convert_alpha()
+        self.background_day_4_flipped = pygame.transform.flip(self.background_day_4, True, False).convert_alpha()
 
-        self.background_night = pygame.image.load('textures/desert_night/desert_night_background.png')
-        self.background_night_flipped = pygame.transform.flip(self.background_night, True, False)
-        self.background_night_2 = pygame.image.load('textures/desert_night/desert_night_background_2.png')
-        self.background_night_2_flipped = pygame.transform.flip(self.background_night_2, True, False)
-        self.background_night_3 = pygame.image.load('textures/desert_night/desert_night_background_3.png')
-        self.background_night_3_flipped = pygame.transform.flip(self.background_night_3, True, False)
-        self.background_night_4 = pygame.image.load('textures/desert_night/desert_night_background_4.png')
-        self.background_night_4_flipped = pygame.transform.flip(self.background_night_4, True, False)
+        self.background_night = pygame.image.load('textures/desert_night/desert_night_background.png').convert_alpha()
+        self.background_night_flipped = pygame.transform.flip(self.background_night, True, False).convert_alpha()
+        self.background_night_2 = pygame.image.load('textures/desert_night/desert_night_background_2.png').convert_alpha()
+        self.background_night_2_flipped = pygame.transform.flip(self.background_night_2, True, False).convert_alpha()
+        self.background_night_3 = pygame.image.load('textures/desert_night/desert_night_background_3.png').convert_alpha()
+        self.background_night_3_flipped = pygame.transform.flip(self.background_night_3, True, False).convert_alpha()
+        self.background_night_4 = pygame.image.load('textures/desert_night/desert_night_background_4.png').convert_alpha()
+        self.background_night_4_flipped = pygame.transform.flip(self.background_night_4, True, False).convert_alpha()
 
         self.game_over_image = pygame.image.load('textures/texts/game_over.png')
 

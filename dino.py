@@ -13,7 +13,7 @@ class Dino:
         self.y = GROUND_LEVEL - self.height
         self.velocity_y = 0
         self.jump = False
-        self.image = pygame.image.load('textures/dino/dino_texture.png')
+        self.image = pygame.image.load('textures/dino/dino_texture.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.gravity_multiplier = 1.1
         logging.info("Initialized dino")
