@@ -3,7 +3,6 @@ import hashlib
 import os
 import json
 
-import config
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
     GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, FRAME_RATE, \
     SCREEN_HEIGHT
@@ -268,8 +267,6 @@ class Game:
             self.obstacle_speed += SPEED_INCREMENT
 
     def draw(self):
-        screen.fill(BLACK)
-
         if not self.background_flip:
             screen.blit(self.background_day_flipped, (self.background_x, 0))
             screen.blit(self.background_day, (self.background_x + SCREEN_WIDTH + 800, 0))

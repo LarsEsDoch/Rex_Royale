@@ -12,8 +12,6 @@ class Obstacle:
         else:
             self.type = random.choice(["small", "large", "bird"])
 
-        self.width, self.height = (60, 70) if self.type == "small" else (40, 130) if self.type == "large" else (130, 115)
-
         if self.type == "bird":
             self.x = SCREEN_WIDTH*2.2
             frame_images = BIRD_FRAMES
