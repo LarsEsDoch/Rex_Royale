@@ -155,7 +155,7 @@ class Game:
                     else:
                         logging.info("Paused")
 
-                if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing:
+                if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "":
                     self.hard_reset()
                     logging.info("Reset")
 
