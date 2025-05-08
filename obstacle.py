@@ -24,6 +24,7 @@ class Obstacle:
             self.x = SCREEN_WIDTH + random.randint(50, 500)
             self.frame_images = [CACTUS_LARGE[random.randint(0, len(CACTUS_LARGE) - 1)]]
 
+        self.width, self.height = (self.frame_images[0].get_width(), self.frame_images[0].get_height())
         self.y = GROUND_LEVEL - self.height - 200 if self.type == "bird" else GROUND_LEVEL - self.height
         self.current_frame = 0
         self.animation_timer = 0
