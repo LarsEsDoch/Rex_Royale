@@ -74,9 +74,10 @@ class Game:
         self.background_x_3 = 0
         self.background_x_4 = 0
 
-        self.transition = False
-        self.day_to_night_transition_progress = 0
-        self.transition_speed = 0.02
+
+        self.night_to_day_transition = False
+        self.night_to_day_transition_progress = 0
+        self.night_to_day_transition_speed = 0.02
         logging.info("Prepared game")
 
     def hard_reset(self):
@@ -111,9 +112,10 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
 
-        self.transition = False
-        self.day_to_night_transition_progress = 0
-        self.transition_speed = 0.01
+
+        self.night_to_day_transition = False
+        self.night_to_day_transition_progress = 0
+        self.night_to_day_transition_speed = 0.01
         logging.info("Cache cleared and game was reset and prepared")
 
     def reset(self):
@@ -139,9 +141,10 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
 
-        self.transition = False
-        self.day_to_night_transition_progress = 0
-        self.transition_speed = 0.01
+
+        self.night_to_day_transition = False
+        self.night_to_day_transition_progress = 0
+        self.night_to_day_transition_speed = 0.01
         logging.info("Game was reset and prepared")
 
     def handle_events(self):
@@ -282,18 +285,16 @@ class Game:
             logging.debug(f"Placed new obstacle")
 
         if -300 >= self.background_x:
-            self.transition = True
+            self.night_to_day_transition = True
 
-        if self.background_x <= -500 and (self.day_to_night_transition_progress == 1 or self.day_to_night_transition_progress == 0) :
-            self.transition = False
+        if self.background_x <= -500 and (self.night_to_day_transition_progress == 1 or self.night_to_day_transition_progress == 0) :
+            self.night_to_day_transition = False
 
-        if self.transition:
+        if self.night_to_day_transition:
             if 5000 <= self.score <= 7000:
-                self.day_to_night_transition_progress = min(
-                    self.day_to_night_transition_progress + self.transition_speed, 1)
-            if self.score >= 10000:
-                self.day_to_night_transition_progress = max(
-                    self.day_to_night_transition_progress - self.transition_speed, 0)
+                self.night_to_day_transition_progress = min(
+                    self.night_to_day_transition_progress + self.night_to_day_transition_speed, 1)
+
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
@@ -319,45 +320,14 @@ class Game:
             self.obstacle_speed += SPEED_INCREMENT
 
     def draw(self):
-        if not self.background_flip:
-            screen.blit(self.background_day_flipped, (self.background_x, 0))
-            screen.blit(self.background_day, (self.background_x + SCREEN_WIDTH + 800, 0))
-        else:
-            screen.blit(self.background_day, (self.background_x, 0))
-            screen.blit(self.background_day_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
 
-        if not self.background_flip_2:
-            screen.blit(self.background_day_2_flipped, (self.background_x_2, 410))
-            screen.blit(self.background_day_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
-        else:
-            screen.blit(self.background_day_2, (self.background_x_2, 410))
-            screen.blit(self.background_day_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
-
-        if not self.background_flip_3:
-            screen.blit(self.background_day_3_flipped, (self.background_x_3, 500))
-            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
-        else:
-            screen.blit(self.background_day_3, (self.background_x_3, 500))
-            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
-
-        if not self.background_flip_4:
-            screen.blit(self.background_day_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
-            screen.blit(self.background_day_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
-        else:
-            screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL - 80))
-            screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
-
-        self.background_night.set_alpha(int(self.day_to_night_transition_progress * 255))
-        self.background_night_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip:
             screen.blit(self.background_night_flipped, (self.background_x, 0))
             screen.blit(self.background_night, (self.background_x + SCREEN_WIDTH + 800, 0))
         else:
-            screen.blit(self.background_night, (self.background_x, 0))
-            screen.blit(self.background_night_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
+             screen.blit(self.background_night, (self.background_x, 0))
+             screen.blit(self.background_night_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
 
-        self.background_night_2.set_alpha(int(self.day_to_night_transition_progress * 255))
-        self.background_night_2_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip_2:
             screen.blit(self.background_night_2_flipped, (self.background_x_2, 410))
             screen.blit(self.background_night_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
@@ -365,8 +335,6 @@ class Game:
             screen.blit(self.background_night_2, (self.background_x_2, 410))
             screen.blit(self.background_night_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
 
-        self.background_night_3.set_alpha(int(self.day_to_night_transition_progress * 255))
-        self.background_night_3_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
         if not self.background_flip_3:
             screen.blit(self.background_night_3_flipped, (self.background_x_3, 500))
             screen.blit(self.background_night_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
@@ -374,14 +342,49 @@ class Game:
             screen.blit(self.background_night_3, (self.background_x_3, 500))
             screen.blit(self.background_night_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
 
-        self.background_night_4.set_alpha(int(self.day_to_night_transition_progress * 255))
-        self.background_night_4_flipped.set_alpha(int(self.day_to_night_transition_progress * 255))
+
         if not self.background_flip_4:
             screen.blit(self.background_night_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
             screen.blit(self.background_night_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
         else:
             screen.blit(self.background_night_4, (self.background_x_4, GROUND_LEVEL - 80))
             screen.blit(self.background_night_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
+
+        self.background_day.set_alpha(int(self.night_to_day_transition_progress * 255))
+        self.background_day_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
+        if not self.background_flip:
+            screen.blit(self.background_day_flipped, (self.background_x, 0))
+            screen.blit(self.background_day, (self.background_x + SCREEN_WIDTH + 800, 0))
+        else:
+            screen.blit(self.background_day, (self.background_x, 0))
+            screen.blit(self.background_day_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
+
+        self.background_day_2.set_alpha(int(self.night_to_day_transition_progress * 255))
+        self.background_day_2_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
+        if not self.background_flip_2:
+            screen.blit(self.background_day_2_flipped, (self.background_x_2, 410))
+            screen.blit(self.background_day_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+        else:
+            screen.blit(self.background_day_2, (self.background_x_2, 410))
+            screen.blit(self.background_day_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+
+        self.background_day_3.set_alpha(int(self.night_to_day_transition_progress * 255))
+        self.background_day_3_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
+        if not self.background_flip_3:
+            screen.blit(self.background_day_3_flipped, (self.background_x_3, 500))
+            screen.blit(self.background_day_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+        else:
+            screen.blit(self.background_day_3, (self.background_x_3, 500))
+            screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+
+        self.background_day_4.set_alpha(int(self.night_to_day_transition_progress * 255))
+        self.background_day_4_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
+        if not self.background_flip_4:
+            screen.blit(self.background_day_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
+            screen.blit(self.background_day_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
+        else:
+            screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL - 80))
+            screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
 
         for obstacle in self.obstacles:
             obstacle.draw()
