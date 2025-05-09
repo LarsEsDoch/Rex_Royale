@@ -33,10 +33,17 @@ class Dino:
 
     def draw(self):
         screen.blit(self.image, (self.x, self.y))
+        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+            pygame.draw.rect(screen, (255, 0, 0), (self.x + (self.width - self.hitbox_width) // 2,
+                                                   self.y + (self.height - self.hitbox_height) // 2,
+                                                   self.hitbox_width, self.hitbox_height), 2)
+
 
     def start_jump(self):
-        if self.y >= GROUND_LEVEL - self.height - 70 and self.velocity_y >= 1:
+        if self.y >= GROUND_LEVEL - self.height - 50 and self.velocity_y >= 1:
             self.velocity_y = DINO_VELOCITY + 1
+            logging.debug("Jump started")
         if not self.jump:
             self.jump = True
             self.velocity_y = DINO_VELOCITY
+            logging.debug("Jump started")

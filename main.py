@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     if args.debug:
         logging.getLogger().setLevel(logging.DEBUG)
-        logging.info("Debug mode enabled.")
+        logging.info("Debug mode enabled")
 
     validate_resources()
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     custom_obstacle_speed = difficulty_speeds[args.difficulty]
     config.GRAVITY = difficulty_gravity[args.difficulty]
     config.VELOCITY = difficulty_velocity[args.difficulty]
-    logging.info(f"Set OBSTACLE_SPEED to: {config.OBSTACLE_SPEED}")
+    logging.info(f"Set obstacle speed to: {config.OBSTACLE_SPEED}")
     fps = args.fps
 
     logging.info(f"Difficulty level set to: {args.difficulty}")

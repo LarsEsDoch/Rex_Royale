@@ -96,6 +96,7 @@ class Game:
         self.checked_username = False
         self.unlocked_user = False
         self.spacing = 0
+
         self.background_flip = True
         self.background_flip_2 = True
         self.background_flip_3 = True
@@ -104,6 +105,7 @@ class Game:
         self.background_x_2 = 0
         self.background_x_3 = 0
         self.background_x_4 = 0
+
         self.game_over_scale = 1
         self.game_over_time = 0
 
@@ -122,6 +124,7 @@ class Game:
         self.dino = Dino()
         self.obstacles.clear()
         self.spacing = 0
+
         self.background_flip = True
         self.background_flip_2 = True
         self.background_flip_3 = True
@@ -130,6 +133,7 @@ class Game:
         self.background_x_2 = 0
         self.background_x_3 = 0
         self.background_x_4 = 0
+
         self.game_over_scale = 1
         self.game_over_time = 0
 
@@ -146,6 +150,43 @@ class Game:
                 logging.info("Exit")
 
             if event.type == pygame.KEYDOWN:
+                if logging.getLogger().isEnabledFor(logging.DEBUG):
+                    if event.key == pygame.K_1:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 1
+                        logging.debug(f"Obstacle jump: 1")
+                    if event.key == pygame.K_2:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 2
+                        logging.debug(f"Obstacle jump: 2")
+                    if event.key == pygame.K_3:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 5
+                        logging.debug(f"Obstacle jump: 5")
+                    if event.key == pygame.K_4:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 10
+                        logging.debug(f"Obstacle jump: 10")
+                    if event.key == pygame.K_5:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 20
+                        logging.debug(f"Obstacle jump: 20")
+                    if event.key == pygame.K_6:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 50
+                        logging.debug(f"Obstacle jump: 50")
+                    if event.key == pygame.K_7:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 100
+                        logging.debug(f"Obstacle jump: 100")
+                    if event.key == pygame.K_8:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 200
+                        logging.debug(f"Obstacle jump: 200")
+                    if event.key == pygame.K_9:
+                        for obstacle in self.obstacles:
+                            obstacle.x = obstacle.x - 500
+                        logging.debug(f"Obstacle jump: 500")
                 if event.key == pygame.K_ESCAPE:
                     self.running = False if self.game_over or self.pause else True
                     self.pause = not self.pause
@@ -172,6 +213,7 @@ class Game:
                         self.reset()
                         logging.info("Reset Score")
                     else:
+                        logging.debug("Jump")
                         self.dino.start_jump()
 
                 if not self.username_existing:
@@ -180,8 +222,10 @@ class Game:
                         logging.info(f"Got username: {self.username}")
                     elif event.key == pygame.K_BACKSPACE:
                         self.username = self.username[:-1]
+                        logging.debug("Backspace")
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
                         self.username += event.unicode
+                        logging.debug(f"Key pressed: {event.key}")
                     self.cursor_tick = 0
 
                 if self.username_existing and not self.checked_username:
@@ -191,8 +235,10 @@ class Game:
 
                     elif event.key == pygame.K_BACKSPACE:
                         self.password = self.password[:-1]
+                        logging.debug("Backspace")
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
                         self.password += event.unicode
+                        logging.debug(f"Key pressed: {event.key}")
                     self.cursor_tick = 0
 
     def update(self):
@@ -231,6 +277,7 @@ class Game:
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
             self.spacing += 2
             self.obstacles.append(Obstacle(self.score))
+            logging.debug(f"Placed new obstacle")
 
         if -300 >= self.background_x:
             self.transition = True
@@ -250,16 +297,19 @@ class Game:
             obstacle.update(self.obstacle_speed)
 
             if obstacle.complete_off_screen():
+                logging.debug(f"Obstacle complete off screen: {obstacle.x + obstacle.width < 0}")
                 self.obstacles.remove(obstacle)
+                logging.debug("Removed obstacle")
 
             if obstacle.off_screen() and not obstacle.got_counted:
+                logging.debug(f"Obstacle off screen: {obstacle.x + obstacle.width < 0}")
                 obstacle.got_counted = True
                 self.score += 100
 
                 logging.info(f"Score: {self.score}")
 
             if obstacle.collides_with(self.dino):
-                logging.info("Dino collided")
+                logging.info("Dino collided with obstacle")
 
                 self.save_scores()
                 self.game_over = True
@@ -444,6 +494,7 @@ class Game:
                 "score": self.score,
                 "password": self.hashed_password
             }
+            logging.info(f"Created new account: {self.username}")
         elif self.score > scores[self.username]["score"]:
             scores[self.username]["score"] = self.score
             scores[self.username]["password"] = self.hashed_password
@@ -459,8 +510,11 @@ class Game:
         if os.path.exists("highscores.json"):
             with open("highscores.json", "r") as file:
                 self.accounts = json.load(file)
+            logging.info(f"Loaded all accounts")
+        else:
+            logging.info("No accounts found")
 
-        logging.info(f"Loaded all accounts")
+
 
     def check_username(self):
         if self.username in self.accounts:
@@ -493,6 +547,7 @@ class Game:
 
     def create_password(self):
         self.hashed_password = hashlib.sha512(self.password.encode('utf-8')).hexdigest()
+        logging.debug(f"Hashed password: {self.hashed_password}")
 
     def run(self):
         while self.running:

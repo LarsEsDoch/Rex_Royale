@@ -1,6 +1,6 @@
 import random
 
-from resources import screen, clock, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE
+from resources import screen, clock, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
 from config import GROUND_LEVEL, SCREEN_WIDTH
 
 class Obstacle:
@@ -44,6 +44,8 @@ class Obstacle:
                 self.current_frame = 0
         else:
             screen.blit(self.frame_images[0], (self.x, self.y))
+        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+            pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height), 2)
 
     def off_screen(self):
         return self.x + self.width < 50
@@ -53,6 +55,7 @@ class Obstacle:
 
     def collides_with(self, dino):
         if self.type == "bird":
+
             return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and self.y < dino.y + dino.hitbox_height < self.y + self.height
 
         return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and dino.y + dino.hitbox_height > self.y
