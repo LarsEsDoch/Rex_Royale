@@ -22,8 +22,10 @@ class Game:
         self.score = 0
         if custom_obstacle_speed is None:
             self.obstacle_speed = OBSTACLE_SPEED
+            self.original_obstacle_speed = OBSTACLE_SPEED
         else:
             self.obstacle_speed = custom_obstacle_speed
+            self.original_obstacle_speed = custom_obstacle_speed
         from dino import Dino
         self.dino = Dino()
         self.obstacles = []
@@ -82,7 +84,7 @@ class Game:
         self.pause = True
         self.game_over = False
         self.score = 0
-        self.obstacle_speed = OBSTACLE_SPEED
+        self.obstacle_speed = self.original_obstacle_speed
         from dino import Dino
         self.dino = Dino()
         self.obstacles.clear()
@@ -119,7 +121,7 @@ class Game:
         self.pause = False
         self.game_over = False
         self.score = 0
-        self.obstacle_speed = OBSTACLE_SPEED
+        self.obstacle_speed = self.original_obstacle_speed
         from dino import Dino
         self.dino = Dino()
         self.obstacles.clear()

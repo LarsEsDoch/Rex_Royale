@@ -13,7 +13,7 @@ class Obstacle:
             self.type = random.choice(["small", "large", "bird"])
 
         if self.type == "bird":
-            self.x = SCREEN_WIDTH*2.2
+            self.x = SCREEN_WIDTH*1.6
             frame_images = BIRD_FRAMES
             for bird_image in frame_images:
                 self.frame_images.append(bird_image)
@@ -32,8 +32,9 @@ class Obstacle:
 
     def update(self, speed):
         if self.type == "bird":
-            self.x -= speed * 1.2
-        self.x -= speed
+            self.x -= speed * 1.75
+        else:
+            self.x -= speed
 
     def draw(self):
         if self.type == "bird":
