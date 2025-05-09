@@ -4,7 +4,7 @@ import os
 import json
 
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
-    GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, FRAME_RATE, \
+    GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, BROWN, LIGHT_BLUE, BLUE, FRAME_RATE, \
     SCREEN_HEIGHT
 from utils import ease_out_sine, ease_out_cubic
 from resources import screen, clock, font, pygame
@@ -74,6 +74,12 @@ class Game:
         self.background_x_3 = 0
         self.background_x_4 = 0
 
+        self.progress_birds = 0
+        self.birds_score = 5000
+        self.progress_day = 0
+        self.day_score = 5600
+        self.progress_sky = 0
+        self.sky_score = 10000
 
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
@@ -112,6 +118,12 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
 
+        self.progress_birds = 0
+        self.birds_score = 5000
+        self.progress_day = 0
+        self.day_score = 5600
+        self.progress_sky = 0
+        self.sky_score = 10000
 
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
@@ -141,6 +153,12 @@ class Game:
         self.game_over_scale = 1
         self.game_over_time = 0
 
+        self.progress_birds = 0
+        self.birds_score = 5000
+        self.progress_day = 0
+        self.day_score = 5600
+        self.progress_sky = 0
+        self.sky_score = 10000
 
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
@@ -278,6 +296,10 @@ class Game:
             if self.background_x_4 <= -SCREEN_WIDTH - 800:
                 self.background_x_4 = 0
                 self.background_flip_4 = not self.background_flip_4
+
+            self.progress_birds = min(self.score / self.birds_score, 1)
+            self.progress_day = min(self.score / self.day_score, 1)
+            self.progress_sky = min(self.score / self.sky_score, 1)
 
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
             self.spacing += 2
@@ -451,6 +473,14 @@ class Game:
         screen.blit(username_text, (10, 35))
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
+
+        pygame.draw.rect(screen, BROWN,
+                         (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_birds * SCREEN_WIDTH // 2, 50))
+        pygame.draw.rect(screen, BLUE,
+                         (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_day * SCREEN_WIDTH // 2, 50))
+        pygame.draw.rect(screen, LIGHT_BLUE,
+                         (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_sky * SCREEN_WIDTH // 2, 50))
+        pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, SCREEN_WIDTH // 2, 50), 2)
 
         if self.cursor_tick < 30:
             cursor = "|"
