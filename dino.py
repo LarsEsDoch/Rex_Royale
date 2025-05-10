@@ -1,26 +1,35 @@
-from resources import screen, pygame
+from resources import screen, pygame, DINO_FRAMES, clock
 from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY
 from resources import logging
 
 class Dino:
 
     def __init__(self):
-        self.width = 150
-        self.height = 150
-        self.hitbox_width = 120
-        self.hitbox_height = 120
+        self.width = 248
+        self.height = 128
+        self.hitbox_width = 235
+        self.hitbox_height = 80
         self.x = 50
         self.y = GROUND_LEVEL - self.height
+        self.hitbox_y_offset = 20
+        self.hitbox_y = self.y - self.hitbox_y_offset
         self.velocity_y = 0
         self.jump = False
-        self.image = pygame.image.load('textures/dino/dino_texture.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.frames = DINO_FRAMES
+        self.animation_timer = 0
+        self.current_frame = 0
         self.gravity_multiplier = 1.1
         logging.info("Initialized dino")
 
     def update(self, score):
+        if self.y >= GROUND_LEVEL - self.height - 10:
+            self.animation_timer += clock.get_time()
+            self.current_frame = int(self.animation_timer / 50) % len(self.frames)
+        else:
+            self.current_frame = 8
         if self.jump:
             self.y += self.velocity_y
+            self.hitbox_y = self.y - self.hitbox_y_offset
 
             if score > 4000:
                 self.gravity_multiplier = min(1.1 + score / 40000, 2)
@@ -29,13 +38,14 @@ class Dino:
 
             if self.y >= GROUND_LEVEL - self.height:
                 self.y = GROUND_LEVEL - self.height
+                self.hitbox_y = self.y - self.hitbox_y_offset
                 self.jump = False
 
     def draw(self):
-        screen.blit(self.image, (self.x, self.y))
+        screen.blit(self.frames[self.current_frame], (self.x, self.y))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             pygame.draw.rect(screen, (255, 0, 0), (self.x + (self.width - self.hitbox_width) // 2,
-                                                   self.y + (self.height - self.hitbox_height) // 2,
+                                                   self.hitbox_y + (self.height - self.hitbox_height) // 2,
                                                    self.hitbox_width, self.hitbox_height), 2)
 
 

@@ -41,8 +41,6 @@ class Obstacle:
             self.animation_timer += clock.get_time()
             self.current_frame = int(self.animation_timer / 100) % len(self.frame_images)
             screen.blit(self.frame_images[self.current_frame], (self.x, self.y))
-            if self.current_frame == 17:
-                self.current_frame = 0
         else:
             screen.blit(self.frame_images[0], (self.x, self.y))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
@@ -57,6 +55,6 @@ class Obstacle:
     def collides_with(self, dino):
         if self.type == "bird":
 
-            return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and self.y < dino.y + dino.hitbox_height < self.y + self.height
+            return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and self.y < dino.hitbox_y + dino.hitbox_height < self.y + self.height
 
-        return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and dino.y + dino.hitbox_height > self.y
+        return dino.x < self.x + self.width and dino.x + dino.hitbox_width > self.x and dino.hitbox_y + dino.hitbox_height > self.y

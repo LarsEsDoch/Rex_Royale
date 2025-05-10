@@ -7,7 +7,7 @@ from game import Game
 
 def validate_resources():
     logging.info("Validating resources...")
-    required_files = ["textures/dino/dino_texture.png", "textures/desert_day/desert_day_background.png",
+    required_files = ["textures/desert_day/desert_day_background.png",
                       "textures/desert_night/desert_night_background.png", "textures/desert_day/desert_day_background_2.png",
                       "textures/desert_night/desert_night_background_2.png", "textures/desert_day/desert_day_background_3.png",
                       "textures/desert_night/desert_night_background_3.png", "textures/desert_day/desert_day_background_4.png",
@@ -21,7 +21,12 @@ def validate_resources():
                       "textures/cactus_small/cactus_small_1.png", "textures/cactus_small/cactus_small_2.png",
                       "textures/cactus_small/cactus_small_3.png", "textures/cactus_small/cactus_small_4.png",
                       "textures/cactus_large/cactus_large_1.png", "textures/cactus_large/cactus_large_2.png",
-                      "textures/cactus_large/cactus_large_3.png", "textures/cactus_large/cactus_large_4.png",]
+                      "textures/cactus_large/cactus_large_3.png", "textures/cactus_large/cactus_large_4.png",
+                      "textures/dino/dino_frame_0.png", "textures/dino/dino_frame_1.png",
+                      "textures/dino/dino_frame_2.png", "textures/dino/dino_frame_3.png",
+                      "textures/dino/dino_frame_4.png", "textures/dino/dino_frame_5.png",
+                      "textures/dino/dino_frame_6.png", "textures/dino/dino_frame_7.png",
+                      "textures/dino/dino_frame_8.png", "textures/dino/dino_frame_9.png",]
     missing_files = [file for file in required_files if not os.path.exists(file)]
 
     if missing_files:

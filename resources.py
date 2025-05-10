@@ -45,4 +45,11 @@ for i in range(3):
     image = pygame.image.load(frame_path)
     image = pygame.transform.scale(image, (40, 130)).convert_alpha()
     CACTUS_LARGE.append(image)
+DINO_FRAMES = []
+for i in range(9):
+    frame_path = f"textures/dino/dino_frame_{i}.png"
+    logging.debug(f"Loading: {frame_path}")
+    image = pygame.image.load(frame_path)
+    image = pygame.transform.scale(image, (248, 128)).convert_alpha()
+    DINO_FRAMES.append(image)
 logging.info("Loaded textures")

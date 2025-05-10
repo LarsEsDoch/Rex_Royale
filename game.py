@@ -310,7 +310,7 @@ class Game:
 
 
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
-            self.spacing += 2
+            self.spacing += 2.5
             self.obstacles.append(Obstacle(self.score))
             logging.debug(f"Placed new obstacle")
 
@@ -483,7 +483,7 @@ class Game:
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
 
-        if not self.pause:
+        if not self.pause and not self.game_over:
             rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
             rect_surface.set_alpha(128)
             rect_surface.fill(WHITE)
