@@ -7,7 +7,7 @@ from game import Game
 
 def validate_resources():
     logging.info("Validating resources...")
-    required_files = ["textures/dino/dino_texture.png", "highscores.json", "textures/desert_day/desert_day_background.png",
+    required_files = ["textures/dino/dino_texture.png", "textures/desert_day/desert_day_background.png",
                       "textures/desert_night/desert_night_background.png", "textures/desert_day/desert_day_background_2.png",
                       "textures/desert_night/desert_night_background_2.png", "textures/desert_day/desert_day_background_3.png",
                       "textures/desert_night/desert_night_background_3.png", "textures/desert_day/desert_day_background_4.png",

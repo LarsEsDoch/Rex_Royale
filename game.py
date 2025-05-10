@@ -80,6 +80,7 @@ class Game:
         self.day_score = 5600
         self.progress_sky = 0
         self.sky_score = 10000
+        self.progress_smoothed = 0
 
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
@@ -124,6 +125,7 @@ class Game:
         self.day_score = 5600
         self.progress_sky = 0
         self.sky_score = 10000
+        self.progress_smoothed = 0
 
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
@@ -159,6 +161,7 @@ class Game:
         self.day_score = 5600
         self.progress_sky = 0
         self.sky_score = 10000
+        self.progress_smoothed = 0
 
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
@@ -219,7 +222,7 @@ class Game:
                     else:
                         logging.info("Paused")
 
-                if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "":
+                if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
                     self.hard_reset()
                     logging.info("Reset")
 
@@ -297,9 +300,14 @@ class Game:
                 self.background_x_4 = 0
                 self.background_flip_4 = not self.background_flip_4
 
-            self.progress_birds = min(self.score / self.birds_score, 1)
-            self.progress_day = min(self.score / self.day_score, 1)
-            self.progress_sky = min(self.score / self.sky_score, 1)
+            self.progress_birds = min((self.score + self.progress_smoothed) / self.birds_score, 1)
+            self.progress_day = min((self.score + self.progress_smoothed) / self.day_score, 1)
+            self.progress_sky = min((self.score + self.progress_smoothed) / self.sky_score, 1)
+            if self.score < 100:
+                self.progress_smoothed = self.progress_smoothed + 0.5
+            else:
+                self.progress_smoothed = self.progress_smoothed + 0.9
+
 
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
             self.spacing += 2
@@ -330,6 +338,7 @@ class Game:
                 logging.debug(f"Obstacle off screen: {obstacle.x + obstacle.width < 0}")
                 obstacle.got_counted = True
                 self.score += 100
+                self.progress_smoothed = 0
 
                 logging.info(f"Score: {self.score}")
 
@@ -474,13 +483,20 @@ class Game:
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
 
-        pygame.draw.rect(screen, BROWN,
-                         (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_birds * SCREEN_WIDTH // 2, 50))
-        pygame.draw.rect(screen, BLUE,
-                         (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_day * SCREEN_WIDTH // 2, 50))
-        pygame.draw.rect(screen, LIGHT_BLUE,
-                         (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_sky * SCREEN_WIDTH // 2, 50))
-        pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, SCREEN_WIDTH // 2, 50), 2)
+        if not self.pause:
+            rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
+            rect_surface.set_alpha(128)
+            rect_surface.fill(WHITE)
+            screen.blit(rect_surface, (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10))
+
+            pygame.draw.rect(screen, BROWN,
+                             (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_birds * SCREEN_WIDTH // 2, 50))
+            pygame.draw.rect(screen, BLUE,
+                             (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_day * SCREEN_WIDTH // 2, 50))
+            pygame.draw.rect(screen, LIGHT_BLUE,
+                             (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_sky * SCREEN_WIDTH // 2, 50))
+            pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, SCREEN_WIDTH // 2, 50), 2)
+
 
         if self.cursor_tick < 30:
             cursor = "|"
