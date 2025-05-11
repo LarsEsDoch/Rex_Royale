@@ -4,7 +4,7 @@ import os
 import json
 
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
-    GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, BROWN, LIGHT_BLUE, BLUE, FRAME_RATE, \
+    GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, BROWN, GOLD, SILVER, BRONZE, LIGHT_BLUE, BLUE, FRAME_RATE, \
     SCREEN_HEIGHT
 from utils import ease_out_sine, ease_out_cubic
 from resources import screen, clock, font, pygame
@@ -38,10 +38,14 @@ class Game:
         self.username_existing = False
         self.checked_username = False
         self.unlocked_user = False
+        self.show_list = False
+        self.high_score_list_y = 0
+        self.target_high_score_list_y = 0
         self.spacing = 0
         self.cursor_tick = 0
         self.game_over_scale = 1
         self.game_over_time = 0
+        self.game_over_fade_in = 0
         self.blend_in_time = 0
         self.show_fps = show_fps
 
@@ -105,6 +109,9 @@ class Game:
         self.username_existing = False
         self.checked_username = False
         self.unlocked_user = False
+        self.show_list = False
+        self.high_score_list_y = 0
+        self.target_high_score_list_y = 0
         self.spacing = 0
 
         self.background_flip = True
@@ -118,6 +125,7 @@ class Game:
 
         self.game_over_scale = 1
         self.game_over_time = 0
+        self.game_over_fade_in = 0
 
         self.progress_birds = 0
         self.birds_score = 5000
@@ -154,6 +162,10 @@ class Game:
 
         self.game_over_scale = 1
         self.game_over_time = 0
+        self.game_over_fade_in = 0
+
+        self.high_score_list_y = 0
+        self.target_high_score_list_y = 0
 
         self.progress_birds = 0
         self.birds_score = 5000
@@ -174,6 +186,14 @@ class Game:
                 self.running = False
                 self.save_scores()
                 logging.info("Exit")
+
+            if event.type == pygame.MOUSEBUTTONDOWN and self.show_list:
+                if event.button == 4 and self.target_high_score_list_y <= -40:
+                    self.target_high_score_list_y += 40
+                    logging.debug("Mouse scrolled up")
+                elif event.button == 5 and self.target_high_score_list_y >= len(self.accounts)*-50 + 120 + SCREEN_HEIGHT//1.5:
+                    self.target_high_score_list_y -= 40
+                    logging.debug("Mouse scrolled down")
 
             if event.type == pygame.KEYDOWN:
                 if logging.getLogger().isEnabledFor(logging.DEBUG):
@@ -221,6 +241,11 @@ class Game:
                         logging.info("Exit")
                     else:
                         logging.info("Paused")
+
+                if event.key == pygame.K_F1:
+                    self.show_list = not self.show_list
+                    logging.info(f"Toggle high score list")
+                    return
 
                 if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
                     self.hard_reset()
@@ -276,6 +301,12 @@ class Game:
             self.check_username()
         if self.username_existing and self.checked_username and not self.unlocked_user:
             self.unlock_user()
+
+        if self.show_list:
+            self.pause = True
+            step = (self.target_high_score_list_y - self.high_score_list_y) * 0.2
+            if abs(step) > 0.5:
+                self.high_score_list_y += step
 
         if self.pause or self.game_over:
             return
@@ -344,7 +375,6 @@ class Game:
 
             if obstacle.collides_with(self.dino):
                 logging.info("Dino collided with obstacle")
-
                 self.save_scores()
                 self.game_over = True
 
@@ -425,7 +455,11 @@ class Game:
         color = WHITE if self.pause or self.game_over else BLACK
 
         if self.game_over:
-            screen.fill(BLACK)
+            self.game_over_fade_in += 0.01
+            rect_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+            rect_surface.set_alpha(self.game_over_fade_in * 255)
+            rect_surface.fill(BLACK)
+            screen.blit(rect_surface, (0, 0))
 
             self.game_over_time += clock.get_time() / 500.0
             progress = min(self.game_over_time / 8.0, 1.0)
@@ -530,6 +564,18 @@ class Game:
             screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
             screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200)))
 
+        if self.show_list:
+            screen.fill(BLACK)
+            header_text = pygame.font.Font(None, 48).render("All highscores", True, WHITE)
+            screen.blit(header_text, header_text.get_rect(center=(SCREEN_WIDTH // 2, 50 + self.high_score_list_y)))
+            accounts = sorted(self.accounts.items(), key=lambda x: x[1]["score"], reverse=True)
+            for account, (username, score) in enumerate(accounts):
+                prefix = "👑 " if account <= 2 else ""
+                colors = {2: BRONZE, 1: SILVER, 0: GOLD}
+                color = colors.get(account, WHITE)
+                score_text = font.render(f"{prefix}{username}: {score['score']}", True, color)
+                screen.blit(score_text, score_text.get_rect(center=(SCREEN_WIDTH // 2, account * 50 + 120 + self.high_score_list_y)))
+
         if self.show_fps:
             fps_text = font.render(f"FPS: {int(clock.get_fps())}", True, color)
             screen.blit(fps_text, (SCREEN_WIDTH - 110, 10))
@@ -554,6 +600,7 @@ class Game:
             with open("highscores.json", "w") as file:
                 json.dump(scores, file, indent=4)
             logging.info(f"Saved highscore: {self.score} for user: {self.username}")
+            self.high_score = self.score
         else:
             logging.info(f"No new highscore: user: {self.username}")
 
@@ -564,8 +611,6 @@ class Game:
             logging.info(f"Loaded all accounts")
         else:
             logging.info("No accounts found")
-
-
 
     def check_username(self):
         if self.username in self.accounts:
