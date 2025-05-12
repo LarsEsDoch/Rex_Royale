@@ -50,7 +50,7 @@ class Dino:
 
 
     def start_jump(self):
-        if self.y >= GROUND_LEVEL - self.height - 50 and self.velocity_y >= 1:
+        if self.y >= GROUND_LEVEL - self.height - 20 and self.velocity_y >= 1:
             self.velocity_y = DINO_VELOCITY + 1
             logging.debug("Jump started")
         if not self.jump:
