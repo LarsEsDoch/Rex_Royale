@@ -234,6 +234,10 @@ class Game:
                             obstacle.x = obstacle.x - 500
                         logging.debug(f"Obstacle jump: 500")
                 if event.key == pygame.K_ESCAPE:
+                    if self.show_list:
+                        self.show_list = False
+                        logging.info(f"Toggle high score list")
+                        return
                     self.running = False if self.game_over or self.pause else True
                     self.pause = not self.pause
                     if not self.running:
@@ -361,12 +365,12 @@ class Game:
             obstacle.update(self.obstacle_speed)
 
             if obstacle.complete_off_screen():
-                logging.debug(f"Obstacle complete off screen: {obstacle.x + obstacle.width < 0}")
+                logging.debug(f"Obstacle complete off screen: {obstacle.x + obstacle.width[0] < 0}")
                 self.obstacles.remove(obstacle)
                 logging.debug("Removed obstacle")
 
             if obstacle.off_screen() and not obstacle.got_counted:
-                logging.debug(f"Obstacle off screen: {obstacle.x + obstacle.width < 0}")
+                logging.debug(f"Obstacle off screen: {obstacle.x + obstacle.width[0] < 0}")
                 obstacle.got_counted = True
                 self.score += 100
                 self.progress_smoothed = 0
