@@ -24,6 +24,12 @@ logging.info("Initialized clock")
 font = pygame.font.Font(None, 36)
 logging.info("Set font")
 
+screen.fill((5, 5, 5))
+text = font.render("Loading...", True, (255, 255, 255))
+text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+screen.blit(text, text_rect)
+logging.info("rendered text")
+
 BIRD_FRAMES = []
 for i in range(17):
     frame_path = f"textures/bird/frame_{i+1}.png"
