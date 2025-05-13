@@ -63,7 +63,7 @@ class Obstacle:
             screen.blit(self.frame_images[self.current_frame], (self.x, self.y[0]))
         elif self.type == "double":
             screen.blit(self.frame_images[0], (self.x, self.y[0]))
-            screen.blit(self.frame_images[1], (self.x + self.width[0] + 100, self.y[0]))
+            screen.blit(self.frame_images[1], (self.x + self.width[0], self.y[1]))
         else:
             screen.blit(self.frame_images[0], (self.x, self.y[0]))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
@@ -72,7 +72,7 @@ class Obstacle:
                 pygame.draw.rect(screen, (255, 0, 0),
                                  (self.x + self.width[0], self.y[1], self.width[1], self.height[1]), 2)
                 return
-            pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y[0], self.width, self.height), 2)
+            pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y[0], self.width[0], self.height[0]), 2)
 
     def off_screen(self):
         if self.type == "double":
@@ -90,8 +90,18 @@ class Obstacle:
         if self.type == "bird":
             return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and self.y[0] < dino.hitbox_y + dino.hitbox_height < self.y[0] + self.height
         if self.type == "double":
-            return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and self.y[0] < dino.hitbox_y + dino.hitbox_height < self.y[0] + \
-                self.height[0] or dino.x < self.x + self.width[1] and dino.x + dino.hitbox_width > self.x and self.y[0] < dino.hitbox_y + dino.hitbox_height < self.y[0] + \
-                self.height[1]
+            first_hitbox = (
+                    dino.x < self.x + self.width[0]
+                    and dino.x + dino.hitbox_width > self.x
+                    and self.y[0] < dino.hitbox_y + dino.hitbox_height
+                    and dino.hitbox_y < self.y[0] + self.height[0]
+            )
+            second_hitbox = (
+                    dino.x < self.x + self.width[0] + self.width[1]  # 2. Kaktus rechts vom 1.
+                    and dino.x + dino.hitbox_width > self.x + self.width[0]
+                    and self.y[1] < dino.hitbox_y + dino.hitbox_height
+                    and dino.hitbox_y < self.y[1] + self.height[1]
+            )
+            return first_hitbox or second_hitbox
         else:
             return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and dino.hitbox_y + dino.hitbox_height > self.y[0]
