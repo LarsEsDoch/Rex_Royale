@@ -88,7 +88,7 @@ class Obstacle:
 
     def collides_with(self, dino):
         if self.type == "bird":
-            return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and self.y[0] < dino.hitbox_y + dino.hitbox_height < self.y[0] + self.height
+            return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and self.y[0] < dino.hitbox_y + dino.hitbox_height < self.y[0] + self.height[0 ]
         if self.type == "double":
             first_hitbox = (
                     dino.x < self.x + self.width[0]
@@ -97,7 +97,7 @@ class Obstacle:
                     and dino.hitbox_y < self.y[0] + self.height[0]
             )
             second_hitbox = (
-                    dino.x < self.x + self.width[0] + self.width[1]  # 2. Kaktus rechts vom 1.
+                    dino.x < self.x + self.width[0] + self.width[1]
                     and dino.x + dino.hitbox_width > self.x + self.width[0]
                     and self.y[1] < dino.hitbox_y + dino.hitbox_height
                     and dino.hitbox_y < self.y[1] + self.height[1]
