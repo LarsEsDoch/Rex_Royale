@@ -48,6 +48,7 @@ class Game:
         self.game_over_fade_in = 0
         self.blend_in_time = 0
         self.show_fps = show_fps
+        self.press_to_return = 0
 
         self.background_day = pygame.image.load('textures/desert_day/desert_day_background.png').convert_alpha()
         self.background_day_flipped = pygame.transform.flip(self.background_day, True, False).convert_alpha()
@@ -113,6 +114,7 @@ class Game:
         self.high_score_list_y = 0
         self.target_high_score_list_y = 0
         self.spacing = 0
+        self.press_to_return = 0
 
         self.background_flip = True
         self.background_flip_2 = True
@@ -150,6 +152,7 @@ class Game:
         self.dino = Dino()
         self.obstacles.clear()
         self.spacing = 0
+        self.press_to_return = 0
 
         self.background_flip = True
         self.background_flip_2 = True
@@ -252,6 +255,13 @@ class Game:
                     return
 
                 if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
+                    if not self.unlocked_user and self.username_existing:
+                        if self.press_to_return >= 5:
+                            self.hard_reset()
+                            logging.info("Reset")
+                        self.press_to_return += 1
+                        return
+
                     self.hard_reset()
                     logging.info("Reset")
 
@@ -287,13 +297,13 @@ class Game:
                     if event.key == pygame.K_RETURN and self.password.strip() != "":
                         logging.info(f"Got password: {self.password}")
                         self.unlock_user()
-
                     elif event.key == pygame.K_BACKSPACE:
                         self.password = self.password[:-1]
                         logging.debug("Backspace")
                     elif not event.key == pygame.K_RETURN and not event.key == pygame.K_SPACE:
                         self.password += event.unicode
                         logging.debug(f"Key pressed: {event.key}")
+                        self.press_to_return = 0
                     self.cursor_tick = 0
 
     def update(self):
@@ -561,11 +571,13 @@ class Game:
             password_text = font.render(f"Password: {self.password}{cursor}", True, WHITE)
             enter_text = font.render("Press enter to confirm", True, WHITE)
             restart_text = font.render("Press backspace to use another account", True, WHITE)
+            return_text = font.render(f"Press 5 times to return: 5/{self.press_to_return}", True, WHITE)
             screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
             screen.blit(info_text, info_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
             screen.blit(password_text, password_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
             screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+            screen.blit(return_text, return_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
 
         if self.show_list:
             screen.fill(BLACK)
