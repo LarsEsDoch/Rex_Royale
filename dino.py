@@ -22,11 +22,11 @@ class Dino:
         logging.info("Initialized dino")
 
     def update(self, score):
+        self.animation_timer += clock.get_time()
         if self.y >= GROUND_LEVEL - self.height - 10:
-            self.animation_timer += clock.get_time()
             self.current_frame = int(self.animation_timer / 50) % len(self.frames)
         else:
-            self.current_frame = 8
+            self.current_frame = int(self.animation_timer / 100) % len(self.frames)
         if self.jump:
             self.y += self.velocity_y
             self.hitbox_y = self.y - self.hitbox_y_offset
