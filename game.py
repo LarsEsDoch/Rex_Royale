@@ -275,8 +275,9 @@ class Game:
                         self.pause = False
                         logging.info("Resumed")
                     elif self.game_over:
-                        self.reset()
-                        logging.info("Reset Score")
+                        if self.game_over_fade_in >= 1:
+                            self.reset()
+                            logging.info("Reset Score")
                     else:
                         logging.debug("Jump")
                         self.dino.start_jump()
