@@ -63,14 +63,14 @@ class Obstacle:
             screen.blit(self.frame_images[self.current_frame], (self.x, self.y[0]))
         elif self.type == "double":
             screen.blit(self.frame_images[0], (self.x, self.y[0]))
-            screen.blit(self.frame_images[1], (self.x + self.width[0], self.y[1]))
+            screen.blit(self.frame_images[1], (self.x + self.width[0] + 10, self.y[1]))
         else:
             screen.blit(self.frame_images[0], (self.x, self.y[0]))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             if self.type == "double":
                 pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y[0], self.width[0], self.height[0]), 2)
                 pygame.draw.rect(screen, (255, 0, 0),
-                                 (self.x + self.width[0], self.y[1], self.width[1], self.height[1]), 2)
+                                 (self.x + self.width[0] + 10, self.y[1], self.width[1], self.height[1]), 2)
                 return
             pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y[0], self.width[0], self.height[0]), 2)
 
