@@ -354,8 +354,7 @@ class Game:
             else:
                 self.progress_smoothed = self.progress_smoothed + 0.9
 
-
-        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(600, 800) - self.spacing:
+        if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(650, 850) - self.spacing:
             self.spacing += 2.5
             self.obstacles.append(Obstacle(self.score))
             logging.debug(f"Placed new obstacle")
@@ -382,8 +381,11 @@ class Game:
 
             if obstacle.off_screen() and not obstacle.got_counted:
                 logging.debug(f"Obstacle off screen: {obstacle.x + obstacle.width[0] < 0}")
+                if obstacle.type == "double":
+                    self.score += 150
+                else:
+                    self.score += 100
                 obstacle.got_counted = True
-                self.score += 100
                 self.progress_smoothed = 0
 
                 logging.info(f"Score: {self.score}")
