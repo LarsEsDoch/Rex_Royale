@@ -58,4 +58,6 @@ for i in range(9):
     image = pygame.image.load(frame_path)
     image = pygame.transform.scale(image, (248, 128)).convert_alpha()
     DINO_FRAMES.append(image)
+COIN_IMAGES = [pygame.image.load(f"textures/coin/multiplicator"), pygame.image.load(f"textures/coin/immortality"),
+               pygame.image.load(f"textures/coin/fly")]
 logging.info("Loaded textures")
