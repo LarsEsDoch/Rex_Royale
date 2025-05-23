@@ -26,7 +26,9 @@ def validate_resources():
                       "textures/dino/dino_frame_2.png", "textures/dino/dino_frame_3.png",
                       "textures/dino/dino_frame_4.png", "textures/dino/dino_frame_5.png",
                       "textures/dino/dino_frame_6.png", "textures/dino/dino_frame_7.png",
-                      "textures/dino/dino_frame_8.png", "textures/dino/dino_frame_9.png",]
+                      "textures/dino/dino_frame_8.png", "textures/dino/dino_frame_9.png",
+                      "textures/coins/multiplicator.png", "textures/coins/immortality.png",
+                      "textures/coins/fly.png"]
     missing_files = [file for file in required_files if not os.path.exists(file)]
 
     if missing_files:
