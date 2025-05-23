@@ -50,7 +50,11 @@ class Dino:
                                                    self.hitbox_width, self.hitbox_height), 2)
 
 
-    def start_jump(self):
+    def start_jump(self, power_up_type):
+        if power_up_type == "fly":
+            self.velocity_y = DINO_VELOCITY / 4
+            logging.debug("Flying started")
+            return
         if self.y >= GROUND_LEVEL - self.height - 20 and self.velocity_y >= 1:
             self.velocity_y = DINO_VELOCITY + 1
             logging.debug("Jump started")

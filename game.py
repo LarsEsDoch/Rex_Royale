@@ -290,7 +290,7 @@ class Game:
                             logging.info("Reset Score")
                     else:
                         logging.debug("Jump")
-                        self.dino.start_jump()
+                        self.dino.start_jump(self.power_up_type)
 
                 if not self.username_existing:
                     if event.key == pygame.K_RETURN and self.username.strip() != "":
@@ -432,16 +432,17 @@ class Game:
 
             if obstacle.off_screen() and not obstacle.got_counted:
                 logging.debug(f"Obstacle off screen: {obstacle.x + obstacle.width[0] < 0}")
+                multiplicator = 2 if self.power_up_type == "multiplicator" else 1
                 if obstacle.type == "double":
-                    self.score += 150
+                    self.score += 150 * multiplicator
                 else:
-                    self.score += 100
+                    self.score += 100 * multiplicator
                 obstacle.got_counted = True
                 self.progress_smoothed = 0
 
                 logging.info(f"Score: {self.score}")
 
-            if obstacle.collides_with(self.dino):
+            if obstacle.collides_with(self.dino) and not self.power_up_type == "immortality":
                 logging.info("Dino collided with obstacle")
                 self.save_scores()
                 self.game_over = True
@@ -517,6 +518,8 @@ class Game:
         for obstacle in self.obstacles:
             obstacle.draw()
 
+        for power_up in self.power_ups:
+            power_up.draw()
         self.dino.draw()
 
         color = WHITE if self.pause or self.game_over else BLACK
