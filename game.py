@@ -6,6 +6,7 @@ import json
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
     GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, BROWN, GOLD, SILVER, BRONZE, LIGHT_BLUE, BLUE, FRAME_RATE, \
     SCREEN_HEIGHT
+from powerUp import PowerUp
 from utils import ease_out_sine, ease_out_cubic
 from resources import screen, clock, font, pygame
 from obstacle import Obstacle
@@ -29,6 +30,9 @@ class Game:
         from dino import Dino
         self.dino = Dino()
         self.obstacles = []
+        self.power_ups = []
+        self.power_up_timer = 0
+        self.power_up_type = None
         self.accounts = {}
         self.load_scores()
         self.high_score = 0
@@ -101,6 +105,9 @@ class Game:
         from dino import Dino
         self.dino = Dino()
         self.obstacles.clear()
+        self.power_ups.clear()
+        self.power_up_timer = 0
+        self.power_up_type = None
         self.accounts = {}
         self.load_scores()
         self.high_score = 0
@@ -151,6 +158,9 @@ class Game:
         from dino import Dino
         self.dino = Dino()
         self.obstacles.clear()
+        self.power_ups.clear()
+        self.power_up_timer = 0
+        self.power_up_type = None
         self.spacing = 0
         self.press_to_return = 0
 
@@ -325,6 +335,47 @@ class Game:
 
         if self.pause or self.game_over:
             return
+
+        if not self.power_ups and self.power_up_timer <= 0 and self.power_up_type is None:
+            self.power_up_timer = random.randint(3 * 60, 6 * 60)
+            self.power_up_timer = -self.power_up_timer
+
+        if self.power_up_timer < 0:
+            self.power_up_timer += 1
+            if self.power_up_timer % 60 == 0:
+                self.power_ups.append(PowerUp())
+                self.power_up_timer = 15 * 60
+                logging.debug(f"Placed new power up")
+
+        for power_up in self.power_ups[:]:
+            power_up.update(self.obstacle_speed)
+            if power_up.complete_off_screen():
+                logging.debug(f"Power up complete off screen: {power_up.x + power_up.width < 0}")
+                self.power_ups.remove(power_up)
+                self.power_up_timer = 0
+                logging.debug("Removed power up")
+
+            if power_up.collides_with(self.dino):
+                logging.debug("Dino collided with power up")
+                if power_up.type == "multiplicator":
+                    self.power_up_type = "multiplicator"
+                    logging.info(f"Multiplicator power up")
+                elif power_up.type == "immortality":
+                    self.power_up_type = "immortality"
+                    logging.info("Immortality power up")
+                elif power_up.type == "fly":
+                    self.power_up_type = "fly"
+                    logging.info("Fly power up")
+                self.power_ups.remove(power_up)
+
+        if self.power_up_type is not None and self.power_up_timer >= 0:
+            self.power_up_timer += 1
+            if self.power_up_timer > 15 * 60:
+                self.power_up_timer = 0
+                self.power_up_type = None
+                logging.debug("Power up completed")
+
+        print(self.power_up_type, self.power_up_timer, self.power_ups)
 
         self.dino.update(self.score)
 
