@@ -46,6 +46,9 @@ class Obstacle:
             self.width, self.height = ([self.frame_images[0].get_width(), self.frame_images[1].get_width()], [self.frame_images[0].get_height(), self.frame_images[1].get_height()])
             self.y = [GROUND_LEVEL - self.height[0], GROUND_LEVEL - self.height[1]]
 
+        self.mask = pygame.mask.from_surface(self.frame_images[0])
+        if self.type == "bird":
+            self.masks = [pygame.mask.from_surface(image) for image in self.frame_images]
         self.current_frame = 0
         self.animation_timer = 0
         self.got_counted = False
@@ -55,11 +58,12 @@ class Obstacle:
             self.x -= speed * 1.75
         else:
             self.x -= speed
-
-    def draw(self):
         if self.type == "bird":
             self.animation_timer += clock.get_time()
             self.current_frame = int(self.animation_timer / 100) % len(self.frame_images)
+
+    def draw(self):
+        if self.type == "bird":
             screen.blit(self.frame_images[self.current_frame], (self.x, self.y[0]))
         elif self.type == "double":
             screen.blit(self.frame_images[0], (self.x, self.y[0]))
@@ -87,21 +91,11 @@ class Obstacle:
             return self.x + self.width[0] < -200
 
     def collides_with(self, dino):
-        if self.type == "bird":
-            return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and self.y[0] < dino.hitbox_y + dino.hitbox_height < self.y[0] + self.height[0 ]
         if self.type == "double":
-            first_hitbox = (
-                    dino.x < self.x + self.width[0]
-                    and dino.x + dino.hitbox_width > self.x
-                    and self.y[0] < dino.hitbox_y + dino.hitbox_height
-                    and dino.hitbox_y < self.y[0] + self.height[0]
-            )
-            second_hitbox = (
-                    dino.x < self.x + self.width[0] + self.width[1]
-                    and dino.x + dino.hitbox_width > self.x + self.width[0]
-                    and self.y[1] < dino.hitbox_y + dino.hitbox_height
-                    and dino.hitbox_y < self.y[1] + self.height[1]
-            )
-            return first_hitbox or second_hitbox
+            obstacle_1 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0]))
+            obstacle_2 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[1]))
+            return obstacle_1 or obstacle_2 is not None
+        elif self.type == "bird":
+            return self.masks[self.current_frame].overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0])) is not None
         else:
-            return dino.x < self.x + self.width[0] and dino.x + dino.hitbox_width > self.x and dino.hitbox_y + dino.hitbox_height > self.y[0]
+            return self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0])) is not None

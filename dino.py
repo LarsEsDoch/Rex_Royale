@@ -16,6 +16,7 @@ class Dino:
         self.velocity_y = 0
         self.jump = False
         self.frames = DINO_FRAMES
+        self.masks = [pygame.mask.from_surface(image) for image in self.frames]
         self.animation_timer = 0
         self.current_frame = 0
         self.gravity_multiplier = 1.1
