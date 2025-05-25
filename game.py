@@ -33,6 +33,7 @@ class Game:
         self.power_ups = []
         self.power_up_timer = 0
         self.power_up_type = None
+        self.power_up_spacing = 0
         self.accounts = {}
         self.load_scores()
         self.high_score = 0
@@ -108,6 +109,7 @@ class Game:
         self.power_ups.clear()
         self.power_up_timer = 0
         self.power_up_type = None
+        self.power_up_spacing = 0
         self.accounts = {}
         self.load_scores()
         self.high_score = 0
@@ -161,6 +163,7 @@ class Game:
         self.power_ups.clear()
         self.power_up_timer = 0
         self.power_up_type = None
+        self.power_up_spacing = 0
         self.spacing = 0
         self.press_to_return = 0
 
@@ -336,47 +339,6 @@ class Game:
         if self.pause or self.game_over:
             return
 
-        if not self.power_ups and self.power_up_timer <= 0 and self.power_up_type is None:
-            self.power_up_timer = random.randint(3 * 60, 6 * 60)
-            self.power_up_timer = -self.power_up_timer
-
-        if self.power_up_timer < 0:
-            self.power_up_timer += 1
-            if self.power_up_timer % 60 == 0:
-                self.power_ups.append(PowerUp())
-                self.power_up_timer = 15 * 60
-                logging.debug(f"Placed new power up")
-
-        for power_up in self.power_ups[:]:
-            power_up.update(self.obstacle_speed)
-            if power_up.complete_off_screen():
-                logging.debug(f"Power up complete off screen: {power_up.x + power_up.width < 0}")
-                self.power_ups.remove(power_up)
-                self.power_up_timer = 0
-                logging.debug("Removed power up")
-
-            if power_up.collides_with(self.dino):
-                logging.debug("Dino collided with power up")
-                if power_up.type == "multiplicator":
-                    self.power_up_type = "multiplicator"
-                    logging.info(f"Multiplicator power up")
-                elif power_up.type == "immortality":
-                    self.power_up_type = "immortality"
-                    logging.info("Immortality power up")
-                elif power_up.type == "fly":
-                    self.power_up_type = "fly"
-                    logging.info("Fly power up")
-                self.power_ups.remove(power_up)
-
-        if self.power_up_type is not None and self.power_up_timer >= 0:
-            self.power_up_timer += 1
-            if self.power_up_timer > 15 * 60:
-                self.power_up_timer = 0
-                self.power_up_type = None
-                logging.debug("Power up completed")
-
-        print(self.power_up_type, self.power_up_timer, self.power_ups)
-
         self.dino.update(self.score)
 
         if not self.pause and not self.game_over:
@@ -407,8 +369,10 @@ class Game:
 
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(650, 850) - self.spacing:
             self.spacing += 2.5
+            self.power_up_spacing = self.obstacle_speed * 2
             self.obstacles.append(Obstacle(self.score))
             logging.debug(f"Placed new obstacle")
+        self.power_up_spacing -= 1
 
         if -300 >= self.background_x:
             self.night_to_day_transition = True
@@ -420,7 +384,6 @@ class Game:
             if 5000 <= self.score <= 7000:
                 self.night_to_day_transition_progress = min(
                     self.night_to_day_transition_progress + self.night_to_day_transition_speed, 1)
-
 
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
@@ -448,6 +411,47 @@ class Game:
                 self.game_over = True
 
             self.obstacle_speed += SPEED_INCREMENT
+
+        if self.power_up_timer < 0:
+            self.power_up_timer += 1
+            if self.power_up_timer >= 0 >= self.power_up_spacing:
+                self.power_ups.append(PowerUp())
+                self.power_up_timer = -15 * 60
+                logging.debug(f"Placed new power up")
+
+        if not self.power_ups and self.power_up_timer >= 0 and self.power_up_type is None:
+            self.power_up_timer = random.randint(6 * 60, 12 * 60)
+            self.power_up_timer = -self.power_up_timer
+
+        for power_up in self.power_ups[:]:
+            power_up.update(self.obstacle_speed)
+            if power_up.complete_off_screen():
+                logging.debug(f"Power up complete off screen: {power_up.x + power_up.width < 0}")
+                self.power_ups.remove(power_up)
+                self.power_up_timer = 0
+                logging.debug("Removed power up")
+
+            if power_up.collides_with(self.dino) and self.power_up_type is None:
+                logging.debug("Dino collided with power up")
+                if power_up.type == "multiplicator":
+                    self.power_up_type = "multiplicator"
+                    logging.info(f"Multiplicator power up")
+                elif power_up.type == "immortality":
+                    self.power_up_type = "immortality"
+                    logging.info("Immortality power up")
+                elif power_up.type == "fly":
+                    self.power_up_type = "fly"
+                    logging.info("Fly power up")
+                self.power_ups.remove(power_up)
+                self.power_up_timer = 0
+                logging.debug("Removed power up")
+
+        if self.power_up_type is not None and self.power_up_timer >= 0:
+            self.power_up_timer += 1
+            if self.power_up_timer > 15 * 60:
+                self.power_up_timer = 0
+                self.power_up_type = None
+                logging.debug("Power up completed")
 
     def draw(self):
         if not self.background_flip:
@@ -586,6 +590,9 @@ class Game:
         screen.blit(username_text, (10, 35))
         highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
         screen.blit(highest_score_text, (10, 60))
+        if self.power_up_type is not None:
+            power_up_text = font.render(f"Power Up: {self.power_up_type}", True, color)
+            screen.blit(power_up_text, (10, 85))
 
         if not self.pause and not self.game_over:
             rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
