@@ -5,8 +5,11 @@ from resources import COIN_IMAGES, screen, logging, pygame
 
 
 class PowerUp:
-    def __init__(self):
-        self.type = random.choice(["multiplicator", "immortality", "fly"])
+    def __init__(self, score):
+        if score < 5000:
+            self.type = random.choice(["fly", "immortality"])
+        else:
+            self.type = random.choice(["multiplicator", "immortality", "fly"])
         self.image = COIN_IMAGES[0] if self.type == "multiplicator" else COIN_IMAGES[1] if self.type == "immortality" else COIN_IMAGES[2]
         self.mask = pygame.mask.from_surface(self.image)
         self.width, self.height = (self.image.get_width(), self.image.get_width())
