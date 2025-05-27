@@ -369,7 +369,7 @@ class Game:
 
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(650, 850) - self.spacing:
             self.spacing += 2.5
-            self.power_up_spacing = self.obstacle_speed * 2
+            self.power_up_spacing = self.obstacle_speed * 5
             self.obstacles.append(Obstacle(self.score))
             logging.debug(f"Placed new obstacle")
         self.power_up_spacing -= 1
@@ -416,11 +416,11 @@ class Game:
             self.power_up_timer += 1
             if self.power_up_timer >= 0 >= self.power_up_spacing:
                 self.power_ups.append(PowerUp(self.score))
-                self.power_up_timer = -15 * 60
+                self.power_up_timer = random.randint(30 * 60, 45 * 60)
                 logging.debug(f"Placed new power up")
 
-        if not self.power_ups and self.power_up_timer >= 0 and self.power_up_type is None:
-            self.power_up_timer = random.randint(6 * 60, 12 * 60)
+        if not self.power_ups and self.power_up_timer >= 0 >= self.power_up_spacing and self.power_up_type is None:
+            self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
 
         for power_up in self.power_ups[:]:
