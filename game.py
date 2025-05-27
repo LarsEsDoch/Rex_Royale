@@ -415,7 +415,7 @@ class Game:
         if self.power_up_timer < 0:
             self.power_up_timer += 1
             if self.power_up_timer >= 0 >= self.power_up_spacing:
-                self.power_ups.append(PowerUp())
+                self.power_ups.append(PowerUp(self.score))
                 self.power_up_timer = -15 * 60
                 logging.debug(f"Placed new power up")
 
