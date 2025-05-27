@@ -593,6 +593,14 @@ class Game:
         if self.power_up_type is not None:
             power_up_text = font.render(f"Power Up: {self.power_up_type}", True, color)
             screen.blit(power_up_text, (10, 85))
+            rect_surface = pygame.Surface((SCREEN_WIDTH // 4, 30), pygame.SRCALPHA)
+            rect_surface.set_alpha(128)
+            rect_surface.fill(WHITE)
+            screen.blit(rect_surface, (10, 120))
+
+            pygame.draw.rect(screen, BLACK,
+                             (10, 120, (1-(self.power_up_timer/(60*15))) * SCREEN_WIDTH // 4, 30))
+            pygame.draw.rect(screen, WHITE, (10, 120, SCREEN_WIDTH // 4, 30), 2)
 
         if not self.pause and not self.game_over:
             rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
