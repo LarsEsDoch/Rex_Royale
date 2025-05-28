@@ -93,8 +93,8 @@ class Obstacle:
     def collides_with(self, dino):
         if self.type == "double":
             obstacle_1 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0]))
-            obstacle_2 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[1]))
-            return obstacle_1 or obstacle_2 is not None
+            obstacle_2 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x - self.width[0] - 10, dino.y - self.y[1]))
+            return obstacle_1 is not None or obstacle_2 is not None
         elif self.type == "bird":
             return self.masks[self.current_frame].overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0])) is not None
         else:
