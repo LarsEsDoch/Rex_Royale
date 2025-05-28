@@ -31,7 +31,8 @@ class Game:
         self.dino = Dino()
         self.obstacles = []
         self.power_ups = []
-        self.power_up_timer = 0
+        self.power_up_timer = random.randint(30 * 60, 45 * 60)
+        self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
         self.power_up_spacing = 0
         self.accounts = {}
@@ -107,7 +108,8 @@ class Game:
         self.dino = Dino()
         self.obstacles.clear()
         self.power_ups.clear()
-        self.power_up_timer = 0
+        self.power_up_timer = random.randint(30 * 60, 45 * 60)
+        self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
         self.power_up_spacing = 0
         self.accounts = {}
@@ -161,7 +163,8 @@ class Game:
         self.dino = Dino()
         self.obstacles.clear()
         self.power_ups.clear()
-        self.power_up_timer = 0
+        self.power_up_timer = random.randint(30 * 60, 45 * 60)
+        self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
         self.power_up_spacing = 0
         self.spacing = 0
@@ -369,10 +372,8 @@ class Game:
 
         if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(650, 850) - self.spacing:
             self.spacing += 2.5
-            self.power_up_spacing = self.obstacle_speed * 5
             self.obstacles.append(Obstacle(self.score))
             logging.debug(f"Placed new obstacle")
-        self.power_up_spacing -= 1
 
         if -300 >= self.background_x:
             self.night_to_day_transition = True
@@ -412,13 +413,18 @@ class Game:
 
             self.obstacle_speed += SPEED_INCREMENT
 
+        if self.obstacles[-1].x <= SCREEN_WIDTH - 400:
+            self.power_up_spacing = True
+        else:
+            self.power_up_spacing = False
+
         if self.power_up_timer < 0:
             self.power_up_timer += 1
 
-        if self.power_up_timer >= 0 >= self.power_up_spacing:
-            logging.debug(f"Placed new power up ({self.power_up_timer, self.power_up_spacing})")
+        if self.power_up_timer >= 0 and self.power_up_spacing and self.power_up_type is None:
+            logging.debug(f"Placed new power up ({self.power_up_timer})")
             self.power_ups.append(PowerUp(self.score))
-            self.power_up_timer = random.randint(1 * 60, 2 * 60)
+            self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
 
         for power_up in self.power_ups[:]:
@@ -426,7 +432,8 @@ class Game:
             if power_up.complete_off_screen():
                 logging.debug(f"Power up complete off screen: {power_up.x + power_up.width < 0}")
                 self.power_ups.remove(power_up)
-                self.power_up_timer = 0
+                self.power_up_timer = random.randint(30 * 60, 45 * 60)
+                self.power_up_timer = -self.power_up_timer
                 logging.debug("Removed power up")
 
             if power_up.collides_with(self.dino) and self.power_up_type is None:
@@ -447,11 +454,10 @@ class Game:
         if self.power_up_type is not None and self.power_up_timer >= 0:
             self.power_up_timer += 1
             if self.power_up_timer > 15 * 60:
-                self.power_up_timer = 0
+                self.power_up_timer = random.randint(30 * 60, 45 * 60)
+                self.power_up_timer = -self.power_up_timer
                 self.power_up_type = None
                 logging.debug("Power up completed")
-
-        print(self.power_up_timer, self.power_up_spacing)
 
     def draw(self):
         if not self.background_flip:
