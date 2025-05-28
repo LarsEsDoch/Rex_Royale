@@ -414,13 +414,11 @@ class Game:
 
         if self.power_up_timer < 0:
             self.power_up_timer += 1
-            if self.power_up_timer >= 0 >= self.power_up_spacing:
-                self.power_ups.append(PowerUp(self.score))
-                self.power_up_timer = random.randint(30 * 60, 45 * 60)
-                logging.debug(f"Placed new power up")
 
-        if not self.power_ups and self.power_up_timer >= 0 >= self.power_up_spacing and self.power_up_type is None:
-            self.power_up_timer = random.randint(30 * 60, 45 * 60)
+        if self.power_up_timer >= 0 >= self.power_up_spacing:
+            logging.debug(f"Placed new power up ({self.power_up_timer, self.power_up_spacing})")
+            self.power_ups.append(PowerUp(self.score))
+            self.power_up_timer = random.randint(1 * 60, 2 * 60)
             self.power_up_timer = -self.power_up_timer
 
         for power_up in self.power_ups[:]:
@@ -452,6 +450,8 @@ class Game:
                 self.power_up_timer = 0
                 self.power_up_type = None
                 logging.debug("Power up completed")
+
+        print(self.power_up_timer, self.power_up_spacing)
 
     def draw(self):
         if not self.background_flip:
