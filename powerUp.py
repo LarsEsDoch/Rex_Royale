@@ -1,6 +1,6 @@
 import random
 
-from config import SCREEN_WIDTH, GROUND_LEVEL
+from config import SCREEN_WIDTH, GROUND_LEVEL, WHITE
 from resources import COIN_IMAGES, screen, logging, pygame
 
 
@@ -27,7 +27,9 @@ class PowerUp:
     def draw(self):
         screen.blit(self.image, (self.x, self.y))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
-            pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y, self.width, self.height), 2)
+            mask_surface = self.mask.to_surface()
+            mask_surface.set_colorkey((0,0,0))
+            screen.blit(mask_surface, (self.x, self.y))
 
     def complete_off_screen(self):
         return self.x + self.width < -200

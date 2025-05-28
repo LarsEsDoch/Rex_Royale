@@ -1,5 +1,5 @@
 from resources import screen, pygame, DINO_FRAMES, clock
-from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
+from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT, WHITE
 from resources import logging
 
 class Dino:
@@ -45,9 +45,9 @@ class Dino:
     def draw(self):
         screen.blit(self.frames[self.current_frame], (self.x, self.y))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
-            pygame.draw.rect(screen, (255, 0, 0), (self.x + (self.width - self.hitbox_width) // 2,
-                                                   self.hitbox_y + (self.height - self.hitbox_height) // 2,
-                                                   self.hitbox_width, self.hitbox_height), 2)
+            mask_surface = self.masks[self.current_frame].to_surface()
+            mask_surface.set_colorkey((0,0,0))
+            screen.blit(mask_surface, (self.x, self.y))
 
 
     def start_jump(self, power_up_type):
@@ -55,10 +55,12 @@ class Dino:
             self.jump = True
             self.velocity_y = DINO_VELOCITY/2
             logging.debug("Flying started")
+            return
         if power_up_type == "fly" and self.y >= GROUND_LEVEL - self.height - 10:
             self.jump = True
             self.velocity_y = DINO_VELOCITY
             logging.debug("Flying started")
+            return
         if self.y >= GROUND_LEVEL - self.height - 20 and self.velocity_y >= 1:
             self.velocity_y = DINO_VELOCITY + 1
             logging.debug("Jump started")

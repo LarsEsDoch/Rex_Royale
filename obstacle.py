@@ -1,7 +1,8 @@
 import random
 
 from resources import screen, clock, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
-from config import GROUND_LEVEL, SCREEN_WIDTH
+from config import GROUND_LEVEL, SCREEN_WIDTH, WHITE
+
 
 class Obstacle:
 
@@ -49,6 +50,8 @@ class Obstacle:
         self.mask = pygame.mask.from_surface(self.frame_images[0])
         if self.type == "bird":
             self.masks = [pygame.mask.from_surface(image) for image in self.frame_images]
+        elif self.type == "double":
+            self.masks = [pygame.mask.from_surface(self.frame_images[0]), pygame.mask.from_surface(self.frame_images[1])]
         self.current_frame = 0
         self.animation_timer = 0
         self.got_counted = False
@@ -72,11 +75,19 @@ class Obstacle:
             screen.blit(self.frame_images[0], (self.x, self.y[0]))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             if self.type == "double":
-                pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y[0], self.width[0], self.height[0]), 2)
-                pygame.draw.rect(screen, (255, 0, 0),
-                                 (self.x + self.width[0] + 10, self.y[1], self.width[1], self.height[1]), 2)
+                mask_surface = self.masks[0].to_surface()
+                mask_surface.set_colorkey((0,0,0))
+                mask_surface2 = self.masks[1].to_surface()
+                mask_surface2.set_colorkey((0,0,0))
+                screen.blit(mask_surface, (self.x, self.y[0]))
+                screen.blit(mask_surface2, (self.x + self.width[0] + 10, self.y[1]))
                 return
-            pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y[0], self.width[0], self.height[0]), 2)
+            if self.type == "bird":
+                mask_surface = self.masks[self.current_frame].to_surface()
+            else:
+                mask_surface = self.mask.to_surface()
+            mask_surface.set_colorkey((0,0,0))
+            screen.blit(mask_surface, (self.x, self.y[0]))
 
     def off_screen(self):
         if self.type == "double":
