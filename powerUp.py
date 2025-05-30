@@ -1,6 +1,6 @@
 import random
 
-from config import SCREEN_WIDTH, GROUND_LEVEL, WHITE
+from config import SCREEN_WIDTH, GROUND_LEVEL
 from resources import COIN_IMAGES, screen, logging, pygame
 
 

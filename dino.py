@@ -1,5 +1,5 @@
 from resources import screen, pygame, DINO_FRAMES, clock
-from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT, WHITE
+from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
 from resources import logging
 
 class Dino:
