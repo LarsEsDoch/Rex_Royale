@@ -33,7 +33,7 @@ class Game:
         self.obstacles = []
         self.power_ups = []
         self.fireballs = []
-        self.power_up_timer = random.randint(30 * 60, 45 * 60)
+        self.power_up_timer = random.randint(3 * 60, 4 * 60)
         self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
         self.power_up_spacing = 0
@@ -446,7 +446,7 @@ class Game:
         if self.power_up_timer >= 0 and self.power_up_spacing and self.power_up_type is None:
             logging.debug(f"Placed new power up ({self.power_up_timer})")
             self.power_ups.append(PowerUp(self.score))
-            self.power_up_timer = random.randint(30 * 60, 45 * 60)
+            self.power_up_timer = random.randint(3 * 60, 4 * 60)
             self.power_up_timer = -self.power_up_timer
 
         for power_up in self.power_ups[:]:
@@ -454,7 +454,7 @@ class Game:
             if power_up.complete_off_screen():
                 logging.debug(f"Power up complete off screen: {power_up.x + power_up.width < 0}")
                 self.power_ups.remove(power_up)
-                self.power_up_timer = random.randint(30 * 60, 45 * 60)
+                self.power_up_timer = random.randint(3 * 60, 4 * 60)
                 self.power_up_timer = -self.power_up_timer
                 logging.debug("Removed power up")
 
