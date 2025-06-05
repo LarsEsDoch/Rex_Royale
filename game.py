@@ -6,6 +6,7 @@ import json
 from config import SCREEN_WIDTH, BLACK, SPEED_INCREMENT, \
     GROUND_LEVEL, OBSTACLE_SPEED, WHITE, RED, BROWN, GOLD, SILVER, BRONZE, LIGHT_BLUE, BLUE, FRAME_RATE, \
     SCREEN_HEIGHT
+from fireball import Fireball
 from powerUp import PowerUp
 from utils import ease_out_sine, ease_out_cubic
 from resources import screen, clock, font, pygame
@@ -31,6 +32,7 @@ class Game:
         self.dino = Dino()
         self.obstacles = []
         self.power_ups = []
+        self.fireballs = []
         self.power_up_timer = random.randint(30 * 60, 45 * 60)
         self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
@@ -108,6 +110,7 @@ class Game:
         self.dino = Dino()
         self.obstacles.clear()
         self.power_ups.clear()
+        self.fireballs.clear()
         self.power_up_timer = random.randint(30 * 60, 45 * 60)
         self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
@@ -163,6 +166,7 @@ class Game:
         self.dino = Dino()
         self.obstacles.clear()
         self.power_ups.clear()
+        self.fireballs.clear()
         self.power_up_timer = random.randint(30 * 60, 45 * 60)
         self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
@@ -298,6 +302,9 @@ class Game:
                         logging.debug("Jump")
                         self.dino.start_jump(self.power_up_type)
 
+                if event.key == pygame.K_RETURN and not self.pause and self.power_up_type == "fireball":
+                    Fireball(self.dino.y)
+
                 if not self.username_existing:
                     if event.key == pygame.K_RETURN and self.username.strip() != "":
                         self.username_existing = True
@@ -386,8 +393,23 @@ class Game:
                 self.night_to_day_transition_progress = min(
                     self.night_to_day_transition_progress + self.night_to_day_transition_speed, 1)
 
+        for fireball in self.fireballs[:]:
+            fireball.update()
+            if fireball.complete_off_screen():
+                logging.debug(f"Fireball complete off screen: {fireball.x + fireball.width[0] < 0}")
+                self.fireballs.remove(fireball)
+                logging.debug("Removed fireball")
+
         for obstacle in self.obstacles[:]:
             obstacle.update(self.obstacle_speed)
+
+            for fireball in self.fireballs[:]:
+                if fireball.collides_with(obstacle):
+                    logging.debug("Obstacle collided with fireball")
+                    self.score += 100
+                    self.obstacles.remove(obstacle)
+                    self.fireballs.remove(fireball)
+                    logging.debug("Removed obstacle")
 
             if obstacle.complete_off_screen():
                 logging.debug(f"Obstacle complete off screen: {obstacle.x + obstacle.width[0] < 0}")
@@ -590,7 +612,7 @@ class Game:
             screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
             screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
             screen.blit(hard_restart_text, hard_restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
-            screen.blit(high_score_text, high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+            screen.blit(high_score_text, high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
 
         score_text = font.render(f"Score: {self.score}", True, color)
         screen.blit(score_text, (10, 10))
