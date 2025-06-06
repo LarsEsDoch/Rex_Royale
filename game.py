@@ -547,6 +547,9 @@ class Game:
             screen.blit(self.background_day_4, (self.background_x_4, GROUND_LEVEL - 80))
             screen.blit(self.background_day_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
 
+        if logging.root.level == logging.DEBUG:
+            pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 2)
+
         for obstacle in self.obstacles:
             obstacle.draw()
 
