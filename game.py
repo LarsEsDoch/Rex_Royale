@@ -664,13 +664,16 @@ class Game:
 
         if not self.unlocked_user and self.username_existing:
             screen.fill(BLACK)
+            password = ""
+            for i in range(len(self.password)):
+                password += "*"
 
             if self.username in self.accounts:
                 pause_text = font.render("User exists already!", True, WHITE)
             else:
                 pause_text = font.render("Creating new account!", True, WHITE)
             info_text = font.render("Enter password to proceed", True, WHITE)
-            password_text = font.render(f"Password: {self.password}{cursor}", True, WHITE)
+            password_text = font.render(f"Password: {password}{cursor}", True, WHITE)
             enter_text = font.render("Press enter to confirm", True, WHITE)
             restart_text = font.render("Press backspace to use another account", True, WHITE)
             return_text = font.render(f"Press 5 times to return: 5/{self.press_to_return}", True, WHITE)
