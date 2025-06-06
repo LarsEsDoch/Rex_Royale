@@ -1,7 +1,6 @@
 import random
 
 from config import SCREEN_WIDTH, GROUND_LEVEL
-from fireball import Fireball
 from resources import COIN_IMAGES, screen, logging, pygame
 
 

@@ -753,7 +753,6 @@ class Game:
                 enter_text = font.render("Wrong password!", True, RED)
                 screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
 
-
                 pygame.display.flip()
                 clock.tick(1)
                 self.hard_reset()
