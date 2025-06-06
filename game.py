@@ -33,7 +33,7 @@ class Game:
         self.obstacles = []
         self.power_ups = []
         self.fireballs = []
-        self.power_up_timer = random.randint(3 * 60, 4 * 60)
+        self.power_up_timer = random.randint(30 * 60, 45 * 60)
         self.power_up_timer = -self.power_up_timer
         self.power_up_type = None
         self.power_up_spacing = 0
@@ -302,8 +302,9 @@ class Game:
                         logging.debug("Jump")
                         self.dino.start_jump(self.power_up_type)
 
-                if event.key == pygame.K_RETURN and not self.pause and self.power_up_type == "fireball":
-                    Fireball(self.dino.y)
+                if event.key == pygame.K_RETURN and not self.pause and self.power_up_type == "fireball" and len(self.fireballs) < 5:
+                    self.fireballs.append(Fireball(self.dino.y))
+                    logging.debug("Fireball spawned")
 
                 if not self.username_existing:
                     if event.key == pygame.K_RETURN and self.username.strip() != "":
@@ -396,7 +397,7 @@ class Game:
         for fireball in self.fireballs[:]:
             fireball.update()
             if fireball.complete_off_screen():
-                logging.debug(f"Fireball complete off screen: {fireball.x + fireball.width[0] < 0}")
+                logging.debug(f"Fireball complete off screen: {fireball.x + fireball.width < 0}")
                 self.fireballs.remove(fireball)
                 logging.debug("Removed fireball")
 
@@ -435,7 +436,7 @@ class Game:
 
             self.obstacle_speed += SPEED_INCREMENT
 
-        if self.obstacles[-1].x <= SCREEN_WIDTH - 400:
+        if not self.obstacles or self.obstacles[-1].x <= SCREEN_WIDTH - 400:
             self.power_up_spacing = True
         else:
             self.power_up_spacing = False
@@ -446,7 +447,7 @@ class Game:
         if self.power_up_timer >= 0 and self.power_up_spacing and self.power_up_type is None:
             logging.debug(f"Placed new power up ({self.power_up_timer})")
             self.power_ups.append(PowerUp(self.score))
-            self.power_up_timer = random.randint(3 * 60, 4 * 60)
+            self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
 
         for power_up in self.power_ups[:]:
@@ -454,7 +455,7 @@ class Game:
             if power_up.complete_off_screen():
                 logging.debug(f"Power up complete off screen: {power_up.x + power_up.width < 0}")
                 self.power_ups.remove(power_up)
-                self.power_up_timer = random.randint(3 * 60, 4 * 60)
+                self.power_up_timer = random.randint(30 * 60, 45 * 60)
                 self.power_up_timer = -self.power_up_timer
                 logging.debug("Removed power up")
 
@@ -469,6 +470,9 @@ class Game:
                 elif power_up.type == "fly":
                     self.power_up_type = "fly"
                     logging.info("Fly power up")
+                elif power_up.type == "fireball":
+                    self.power_up_type = "fireball"
+                    logging.info("Fireball power up")
                 self.power_ups.remove(power_up)
                 self.power_up_timer = 0
                 logging.debug("Removed power up")
@@ -555,6 +559,9 @@ class Game:
 
         for power_up in self.power_ups:
             power_up.draw()
+
+        for fireball in self.fireballs:
+            fireball.draw()
         self.dino.draw()
 
         color = WHITE if self.pause or self.game_over else BLACK
