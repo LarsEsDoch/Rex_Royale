@@ -51,17 +51,15 @@ class Dino:
 
 
     def start_jump(self, power_up_type):
-        if power_up_type == "fly" and self.y < SCREEN_HEIGHT - self.height - 10:
-            self.jump = True
-            self.velocity_y = DINO_VELOCITY/2
-            logging.debug("Flying started")
-            return
         if power_up_type == "fly" and self.y >= GROUND_LEVEL - self.height - 10:
             self.jump = True
             self.velocity_y = DINO_VELOCITY
             logging.debug("Flying started")
-            return
-        if self.y >= GROUND_LEVEL - self.height - 20 and self.velocity_y >= 1:
+        elif power_up_type == "fly" and self.y < SCREEN_HEIGHT - self.height - 10:
+            self.jump = True
+            self.velocity_y = DINO_VELOCITY/2
+            logging.debug("Flying started")
+        if self.y >= GROUND_LEVEL - self.height - 40 and self.velocity_y >= 1:
             self.velocity_y = DINO_VELOCITY + 1
             logging.debug("Jump started")
         if not self.jump:
