@@ -300,7 +300,8 @@ class Game:
                             logging.info("Reset Score")
                     else:
                         logging.debug("Jump")
-                        self.dino.start_jump(self.power_up_type)
+                        if self.dino.y > 50:
+                            self.dino.start_jump(self.power_up_type)
 
                 if event.key == pygame.K_RETURN and not self.pause and self.power_up_type == "fireball" and len(self.fireballs) < 5:
                     self.fireballs.append(Fireball(self.dino.y))
