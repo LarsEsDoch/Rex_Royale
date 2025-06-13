@@ -3,7 +3,7 @@ import argparse
 
 import config
 from config import logging, FRAME_RATE, DINO_VELOCITY, GRAVITY, OBSTACLE_SPEED
-from game import Game
+from src.game.game import Game
 
 def validate_resources():
     logging.info("Validating resources...")
