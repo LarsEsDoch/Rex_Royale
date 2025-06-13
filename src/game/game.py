@@ -230,4 +230,5 @@ class Game:
             handleEvents.handleEvents(self)
             update.update(self)
             draw.draw(self)
+            clock.tick(self.fps)
         pygame.quit()

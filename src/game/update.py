@@ -159,5 +159,3 @@ def update(self):
             self.power_up_timer = -self.power_up_timer
             self.power_up_type = None
             logging.debug("Power up completed")
-
-    clock.tick(self.fps)
