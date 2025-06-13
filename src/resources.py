@@ -69,5 +69,5 @@ COIN_IMAGES = [pygame.image.load(f"./textures/power_ups/multiplicator.png"),
                pygame.image.load(f"./textures/power_ups/immortality.png"),
                pygame.image.load(f"./textures/power_ups/fly.png"),
                pygame.image.load(f"./textures/power_ups/fireball.png")]
-COIN_IMAGES = [pygame.transform.scale(image, (60, 60)).convert_alpha() for image in COIN_IMAGES]
+COIN_IMAGES = [pygame.transform.scale(image, (80, 80)).convert_alpha() for image in COIN_IMAGES]
 logging.info("Loaded textures")

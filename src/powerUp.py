@@ -10,7 +10,7 @@ class PowerUp:
             self.type = random.choice(["fly", "immortality", "fireball"])
         else:
             self.type = random.choice(["multiplicator", "immortality", "fly", "fireball"])
-        self.image = COIN_IMAGES[0] if self.type == "multiplicator" else COIN_IMAGES[1] if self.type == "immortality" else COIN_IMAGES[2] if self.type == "fireball" else COIN_IMAGES[3]
+        self.image = COIN_IMAGES[0] if self.type == "multiplicator" else COIN_IMAGES[1] if self.type == "immortality" else COIN_IMAGES[2] if self.type == "fly" else COIN_IMAGES[3]
         self.mask = pygame.mask.from_surface(self.image)
         self.width, self.height = (self.image.get_width(), self.image.get_width())
         self.x = SCREEN_WIDTH
