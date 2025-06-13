@@ -58,25 +58,29 @@ class Game:
         self.show_fps = show_fps
         self.press_to_return = 0
 
-        self.background_day = pygame.image.load('textures/desert_day/desert_day_background.png').convert_alpha()
+        self.background_day = pygame.image.load('./textures/desert_day/desert_day_background.png').convert_alpha()
         self.background_day_flipped = pygame.transform.flip(self.background_day, True, False).convert_alpha()
-        self.background_day_2 = pygame.image.load('textures/desert_day/desert_day_background_2.png').convert_alpha()
+        self.background_day_2 = pygame.image.load('./textures/desert_day/desert_day_background_2.png').convert_alpha()
         self.background_day_2_flipped = pygame.transform.flip(self.background_day_2, True, False).convert_alpha()
-        self.background_day_3 = pygame.image.load('textures/desert_day/desert_day_background_3.png').convert_alpha()
+        self.background_day_3 = pygame.image.load('./textures/desert_day/desert_day_background_3.png').convert_alpha()
         self.background_day_3_flipped = pygame.transform.flip(self.background_day_3, True, False).convert_alpha()
-        self.background_day_4 = pygame.image.load('textures/desert_day/desert_day_background_4.png').convert_alpha()
+        self.background_day_4 = pygame.image.load('./textures/desert_day/desert_day_background_4.png').convert_alpha()
         self.background_day_4_flipped = pygame.transform.flip(self.background_day_4, True, False).convert_alpha()
 
-        self.background_night = pygame.image.load('textures/desert_night/desert_night_background.png').convert_alpha()
+        self.background_night = pygame.image.load(
+            './textures/desert_night/desert_night_background.png').convert_alpha()
         self.background_night_flipped = pygame.transform.flip(self.background_night, True, False).convert_alpha()
-        self.background_night_2 = pygame.image.load('textures/desert_night/desert_night_background_2.png').convert_alpha()
+        self.background_night_2 = pygame.image.load(
+            './textures/desert_night/desert_night_background_2.png').convert_alpha()
         self.background_night_2_flipped = pygame.transform.flip(self.background_night_2, True, False).convert_alpha()
-        self.background_night_3 = pygame.image.load('textures/desert_night/desert_night_background_3.png').convert_alpha()
+        self.background_night_3 = pygame.image.load(
+            './textures/desert_night/desert_night_background_3.png').convert_alpha()
         self.background_night_3_flipped = pygame.transform.flip(self.background_night_3, True, False).convert_alpha()
-        self.background_night_4 = pygame.image.load('textures/desert_night/desert_night_background_4.png').convert_alpha()
+        self.background_night_4 = pygame.image.load(
+            './textures/desert_night/desert_night_background_4.png').convert_alpha()
         self.background_night_4_flipped = pygame.transform.flip(self.background_night_4, True, False).convert_alpha()
 
-        self.game_over_image = pygame.image.load('textures/texts/game_over.png')
+        self.game_over_image = pygame.image.load('./textures/texts/game_over.png')
 
         self.background_flip = True
         self.background_flip_2 = True
@@ -728,7 +732,7 @@ class Game:
             scores[self.username]["password"] = self.hashed_password
 
         if not self.username in scores or self.score > self.high_score:
-            with open("highscores.json", "w") as file:
+            with open("./saves/highscores.json", "w") as file:
                 json.dump(scores, file, indent=4)
             logging.info(f"Saved highscore: {self.score} for user: {self.username}")
             self.high_score = self.score
@@ -736,8 +740,8 @@ class Game:
             logging.info(f"No new highscore: user: {self.username}")
 
     def load_scores(self):
-        if os.path.exists("highscores.json"):
-            with open("highscores.json", "r") as file:
+        if os.path.exists("./saves/highscores.json"):
+            with open("./saves/highscores.json", "r") as file:
                 self.accounts = json.load(file)
             logging.info(f"Loaded all accounts")
         else:

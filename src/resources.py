@@ -15,7 +15,7 @@ logging.info("Set screen dimensions")
 pygame.display.set_caption("Dino Game")
 logging.info("Set window caption")
 
-pygame.display.set_icon(pygame.image.load("textures/images/icon.png"))
+pygame.display.set_icon(pygame.image.load("./textures/images/icon.png"))
 logging.info("Set window icon")
 
 clock = pygame.time.Clock()
@@ -65,9 +65,9 @@ for i in range(4):
     image = pygame.image.load(frame_path)
     image = pygame.transform.scale(image, (180, 60)).convert_alpha()
     FIREBALL_FRAMES.append(image)
-COIN_IMAGES = [pygame.image.load(f"textures/power_ups/multiplicator.png"),
-               pygame.image.load(f"textures/power_ups/immortality.png"),
-               pygame.image.load(f"textures/power_ups/fly.png"),
-               pygame.image.load(f"textures/power_ups/fireball.png")]
+COIN_IMAGES = [pygame.image.load(f"./textures/power_ups/multiplicator.png"),
+               pygame.image.load(f"./textures/power_ups/immortality.png"),
+               pygame.image.load(f"./textures/power_ups/fly.png"),
+               pygame.image.load(f"./textures/power_ups/fireball.png")]
 COIN_IMAGES = [pygame.transform.scale(image, (60, 60)).convert_alpha() for image in COIN_IMAGES]
 logging.info("Loaded textures")
