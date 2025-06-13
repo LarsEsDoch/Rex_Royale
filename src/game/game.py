@@ -101,62 +101,6 @@ class Game:
         self.night_to_day_transition_speed = 0.02
         logging.info("Prepared game")
 
-    def hard_reset(self):
-        self.running = True
-        self.pause = True
-        self.game_over = False
-        self.score = 0
-        self.obstacle_speed = self.original_obstacle_speed
-        from ..dino import Dino
-        self.dino = Dino()
-        self.obstacles.clear()
-        self.power_ups.clear()
-        self.fireballs.clear()
-        self.power_up_timer = random.randint(30 * 60, 45 * 60)
-        self.power_up_timer = -self.power_up_timer
-        self.power_up_type = None
-        self.power_up_spacing = 0
-        self.accounts = {}
-        self.load_scores()
-        self.high_score = 0
-        self.username = ""
-        self.password = ""
-        self.hashed_password = ""
-        self.username_existing = False
-        self.checked_username = False
-        self.unlocked_user = False
-        self.show_list = False
-        self.high_score_list_y = 0
-        self.target_high_score_list_y = 0
-        self.spacing = 0
-        self.press_to_return = 0
-
-        self.background_flip = True
-        self.background_flip_2 = True
-        self.background_flip_3 = True
-        self.background_flip_4 = True
-        self.background_x = 0
-        self.background_x_2 = 0
-        self.background_x_3 = 0
-        self.background_x_4 = 0
-
-        self.game_over_scale = 1
-        self.game_over_time = 0
-        self.game_over_fade_in = 0
-
-        self.progress_birds = 0
-        self.birds_score = 5000
-        self.progress_day = 0
-        self.day_score = 5600
-        self.progress_sky = 0
-        self.sky_score = 10000
-        self.progress_smoothed = 0
-
-        self.night_to_day_transition = False
-        self.night_to_day_transition_progress = 0
-        self.night_to_day_transition_speed = 0.01
-        logging.info("Cache cleared and game was reset and prepared")
-
     def reset(self):
         self.running = True
         self.pause = False
@@ -203,6 +147,20 @@ class Game:
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.01
         logging.info("Game was reset and prepared")
+
+    def accounts_reset(self):
+        self.accounts = {}
+        self.load_scores()
+        self.high_score = 0
+        self.username = ""
+        self.password = ""
+        self.hashed_password = ""
+        self.username_existing = False
+        self.checked_username = False
+        self.unlocked_user = False
+        self.show_list = False
+        self.pause = True
+        logging.info("Accounts were reset")
 
     def save_scores(self):
         if self.username == "":
@@ -254,7 +212,8 @@ class Game:
 
                 pygame.display.flip()
                 clock.tick(1)
-                self.hard_reset()
+                self.reset()
+                self.accounts_reset()
                 clock.tick(self.fps)
                 return
         self.pause = False

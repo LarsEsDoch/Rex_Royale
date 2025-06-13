@@ -78,12 +78,14 @@ def handleEvents(self):
             if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
                 if not self.unlocked_user and self.username_existing:
                     if self.press_to_return >= 5:
-                        self.hard_reset()
+                        self.reset()
+                        self.accounts_reset()
                         logging.info("Reset")
                     self.press_to_return += 1
                     return
 
-                self.hard_reset()
+                self.reset()
+                self.accounts_reset()
                 logging.info("Reset")
 
             if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
