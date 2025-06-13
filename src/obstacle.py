@@ -1,7 +1,7 @@
 import random
 
 from resources import screen, clock, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
-from config import GROUND_LEVEL, SCREEN_WIDTH, WHITE
+from config import GROUND_LEVEL, SCREEN_WIDTH
 
 
 class Obstacle:
@@ -9,7 +9,7 @@ class Obstacle:
     def __init__(self, score):
         self.frame_images = []
         if score < 5000:
-            self.type = random.choice(["small", "large", "double"])
+            self.type = random.choice(["bird"])
         else:
             self.type = random.choice(["small", "large", "double", "bird"])
 
@@ -62,7 +62,7 @@ class Obstacle:
         else:
             self.x -= speed
         if self.type == "bird":
-            self.animation_timer += clock.get_time()
+            self.animation_timer += 1000/60
             self.current_frame = int(self.animation_timer / 100) % len(self.frame_images)
 
     def draw(self):

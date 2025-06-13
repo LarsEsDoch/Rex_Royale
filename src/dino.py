@@ -1,4 +1,4 @@
-from resources import screen, pygame, DINO_FRAMES, logging, clock
+from resources import screen, pygame, DINO_FRAMES, logging
 from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
 
 class Dino:
@@ -22,7 +22,7 @@ class Dino:
         logging.info("Initialized dino")
 
     def update(self, score):
-        self.animation_timer += clock.get_time()
+        self.animation_timer += 1000/60
         if self.y >= GROUND_LEVEL - self.height - 10:
             self.current_frame = int(self.animation_timer / 50) % len(self.frames)
         else:

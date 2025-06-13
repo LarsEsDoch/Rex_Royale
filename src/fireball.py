@@ -14,7 +14,7 @@ class Fireball():
 
     def update(self):
         self.x += 5
-        self.animation_timer += clock.get_time()
+        self.animation_timer += 1000/60
         self.current_frame = int(self.animation_timer / 100) % len(self.frames)
 
     def draw(self):
