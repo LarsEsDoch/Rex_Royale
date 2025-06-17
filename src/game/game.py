@@ -6,9 +6,8 @@ import json
 from . import handleEvents
 from . import update
 from . import draw
-from ..config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, FRAME_RATE, SCREEN_HEIGHT
-from ..resources import screen, clock, font, pygame
-from ..resources import logging
+from ..config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, SCREEN_HEIGHT
+from ..resources import screen, clock, font, pygame, logging
 from ..dino import Dino
 
 class Game:
@@ -100,6 +99,11 @@ class Game:
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.02
+
+        pygame.mixer.music.load('./sounds/music/pause_music.wav')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
+        self.volume = 0.2
         logging.info("Prepared game")
 
     def reset(self):
@@ -147,6 +151,10 @@ class Game:
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.01
+
+        pygame.mixer.music.load('./sounds/music/game_music.wav')
+        pygame.mixer.music.play(-1)
+
         logging.info("Game was reset and prepared")
 
     def accounts_reset(self):
@@ -161,6 +169,10 @@ class Game:
         self.unlocked_user = False
         self.show_list = False
         self.pause = True
+
+        pygame.mixer.music.load('./sounds/music/pause_music.wav')
+        pygame.mixer.music.play(-1)
+
         logging.info("Accounts were reset")
 
     def save_scores(self):
@@ -220,6 +232,8 @@ class Game:
         self.pause = False
         self.checked_username = True
         self.unlocked_user = True
+        pygame.mixer.music.load('./sounds/music/game_music.wav')
+        pygame.mixer.music.play(-1)
         logging.info(f"Started game")
 
     def create_password(self):

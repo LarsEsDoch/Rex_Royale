@@ -1,5 +1,7 @@
-from resources import screen, pygame, DINO_FRAMES, logging, DINO_DUCK
+from resources import screen, pygame, DINO_FRAMES, logging, DINO_DUCK, JUMP_SOUND, WING_FLAP_SOUND
 from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
+from src.resources import LANDING_SOUND
+
 
 class Dino:
 
@@ -38,10 +40,14 @@ class Dino:
 
             self.velocity_y += GRAVITY * self.gravity_multiplier
 
-            if self.y >= GROUND_LEVEL - self.height:
-                self.y = GROUND_LEVEL - self.height
+            if self.y >= GROUND_LEVEL - self.height - 40 and self.velocity_y >= 1:
+                self.y = GROUND_LEVEL - self.height - 40
                 self.hitbox_y = self.y - self.hitbox_y_offset
                 self.jump = False
+                LANDING_SOUND.play()
+
+        if self.y >= GROUND_LEVEL - self.height - 40:
+            self.y = min(self.y + self.velocity_y, GROUND_LEVEL - self.height)
 
     def draw(self, ducked):
         if ducked:
@@ -62,15 +68,15 @@ class Dino:
         if power_up_type == "fly" and self.y >= GROUND_LEVEL - self.height - 10:
             self.jump = True
             self.velocity_y = DINO_VELOCITY
+            JUMP_SOUND.play()
             logging.debug("Flying started")
         elif power_up_type == "fly" and self.y < SCREEN_HEIGHT - self.height - 10:
             self.jump = True
             self.velocity_y = DINO_VELOCITY/2
+            WING_FLAP_SOUND.play()
             logging.debug("Flying started")
-        if self.y >= GROUND_LEVEL - self.height - 40 and self.velocity_y >= 1:
-            self.velocity_y = DINO_VELOCITY + 1
-            logging.debug("Jump started")
         if not self.jump:
             self.jump = True
             self.velocity_y = DINO_VELOCITY
+            JUMP_SOUND.play()
             logging.debug("Jump started")

@@ -1,11 +1,11 @@
 import pygame
 
-from config import logging
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, logging
 from utils import load_frames, load_frame
 
 pygame.init()
-logging.info("Initialized pygame successful")
+pygame.mixer.init()
+logging.info("Initialized pygame and pygame mixer successful")
 
 if FULLSCREEN:
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
@@ -44,3 +44,16 @@ COIN_IMAGES = [pygame.image.load(f"./textures/power_ups/multiplicator.png"),
                pygame.image.load(f"./textures/power_ups/fireball.png")]
 COIN_IMAGES = [pygame.transform.scale(image, (80, 80)).convert_alpha() for image in COIN_IMAGES]
 logging.info("Loaded textures")
+
+JUMP_SOUND = pygame.mixer.Sound("./sounds/sound_effects/jump_sound.wav")
+GAME_OVER_SOUND = pygame.mixer.Sound("./sounds/sound_effects/game_over_sound.wav")
+LANDING_SOUND = pygame.mixer.Sound("./sounds/sound_effects/landing_sound.wav")
+SELECT_SOUND = pygame.mixer.Sound("./sounds/sound_effects/select_sound.wav")
+COLLIDE_FIREBALL_SOUND = pygame.mixer.Sound("./sounds/sound_effects/collide_fireball_sound.wav")
+SHOT_FIREBALL_SOUND = pygame.mixer.Sound("./sounds/sound_effects/shot_fireball_sound.wav")
+CLAIM_COIN_SOUND = pygame.mixer.Sound("./sounds/sound_effects/claim_coin_sound.wav")
+IMMORTALITY_SOUND = pygame.mixer.Sound("./sounds/sound_effects/immortality_sound.wav")
+WING_FLAP_SOUND = pygame.mixer.Sound("./sounds/sound_effects/wing_flap_sound.wav")
+logging.info("Loaded sounds")
+
+logging.debug("Initialized resources successful")

@@ -23,7 +23,3 @@ def load_frame(frame_path, size):
     image = pygame.image.load(frame_path)
     image = pygame.transform.scale(image, size).convert_alpha()
     return image
-
-def load_sound(sound_path):
-    logging.debug(f"Loading: {sound_path}")
-    return pygame.mixer.Sound(sound_path)

@@ -1,9 +1,12 @@
 import random
 
+import pygame
+
 from ..config import SCREEN_WIDTH, SPEED_INCREMENT
 from ..powerUp import PowerUp
 from ..obstacle import Obstacle
-from ..resources import logging, clock
+from ..resources import logging, clock, GAME_OVER_SOUND, IMMORTALITY_SOUND, CLAIM_COIN_SOUND, COLLIDE_FIREBALL_SOUND
+
 
 def update(self):
     self.cursor_tick += 1
@@ -85,6 +88,7 @@ def update(self):
                 self.score += 100
                 self.obstacles.remove(obstacle)
                 self.fireballs.remove(fireball)
+                COLLIDE_FIREBALL_SOUND.play()
                 logging.debug("Removed obstacle")
 
         if obstacle.complete_off_screen():
@@ -108,6 +112,8 @@ def update(self):
             logging.info("Dino collided with obstacle")
             self.save_scores()
             self.game_over = True
+            pygame.mixer.music.stop()
+            GAME_OVER_SOUND.play()
 
         self.obstacle_speed += SPEED_INCREMENT
 
@@ -136,11 +142,14 @@ def update(self):
 
         if power_up.collides_with(self.dino) and self.power_up_type is None:
             logging.debug("Dino collided with power up")
+            CLAIM_COIN_SOUND.play()
             if power_up.type == "multiplicator":
                 self.power_up_type = "multiplicator"
                 logging.info(f"Multiplicator power up")
             elif power_up.type == "immortality":
                 self.power_up_type = "immortality"
+                pygame.mixer.music.stop()
+                IMMORTALITY_SOUND.play()
                 logging.info("Immortality power up")
             elif power_up.type == "fly":
                 self.power_up_type = "fly"
@@ -158,4 +167,6 @@ def update(self):
             self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
             self.power_up_type = None
+            pygame.mixer.music.load('./sounds/music/game_music.wav')
+            pygame.mixer.music.play(-1)
             logging.debug("Power up completed")

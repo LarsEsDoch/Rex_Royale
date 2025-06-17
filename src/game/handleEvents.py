@@ -1,6 +1,6 @@
 from ..config import SCREEN_HEIGHT
 from ..fireball import Fireball
-from ..resources import pygame
+from ..resources import pygame, JUMP_SOUND, SHOT_FIREBALL_SOUND, SELECT_SOUND
 from ..resources import logging
 
 def handleEvents(self):
@@ -8,6 +8,7 @@ def handleEvents(self):
         if event.type == pygame.QUIT:
             self.running = False
             self.save_scores()
+            SELECT_SOUND.play()
             logging.info("Exit")
 
         if event.type == pygame.MOUSEBUTTONDOWN and self.show_list:
@@ -61,18 +62,24 @@ def handleEvents(self):
                 if self.show_list:
                     self.show_list = False
                     logging.info(f"Toggle high score list")
+                    SELECT_SOUND.play()
                     return
                 self.running = False if self.game_over or self.pause else True
                 self.pause = not self.pause
                 if not self.running:
                     self.save_scores()
+                    SELECT_SOUND.play()
                     logging.info("Exit")
                 else:
+                    pygame.mixer.music.load('./sounds/music/pause_music.wav')
+                    pygame.mixer.music.play(-1)
+                    SELECT_SOUND.play()
                     logging.info("Paused")
 
             if event.key == pygame.K_F1:
                 self.show_list = not self.show_list
                 logging.info(f"Toggle high score list")
+                SELECT_SOUND.play()
                 return
 
             if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
@@ -80,26 +87,32 @@ def handleEvents(self):
                     if self.press_to_return >= 5:
                         self.reset()
                         self.accounts_reset()
+                        SELECT_SOUND.play()
                         logging.info("Reset")
                     self.press_to_return += 1
                     return
 
                 self.reset()
                 self.accounts_reset()
+                SELECT_SOUND.play()
                 logging.info("Reset")
 
             if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
                 self.save_scores()
                 self.reset()
+                SELECT_SOUND.play()
                 logging.info("Reset Score")
 
             if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                 if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                     self.pause = False
+                    pygame.mixer.music.load('./sounds/music/game_music.wav')
+                    pygame.mixer.music.play(-1)
                     logging.info("Resumed")
                 elif self.game_over:
                     if self.game_over_fade_in >= 1:
                         self.reset()
+                        SELECT_SOUND.play()
                         logging.info("Reset Score")
                 else:
                     logging.debug("Jump")
@@ -109,11 +122,13 @@ def handleEvents(self):
                 self.ducked = True
             if (event.key == pygame.K_RETURN or event.key == pygame.K_RIGHT) and not self.pause and self.power_up_type == "fireball" and len(self.fireballs) < 5:
                 self.fireballs.append(Fireball(self.dino.y))
+                SHOT_FIREBALL_SOUND.play()
                 logging.debug("Fireball spawned")
 
             if not self.username_existing:
                 if event.key == pygame.K_RETURN and self.username.strip() != "":
                     self.username_existing = True
+                    SELECT_SOUND.play()
                     logging.info(f"Got username: {self.username}")
                 elif event.key == pygame.K_BACKSPACE:
                     self.username = self.username[:-1]
@@ -126,6 +141,7 @@ def handleEvents(self):
             if self.username_existing and not self.checked_username:
                 if event.key == pygame.K_RETURN and self.password.strip() != "":
                     logging.info(f"Got password: {self.password}")
+                    SELECT_SOUND.play()
                     self.unlock_user()
                 elif event.key == pygame.K_BACKSPACE:
                     self.password = self.password[:-1]
