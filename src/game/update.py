@@ -24,8 +24,12 @@ def update(self):
         if abs(step) > 0.5:
             self.high_score_list_y += step
 
+    pygame.mixer.music.set_volume(self.volume)
+
     if self.pause or self.game_over:
         return
+
+    self.control_info_time -= 1
 
     self.dino.update(self.score)
 
@@ -164,9 +168,11 @@ def update(self):
     if self.power_up_type is not None and self.power_up_timer >= 0:
         self.power_up_timer += 1
         if self.power_up_timer > 15 * 60:
+            if self.power_up_type == "immortality":
+                pygame.mixer.music.load('./sounds/music/game_music.wav')
+                pygame.mixer.music.play(-1)
             self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
             self.power_up_type = None
-            pygame.mixer.music.load('./sounds/music/game_music.wav')
-            pygame.mixer.music.play(-1)
             logging.debug("Power up completed")
+

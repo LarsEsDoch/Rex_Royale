@@ -102,8 +102,7 @@ class Game:
 
         pygame.mixer.music.load('./sounds/music/pause_music.wav')
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.2)
-        self.volume = 0.2
+        self.volume = 0.2 - 0.2
         logging.info("Prepared game")
 
     def reset(self):
