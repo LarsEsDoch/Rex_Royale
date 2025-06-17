@@ -1,15 +1,15 @@
 import random
 
-from resources import screen, clock, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
+from resources import screen, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
 from config import GROUND_LEVEL, SCREEN_WIDTH
 
 
 class Obstacle:
 
-    def __init__(self, score):
+    def __init__(self, score, power_up_type):
         self.frame_images = []
         if score < 5000:
-            self.type = random.choice(["bird"])
+            self.type = random.choice(["small", "large", "double"])
         else:
             self.type = random.choice(["small", "large", "double", "bird"])
 
@@ -42,7 +42,13 @@ class Obstacle:
 
         if not self.type == "double":
             self.width, self.height = ([self.frame_images[0].get_width()], [self.frame_images[0].get_height()])
-            self.y = [GROUND_LEVEL - self.height[0] - 200 if self.type == "bird" else GROUND_LEVEL - self.height[0]]
+            if self.type == "bird":
+                if power_up_type == "fly":
+                    self.y = [GROUND_LEVEL - self.height[0] - random.randint(150, 600)]
+                else:
+                    self.y = [GROUND_LEVEL - self.height[0] - random.randint(80, 200)]
+            else:
+                self.y = [GROUND_LEVEL - self.height[0]]
         else:
             self.width, self.height = ([self.frame_images[0].get_width(), self.frame_images[1].get_width()], [self.frame_images[0].get_height(), self.frame_images[1].get_height()])
             self.y = [GROUND_LEVEL - self.height[0], GROUND_LEVEL - self.height[1]]
@@ -101,12 +107,16 @@ class Obstacle:
         else:
             return self.x + self.width[0] < -200
 
-    def collides_with(self, dino):
+    def collides_with(self, dino, ducked):
+        if ducked:
+            mask = dino.duck_mask
+        else:
+            mask = dino.masks[dino.current_frame]
         if self.type == "double":
-            obstacle_1 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0]))
-            obstacle_2 = self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x - self.width[0] - 10, dino.y - self.y[1]))
+            obstacle_1 = self.mask.overlap(mask, (dino.x - self.x, dino.y - self.y[0]))
+            obstacle_2 = self.mask.overlap(mask, (dino.x - self.x - self.width[0] - 10, dino.y - self.y[1]))
             return obstacle_1 is not None or obstacle_2 is not None
         elif self.type == "bird":
-            return self.masks[self.current_frame].overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0])) is not None
+            return self.masks[self.current_frame].overlap(mask, (dino.x - self.x, dino.y - self.y[0])) is not None
         else:
-            return self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y[0])) is not None
+            return self.mask.overlap(mask, (dino.x - self.x, dino.y - self.y[0])) is not None

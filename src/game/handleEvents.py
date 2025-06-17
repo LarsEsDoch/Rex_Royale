@@ -93,7 +93,7 @@ def handleEvents(self):
                 self.reset()
                 logging.info("Reset Score")
 
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                 if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                     self.pause = False
                     logging.info("Resumed")
@@ -105,9 +105,9 @@ def handleEvents(self):
                     logging.debug("Jump")
                     if self.dino.y > 50:
                         self.dino.start_jump(self.power_up_type)
-
-            if event.key == pygame.K_RETURN and not self.pause and self.power_up_type == "fireball" and len(
-                    self.fireballs) < 5:
+            if event.key == pygame.K_DOWN and not self.pause and not self.game_over:
+                self.ducked = True
+            if (event.key == pygame.K_RETURN or event.key == pygame.K_RIGHT) and not self.pause and self.power_up_type == "fireball" and len(self.fireballs) < 5:
                 self.fireballs.append(Fireball(self.dino.y))
                 logging.debug("Fireball spawned")
 
@@ -135,3 +135,7 @@ def handleEvents(self):
                     logging.debug(f"Key pressed: {event.key}")
                     self.press_to_return = 0
                 self.cursor_tick = 0
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_DOWN and not self.pause and not self.game_over:
+                self.ducked = False

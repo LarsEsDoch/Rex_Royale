@@ -54,7 +54,7 @@ def update(self):
 
     if not self.obstacles or self.obstacles[-1].x < SCREEN_WIDTH - random.randint(650, 850) - self.spacing:
         self.spacing += 2.5
-        self.obstacles.append(Obstacle(self.score))
+        self.obstacles.append(Obstacle(self.score, self.power_up_type))
         logging.debug(f"Placed new obstacle")
 
     if -300 >= self.background_x:
@@ -104,7 +104,7 @@ def update(self):
 
             logging.info(f"Score: {self.score}")
 
-        if obstacle.collides_with(self.dino) and not self.power_up_type == "immortality":
+        if obstacle.collides_with(self.dino, self.ducked) and not self.power_up_type == "immortality":
             logging.info("Dino collided with obstacle")
             self.save_scores()
             self.game_over = True

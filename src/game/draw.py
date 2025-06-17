@@ -79,7 +79,7 @@ def draw(self):
 
     for fireball in self.fireballs:
         fireball.draw()
-    self.dino.draw()
+    self.dino.draw(self.ducked)
 
     color = WHITE if self.pause or self.game_over else BLACK
 

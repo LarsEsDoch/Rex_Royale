@@ -9,6 +9,7 @@ from . import draw
 from ..config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, FRAME_RATE, SCREEN_HEIGHT
 from ..resources import screen, clock, font, pygame
 from ..resources import logging
+from ..dino import Dino
 
 class Game:
 
@@ -25,8 +26,8 @@ class Game:
         else:
             self.obstacle_speed = custom_obstacle_speed
             self.original_obstacle_speed = custom_obstacle_speed
-        from ..dino import Dino
         self.dino = Dino()
+        self.ducked = False
         self.obstacles = []
         self.power_ups = []
         self.fireballs = []
@@ -107,8 +108,8 @@ class Game:
         self.game_over = False
         self.score = 0
         self.obstacle_speed = self.original_obstacle_speed
-        from ..dino import Dino
         self.dino = Dino()
+        self.ducked = False
         self.obstacles.clear()
         self.power_ups.clear()
         self.fireballs.clear()

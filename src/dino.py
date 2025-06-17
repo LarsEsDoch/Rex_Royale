@@ -1,4 +1,4 @@
-from resources import screen, pygame, DINO_FRAMES, logging
+from resources import screen, pygame, DINO_FRAMES, logging, DINO_DUCK
 from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
 
 class Dino:
@@ -15,7 +15,9 @@ class Dino:
         self.velocity_y = 0
         self.jump = False
         self.frames = DINO_FRAMES
+        self.duck_image = DINO_DUCK
         self.masks = [pygame.mask.from_surface(image) for image in self.frames]
+        self.duck_mask = pygame.mask.from_surface(self.duck_image)
         self.animation_timer = 0
         self.current_frame = 0
         self.gravity_multiplier = 1.1
@@ -41,12 +43,19 @@ class Dino:
                 self.hitbox_y = self.y - self.hitbox_y_offset
                 self.jump = False
 
-    def draw(self):
-        screen.blit(self.frames[self.current_frame], (self.x, self.y))
-        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
-            mask_surface = self.masks[self.current_frame].to_surface()
-            mask_surface.set_colorkey((0,0,0))
-            screen.blit(mask_surface, (self.x, self.y))
+    def draw(self, ducked):
+        if ducked:
+            screen.blit(self.duck_image, (self.x, self.y))
+            if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+                mask_surface = self.duck_mask.to_surface()
+                mask_surface.set_colorkey((0,0,0))
+                screen.blit(mask_surface, (self.x, self.y))
+        else:
+            screen.blit(self.frames[self.current_frame], (self.x, self.y))
+            if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+                mask_surface = self.masks[self.current_frame].to_surface()
+                mask_surface.set_colorkey((0,0,0))
+                screen.blit(mask_surface, (self.x, self.y))
 
 
     def start_jump(self, power_up_type):
