@@ -2,6 +2,7 @@ import pygame
 
 from config import logging
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
+from utils import load_frames, load_frame
 
 pygame.init()
 logging.info("Initialized pygame successful")
@@ -12,7 +13,7 @@ else:
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 logging.info("Set screen dimensions")
 
-pygame.display.set_caption("Dino Game")
+pygame.display.set_caption("Rex Royale")
 logging.info("Set window caption")
 
 pygame.display.set_icon(pygame.image.load("./textures/images/icon.png"))
@@ -22,6 +23,7 @@ clock = pygame.time.Clock()
 logging.info("Initialized clock")
 
 font = pygame.font.Font(None, 36)
+font_large = pygame.font.Font(None, 48)
 logging.info("Set font")
 
 screen.fill((5, 5, 5))

@@ -1,7 +1,6 @@
 from ..config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GOLD, SILVER, BRONZE, LIGHT_BLUE, BLUE, SCREEN_HEIGHT
 from ..utils import ease_out_sine, ease_out_cubic
-from ..resources import screen, clock, font, pygame
-from ..resources import logging
+from ..resources import screen, clock, font, font_large, pygame, logging
 
 def draw(self):
     if not self.background_flip:
@@ -129,12 +128,14 @@ def draw(self):
 
     if self.pause:
         screen.fill(BLACK)
+        game_text = font_large.render("Rex Royale", True, WHITE)
         pause_text = font.render("Paused", True, WHITE)
         continue_text = font.render("Press space to continue", True, WHITE)
         escape_text = font.render("Press escape to exit", True, WHITE)
         restart_text = font.render("Press enter to start from beginning", True, WHITE)
         hard_restart_text = font.render("Press backspace to change account", True, WHITE)
         high_score_text = font.render("Press F1 to see highscores", True, WHITE)
+        screen.blit(game_text, game_text.get_rect(center=(SCREEN_WIDTH // 2, 50)))
         screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
         screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
         screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
@@ -182,9 +183,11 @@ def draw(self):
     if not self.username_existing and not self.unlocked_user and not self.checked_username:
         screen.fill(BLACK)
 
+        game_text = font_large.render("Rex Royale", True, WHITE)
         pause_text = font.render("Enter your username!", True, WHITE)
         username_text = font.render(f"Username: {self.username}{cursor}", True, WHITE)
         enter_text = font.render("Press enter to confirm", True, WHITE)
+        screen.blit(game_text, game_text.get_rect(center=(SCREEN_WIDTH // 2, 50)))
         screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
         screen.blit(username_text, username_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
         screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
@@ -199,11 +202,13 @@ def draw(self):
             pause_text = font.render("User exists already!", True, WHITE)
         else:
             pause_text = font.render("Creating new account!", True, WHITE)
+        game_text = font_large.render("Rex Royale", True, WHITE)
         info_text = font.render("Enter password to proceed", True, WHITE)
         password_text = font.render(f"Password: {password}{cursor}", True, WHITE)
         enter_text = font.render("Press enter to confirm", True, WHITE)
         restart_text = font.render("Press backspace to use another account", True, WHITE)
         return_text = font.render(f"Press 5 times to return: 5/{self.press_to_return}", True, WHITE)
+        screen.blit(game_text, game_text.get_rect(center=(SCREEN_WIDTH // 2, 50)))
         screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
         screen.blit(info_text, info_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
         screen.blit(password_text, password_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
@@ -213,7 +218,9 @@ def draw(self):
 
     if self.show_list:
         screen.fill(BLACK)
-        header_text = pygame.font.Font(None, 48).render("All highscores", True, WHITE)
+        game_text = font.render("Rex Royale", True, WHITE)
+        screen.blit(game_text, game_text.get_rect(center=(75, 20)))
+        header_text = font_large.render("All highscores", True, WHITE)
         screen.blit(header_text, header_text.get_rect(center=(SCREEN_WIDTH // 2, 50 + self.high_score_list_y)))
         accounts = sorted(self.accounts.items(), key=lambda x: x[1]["score"], reverse=True)
         for account, (username, score) in enumerate(accounts):
