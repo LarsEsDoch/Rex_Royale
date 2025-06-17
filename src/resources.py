@@ -30,41 +30,12 @@ text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
 screen.blit(text, text_rect)
 logging.info("rendered text")
 
-BIRD_FRAMES = []
-for i in range(17):
-    frame_path = f"./textures/bird/frame_{i+1}.png"
-    logging.debug(f"Loading: {frame_path}")
-    image = pygame.image.load(frame_path)
-    image = pygame.transform.scale(image, (130, 115)).convert_alpha()
-    BIRD_FRAMES.append(image)
-CACTUS_SMALL = []
-for i in range(3):
-    frame_path = f"./textures/cactus_small/cactus_small_{i+1}.png"
-    logging.debug(f"Loading: {frame_path}")
-    image = pygame.image.load(frame_path)
-    image = pygame.transform.scale(image, (60, 70)).convert_alpha()
-    CACTUS_SMALL.append(image)
-CACTUS_LARGE = []
-for i in range(3):
-    frame_path = f"./textures/cactus_large/cactus_large_{i+1}.png"
-    logging.debug(f"Loading: {frame_path}")
-    image = pygame.image.load(frame_path)
-    image = pygame.transform.scale(image, (40, 130)).convert_alpha()
-    CACTUS_LARGE.append(image)
-DINO_FRAMES = []
-for i in range(9):
-    frame_path = f"./textures/dino/dino_frame_{i}.png"
-    logging.debug(f"Loading: {frame_path}")
-    image = pygame.image.load(frame_path)
-    image = pygame.transform.scale(image, (248, 128)).convert_alpha()
-    DINO_FRAMES.append(image)
-FIREBALL_FRAMES = []
-for i in range(4):
-    frame_path = f"textures/power_ups/fireball/fireball_{i}.png"
-    logging.debug(f"Loading: {frame_path}")
-    image = pygame.image.load(frame_path)
-    image = pygame.transform.scale(image, (180, 60)).convert_alpha()
-    FIREBALL_FRAMES.append(image)
+BIRD_FRAMES = load_frames("./textures/bird/frame_*.png", 17, (130, 115))
+CACTUS_SMALL = load_frames("./textures/cactus_small/cactus_small_*.png", 3, (60, 70))
+CACTUS_LARGE = load_frames("./textures/cactus_large/cactus_large_*.png", 3, (40, 130))
+DINO_FRAMES = load_frames("./textures/dino/dino_frame_*.png", 9, (248, 128))
+DINO_DUCK = load_frame("./textures/dino/dino_duck.png", (248, 128))
+FIREBALL_FRAMES = load_frames("./textures/power_ups/fireball/fireball_*.png", 4, (180, 60))
 COIN_IMAGES = [pygame.image.load(f"./textures/power_ups/multiplicator.png"),
                pygame.image.load(f"./textures/power_ups/immortality.png"),
                pygame.image.load(f"./textures/power_ups/fly.png"),
