@@ -118,7 +118,7 @@ def handleEvents(self):
                     logging.debug("Jump")
                     if self.dino.y > 50:
                         self.dino.start_jump(self.power_up_type)
-            if event.key == pygame.K_DOWN and not self.pause and not self.game_over:
+            if (event.key == pygame.K_DOWN or event.key == pygame.K_LSHIFT) and not self.pause and not self.game_over:
                 self.ducked = True
             if (event.key == pygame.K_RETURN or event.key == pygame.K_RIGHT) and not self.pause and self.power_up_type == "fireball" and len(self.fireballs) < 5:
                 self.fireballs.append(Fireball(self.dino.y))
@@ -153,5 +153,5 @@ def handleEvents(self):
                 self.cursor_tick = 0
 
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN and not self.pause and not self.game_over:
+            if (event.key == pygame.K_DOWN or event.key == pygame.K_LSHIFT) and not self.pause and not self.game_over:
                 self.ducked = False

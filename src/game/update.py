@@ -24,6 +24,10 @@ def update(self):
         if abs(step) > 0.5:
             self.high_score_list_y += step
 
+    if not self.unlocked_user and self.username_existing:
+        if not self.username in self.accounts:
+            self.show_control_info = True
+
     pygame.mixer.music.set_volume(self.volume)
 
     if self.pause or self.game_over:

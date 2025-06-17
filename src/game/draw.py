@@ -149,6 +149,17 @@ def draw(self):
     screen.blit(username_text, (10, 35))
     highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
     screen.blit(highest_score_text, (10, 60))
+
+    if (not self.pause or not self.game_over) and self.control_info_time >= 0 and self.show_control_info:
+        control_info_text = font.render("Space or Arrow Up to jump", True, BLACK)
+        screen.blit(control_info_text, (SCREEN_WIDTH - control_info_text.get_width() - 20, 200))
+        control_info_text_2 = font.render("Shift or Arrow Down to duck", True, BLACK)
+        screen.blit(control_info_text_2, (SCREEN_WIDTH - control_info_text_2.get_width() - 20, 225))
+        control_info_text_3 = font.render("Enter or Arrow Right to shoot fireballs", True, BLACK)
+        screen.blit(control_info_text_3, (SCREEN_WIDTH - control_info_text_3.get_width() - 20, 250))
+        control_info_text_4 = font.render("Escape to pause the game", True, BLACK)
+        screen.blit(control_info_text_4, (SCREEN_WIDTH - control_info_text_4.get_width() - 20, 275))
+
     if self.power_up_type is not None:
         power_up_text = font.render(f"Power Up: {self.power_up_type}", True, color)
         screen.blit(power_up_text, (10, 85))
@@ -161,7 +172,7 @@ def draw(self):
                          (10, 120, (1 - (self.power_up_timer / (60 * 15))) * SCREEN_WIDTH // 4, 30))
         pygame.draw.rect(screen, WHITE, (10, 120, SCREEN_WIDTH // 4, 30), 2)
 
-    if not self.pause and not self.game_over:
+    if not self.pause and not self.game_over and self.score < 6000:
         rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
         rect_surface.set_alpha(128)
         rect_surface.fill(WHITE)

@@ -96,6 +96,9 @@ class Game:
         self.sky_score = 10000
         self.progress_smoothed = 0
 
+        self.control_info_time = 600
+        self.show_control_info = False
+
         self.night_to_day_transition = False
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.02
