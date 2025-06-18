@@ -29,7 +29,7 @@ def update(self):
         if not self.username in self.accounts:
             self.show_control_info = True
 
-    pygame.mixer.music.set_volume(self.volume)
+    pygame.mixer.music.set_volume(self.music_volume)
 
     if self.game_over:
         self.game_over_fade_in += 0.015
@@ -43,7 +43,7 @@ def update(self):
 
     self.control_info_time -= 1
 
-    self.dino.update(self.score)
+    self.dino.update(self.score, self.sound_volume)
 
     if not self.pause and not self.game_over:
         self.background_x -= self.obstacle_speed * 0.20
@@ -104,6 +104,7 @@ def update(self):
                 self.score += 100
                 self.obstacles.remove(obstacle)
                 self.fireballs.remove(fireball)
+                COLLIDE_FIREBALL_SOUND.set_volume(self.sound_volume)
                 COLLIDE_FIREBALL_SOUND.play()
                 logging.debug("Removed obstacle")
 
@@ -129,6 +130,7 @@ def update(self):
             self.save_scores()
             self.game_over = True
             pygame.mixer.music.stop()
+            GAME_OVER_SOUND.set_volume(self.sound_volume)
             GAME_OVER_SOUND.play()
 
         self.obstacle_speed += SPEED_INCREMENT
@@ -158,6 +160,7 @@ def update(self):
 
         if power_up.collides_with(self.dino) and self.power_up_type is None:
             logging.debug("Dino collided with power up")
+            CLAIM_COIN_SOUND.set_volume(self.sound_volume)
             CLAIM_COIN_SOUND.play()
             if power_up.type == "multiplicator":
                 self.power_up_type = "multiplicator"
@@ -165,6 +168,7 @@ def update(self):
             elif power_up.type == "immortality":
                 self.power_up_type = "immortality"
                 pygame.mixer.music.stop()
+                IMMORTALITY_SOUND.set_volume(self.music_volume)
                 IMMORTALITY_SOUND.play()
                 logging.info("Immortality power up")
             elif power_up.type == "fly":
