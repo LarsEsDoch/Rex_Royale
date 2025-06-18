@@ -31,6 +31,13 @@ def update(self):
 
     pygame.mixer.music.set_volume(self.volume)
 
+    if self.game_over:
+        self.game_over_fade_in += 0.015
+        self.game_over_time += clock.get_time() / 300.0
+        progress = min(self.game_over_time / 8.0, 1.0)
+        scale_eased = ease_out_cubic(progress)
+        self.game_over_scale = 1 + scale_eased * 8
+
     if self.pause or self.game_over:
         return
 
