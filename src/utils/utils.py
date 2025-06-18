@@ -1,5 +1,5 @@
-from config import logging
-from resources import pygame
+from src.utils.config import logging
+from src.utils.resources import pygame
 
 def ease_out_cubic(t):
     return 1 - (1 - t) ** 3
@@ -8,13 +8,22 @@ def ease_out_sine(t):
     from math import sin, pi
     return sin((t * pi) / 2)
 
-def load_frames(frame_path, frame_length, size):
+def load_frames_scaled(frame_path, frame_length, size):
     frames = []
     for i in range(frame_length):
         current_path = frame_path.replace('*', str(i))
         logging.debug(f"Loading: {current_path}")
         image = pygame.image.load(current_path)
         image = pygame.transform.scale(image, size).convert_alpha()
+        frames.append(image)
+    return frames
+
+def load_frames(frame_path, frame_length):
+    frames = []
+    for i in range(frame_length):
+        current_path = frame_path.replace('*', str(i))
+        logging.debug(f"Loading: {current_path}")
+        image = pygame.image.load(current_path).convert_alpha()
         frames.append(image)
     return frames
 

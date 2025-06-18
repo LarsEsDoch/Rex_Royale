@@ -1,6 +1,6 @@
-from resources import screen, pygame, DINO_FRAMES, logging, DINO_DUCK, JUMP_SOUND, WING_FLAP_SOUND
-from config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
-from src.resources import LANDING_SOUND
+from src.utils.resources import screen, pygame, DINO_FRAMES, logging, DINO_DUCK, JUMP_SOUND, WING_FLAP_SOUND
+from src.utils.config import GROUND_LEVEL, GRAVITY, DINO_VELOCITY, SCREEN_HEIGHT
+from src.utils.resources import LANDING_SOUND
 
 
 class Dino:

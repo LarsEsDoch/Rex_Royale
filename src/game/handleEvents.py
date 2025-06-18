@@ -1,7 +1,7 @@
-from ..config import SCREEN_HEIGHT
-from ..fireball import Fireball
-from ..resources import pygame, JUMP_SOUND, SHOT_FIREBALL_SOUND, SELECT_SOUND
-from ..resources import logging
+from src.utils.config import SCREEN_HEIGHT
+from src.entities.fireball import Fireball
+from src.utils.resources import pygame, SHOT_FIREBALL_SOUND, SELECT_SOUND
+from src.utils.resources import logging
 
 def handleEvents(self):
     for event in pygame.event.get():
@@ -87,7 +87,7 @@ def handleEvents(self):
                     SELECT_SOUND.play()
                     logging.info("Exit")
                 else:
-                    pygame.mixer.music.load('./sounds/music/pause_music.wav')
+                    pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
                     pygame.mixer.music.play(-1)
                     SELECT_SOUND.set_volume(self.sound_volume)
                     SELECT_SOUND.play()
@@ -127,7 +127,7 @@ def handleEvents(self):
             if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                 if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                     self.pause = False
-                    pygame.mixer.music.load('./sounds/music/game_music.wav')
+                    pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
                     pygame.mixer.music.play(-1)
                     logging.info("Resumed")
                 elif self.game_over:

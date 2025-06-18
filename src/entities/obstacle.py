@@ -1,7 +1,7 @@
 import random
 
-from resources import screen, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
-from config import GROUND_LEVEL, SCREEN_WIDTH
+from src.utils.resources import screen, BIRD_FRAMES, CACTUS_SMALL, CACTUS_LARGE, pygame, logging
+from src.utils.config import GROUND_LEVEL, SCREEN_WIDTH
 
 
 class Obstacle:

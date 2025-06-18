@@ -1,5 +1,5 @@
-from config import SCREEN_WIDTH
-from resources import FIREBALL_FRAMES, clock, screen, logging, pygame
+from src.utils.config import SCREEN_WIDTH
+from src.utils.resources import FIREBALL_FRAMES, screen, logging, pygame
 
 
 class Fireball():

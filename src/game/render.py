@@ -1,6 +1,6 @@
-from ..config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GOLD, SILVER, BRONZE, BLUE, SCREEN_HEIGHT
-from ..utils import ease_out_sine
-from ..resources import screen, clock, font, font_large, pygame, logging
+from src.utils.config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GOLD, SILVER, BRONZE, BLUE, SCREEN_HEIGHT
+from src.utils.utils import ease_out_sine
+from src.utils.resources import screen, clock, font, font_large, pygame, logging
 
 def render(self):
     render_background(self)

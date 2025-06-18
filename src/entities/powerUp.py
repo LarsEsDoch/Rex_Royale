@@ -1,7 +1,7 @@
 import random
 
-from config import SCREEN_WIDTH, GROUND_LEVEL
-from resources import COIN_IMAGES, screen, logging, pygame
+from src.utils.config import SCREEN_WIDTH, GROUND_LEVEL
+from src.utils.resources import COIN_IMAGES, screen, logging, pygame
 
 
 class PowerUp:

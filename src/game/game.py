@@ -6,9 +6,10 @@ import json
 from . import handleEvents
 from . import update
 from . import render
-from ..config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, SCREEN_HEIGHT
-from ..resources import screen, clock, font, pygame, logging
-from ..dino import Dino
+from src.utils.config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, SCREEN_HEIGHT
+from src.utils.resources import screen, clock, font, pygame, logging, BACKGROUNDS_DAY, BACKGROUNDS_NIGHT, \
+    GAME_OVER_IMAGE
+from src.entities.dino import Dino
 
 class Game:
 
@@ -55,29 +56,25 @@ class Game:
         self.show_fps = show_fps
         self.press_to_return = 0
 
-        self.background_day = pygame.image.load('./textures/desert_day/desert_day_background.png').convert_alpha()
+        self.background_day = BACKGROUNDS_DAY[0]
         self.background_day_flipped = pygame.transform.flip(self.background_day, True, False).convert_alpha()
-        self.background_day_2 = pygame.image.load('./textures/desert_day/desert_day_background_2.png').convert_alpha()
+        self.background_day_2 = BACKGROUNDS_DAY[1]
         self.background_day_2_flipped = pygame.transform.flip(self.background_day_2, True, False).convert_alpha()
-        self.background_day_3 = pygame.image.load('./textures/desert_day/desert_day_background_3.png').convert_alpha()
+        self.background_day_3 = BACKGROUNDS_DAY[2]
         self.background_day_3_flipped = pygame.transform.flip(self.background_day_3, True, False).convert_alpha()
-        self.background_day_4 = pygame.image.load('./textures/desert_day/desert_day_background_4.png').convert_alpha()
+        self.background_day_4 = BACKGROUNDS_DAY[3]
         self.background_day_4_flipped = pygame.transform.flip(self.background_day_4, True, False).convert_alpha()
 
-        self.background_night = pygame.image.load(
-            './textures/desert_night/desert_night_background.png').convert_alpha()
+        self.background_night = BACKGROUNDS_NIGHT[0]
         self.background_night_flipped = pygame.transform.flip(self.background_night, True, False).convert_alpha()
-        self.background_night_2 = pygame.image.load(
-            './textures/desert_night/desert_night_background_2.png').convert_alpha()
+        self.background_night_2 = BACKGROUNDS_NIGHT[1]
         self.background_night_2_flipped = pygame.transform.flip(self.background_night_2, True, False).convert_alpha()
-        self.background_night_3 = pygame.image.load(
-            './textures/desert_night/desert_night_background_3.png').convert_alpha()
+        self.background_night_3 = BACKGROUNDS_NIGHT[2]
         self.background_night_3_flipped = pygame.transform.flip(self.background_night_3, True, False).convert_alpha()
-        self.background_night_4 = pygame.image.load(
-            './textures/desert_night/desert_night_background_4.png').convert_alpha()
+        self.background_night_4 = BACKGROUNDS_NIGHT[3]
         self.background_night_4_flipped = pygame.transform.flip(self.background_night_4, True, False).convert_alpha()
 
-        self.game_over_image = pygame.image.load('./textures/texts/game_over.png')
+        self.game_over_image = GAME_OVER_IMAGE
 
         self.background_flip = True
         self.background_flip_2 = True
@@ -103,7 +100,7 @@ class Game:
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.02
 
-        pygame.mixer.music.load('./sounds/music/pause_music.wav')
+        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
         pygame.mixer.music.play(-1)
         self.music_volume = 0.2
         self.sound_volume = 0.2
@@ -155,7 +152,7 @@ class Game:
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.01
 
-        pygame.mixer.music.load('./sounds/music/game_music.wav')
+        pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
         pygame.mixer.music.play(-1)
 
         logging.info("Game was reset and prepared")
@@ -173,7 +170,7 @@ class Game:
         self.show_list = False
         self.pause = True
 
-        pygame.mixer.music.load('./sounds/music/pause_music.wav')
+        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
         pygame.mixer.music.play(-1)
 
         logging.info("Accounts were reset")
@@ -235,7 +232,7 @@ class Game:
         self.pause = False
         self.checked_username = True
         self.unlocked_user = True
-        pygame.mixer.music.load('./sounds/music/game_music.wav')
+        pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
         pygame.mixer.music.play(-1)
         logging.info(f"Started game")
 

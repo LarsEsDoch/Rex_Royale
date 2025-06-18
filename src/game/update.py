@@ -2,11 +2,11 @@ import random
 
 import pygame
 
-from ..config import SCREEN_WIDTH, SPEED_INCREMENT
-from ..powerUp import PowerUp
-from ..obstacle import Obstacle
-from ..resources import logging, clock, GAME_OVER_SOUND, IMMORTALITY_SOUND, CLAIM_COIN_SOUND, COLLIDE_FIREBALL_SOUND
-from ..utils import ease_out_cubic
+from src.utils.config import SCREEN_WIDTH, SPEED_INCREMENT
+from src.entities.powerUp import PowerUp
+from src.entities.obstacle import Obstacle
+from src.utils.resources import logging, clock, GAME_OVER_SOUND, IMMORTALITY_SOUND, CLAIM_COIN_SOUND, COLLIDE_FIREBALL_SOUND
+from src.utils.utils import ease_out_cubic
 
 
 def update(self):
@@ -185,7 +185,7 @@ def update(self):
         self.power_up_timer += 1
         if self.power_up_timer > 15 * 60:
             if self.power_up_type == "immortality":
-                pygame.mixer.music.load('./sounds/music/game_music.wav')
+                pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
                 pygame.mixer.music.play(-1)
             self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
