@@ -22,6 +22,19 @@ def handleEvents(self):
 
         if event.type == pygame.KEYDOWN:
             if logging.getLogger().isEnabledFor(logging.DEBUG):
+                if event.key == pygame.K_q:
+                    self.fps = 60
+                if event.key == pygame.K_w:
+                    self.fps = 30
+                if event.key == pygame.K_e:
+                    self.fps = 20
+                if event.key == pygame.K_r:
+                    self.fps = 10
+                if event.key == pygame.K_t:
+                    self.fps = 5
+                if event.key == pygame.K_z:
+                    self.fps = 1
+
                 if event.key == pygame.K_1:
                     for obstacle in self.obstacles:
                         obstacle.x = obstacle.x - 1
