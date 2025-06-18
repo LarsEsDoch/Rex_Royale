@@ -5,7 +5,7 @@ import json
 
 from . import handleEvents
 from . import update
-from . import draw
+from . import render
 from ..config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, SCREEN_HEIGHT
 from ..resources import screen, clock, font, pygame, logging
 from ..dino import Dino
@@ -247,6 +247,6 @@ class Game:
         while self.running:
             handleEvents.handleEvents(self)
             update.update(self)
-            draw.draw(self)
+            render.render(self)
             clock.tick(self.fps)
         pygame.quit()

@@ -17,7 +17,7 @@ class Fireball():
         self.animation_timer += 1000/60
         self.current_frame = int(self.animation_timer / 100) % len(self.frames)
 
-    def draw(self):
+    def render(self):
         screen.blit(self.frames[self.current_frame], (self.x, self.y))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             mask_surface = self.masks[self.current_frame].to_surface()

@@ -24,7 +24,7 @@ class PowerUp:
     def update(self, speed):
         self.x -= speed
 
-    def draw(self):
+    def render(self):
         screen.blit(self.image, (self.x, self.y))
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             mask_surface = self.mask.to_surface()

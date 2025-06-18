@@ -2,37 +2,37 @@ from ..config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GOLD, SILV
 from ..utils import ease_out_sine
 from ..resources import screen, clock, font, font_large, pygame, logging
 
-def draw(self):
-    draw_background(self)
+def render(self):
+    render_background(self)
 
     for obstacle in self.obstacles:
-        obstacle.draw()
+        obstacle.render()
 
     for power_up in self.power_ups:
-        power_up.draw()
+        power_up.render()
 
     for fireball in self.fireballs:
-        fireball.draw()
-    self.dino.draw(self.ducked)
+        fireball.render()
+    self.dino.render(self.ducked)
 
     color = WHITE if self.pause or self.game_over else BLACK
 
     if self.game_over:
-        draw_game_over_screen(self)
+        render_game_over_screen(self)
 
     if self.pause:
-        draw_pause_screen()
+        render_pause_screen()
 
-    draw_user_info(self, color)
+    render_user_info(self, color)
 
     if (not self.pause or not self.game_over) and self.control_info_time >= 0 and self.show_control_info:
-        draw_control_info()
+        render_control_info()
 
     if self.power_up_type is not None:
-        draw_power_up_info(self)
+        render_power_up_info(self)
 
     if not self.pause and not self.game_over and self.score < 6000:
-        draw_progress_bars(self)
+        render_progress_bars(self)
 
     if self.cursor_tick < 30:
         cursor = "|"
@@ -40,13 +40,13 @@ def draw(self):
         cursor = " "
 
     if not self.username_existing and not self.unlocked_user and not self.checked_username:
-        draw_username_gui(self, cursor)
+        render_username_gui(self, cursor)
 
     if not self.unlocked_user and self.username_existing:
-        draw_password_gui(self, cursor)
+        render_password_gui(self, cursor)
 
     if self.show_list:
-        draw_high_score_list(self)
+        render_high_score_list(self)
 
     if self.show_fps:
         fps_text = font.render(f"FPS: {int(clock.get_fps())}", True, color)
@@ -54,7 +54,7 @@ def draw(self):
 
     pygame.display.flip()
 
-def draw_background(self):
+def render_background(self):
     if not self.background_flip:
         screen.blit(self.background_night_flipped, (self.background_x, 0))
         screen.blit(self.background_night, (self.background_x + SCREEN_WIDTH + 800, 0))
@@ -122,7 +122,7 @@ def draw_background(self):
     if logging.root.level == logging.DEBUG:
         pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 2)
 
-def draw_game_over_screen(self):
+def render_game_over_screen(self):
     rect_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     rect_surface.set_alpha(self.game_over_fade_in * 255)
     rect_surface.fill(BLACK)
@@ -161,7 +161,7 @@ def draw_game_over_screen(self):
         screen.blit(change_account_text,
                     change_account_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 330)))
 
-def draw_pause_screen():
+def render_pause_screen():
     screen.fill(BLACK)
     game_text = font_large.render("Rex Royale", True, WHITE)
     pause_text = font.render("Paused", True, WHITE)
@@ -178,7 +178,7 @@ def draw_pause_screen():
     screen.blit(hard_restart_text, hard_restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
     screen.blit(high_score_text, high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
 
-def draw_user_info(self, color):
+def render_user_info(self, color):
     score_text = font.render(f"Score: {self.score}", True, color)
     screen.blit(score_text, (10, 10))
     username_text = font.render(f"User: {self.username}", True, color)
@@ -186,7 +186,7 @@ def draw_user_info(self, color):
     highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
     screen.blit(highest_score_text, (10, 60))
 
-def draw_control_info():
+def render_control_info():
     control_info_text = font.render("Space or Arrow Up to jump", True, BLACK)
     screen.blit(control_info_text, (SCREEN_WIDTH - control_info_text.get_width() - 20, 200))
     control_info_text_2 = font.render("Shift or Arrow Down to duck", True, BLACK)
@@ -196,7 +196,7 @@ def draw_control_info():
     control_info_text_4 = font.render("Escape to pause the game", True, BLACK)
     screen.blit(control_info_text_4, (SCREEN_WIDTH - control_info_text_4.get_width() - 20, 275))
 
-def draw_power_up_info(self):
+def render_power_up_info(self):
     power_up_text = font.render(f"Power Up: {self.power_up_type}", True, BLACK)
     screen.blit(power_up_text, (10, 85))
     rect_surface = pygame.Surface((SCREEN_WIDTH // 4, 30), pygame.SRCALPHA)
@@ -208,7 +208,7 @@ def draw_power_up_info(self):
                      (10, 120, (1 - (self.power_up_timer / (60 * 15))) * SCREEN_WIDTH // 4, 30))
     pygame.draw.rect(screen, WHITE, (10, 120, SCREEN_WIDTH // 4, 30), 2)
 
-def draw_progress_bars(self):
+def render_progress_bars(self):
     rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
     rect_surface.set_alpha(128)
     rect_surface.fill(WHITE)
@@ -222,7 +222,7 @@ def draw_progress_bars(self):
     #                  (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_sky * SCREEN_WIDTH // 2, 50))
     pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, SCREEN_WIDTH // 2, 50), 2)
 
-def draw_username_gui(self, cursor):
+def render_username_gui(self, cursor):
     screen.fill(BLACK)
 
     game_text = font_large.render("Rex Royale", True, WHITE)
@@ -234,7 +234,7 @@ def draw_username_gui(self, cursor):
     screen.blit(username_text, username_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
     screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
 
-def draw_password_gui(self, cursor):
+def render_password_gui(self, cursor):
     screen.fill(BLACK)
     password = ""
     for i in range(len(self.password)):
@@ -258,7 +258,7 @@ def draw_password_gui(self, cursor):
     screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
     screen.blit(return_text, return_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
 
-def draw_high_score_list(self):
+def render_high_score_list(self):
     screen.fill(BLACK)
     game_text = font.render("Rex Royale", True, WHITE)
     screen.blit(game_text, game_text.get_rect(center=(75, 20)))

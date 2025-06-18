@@ -50,7 +50,7 @@ class Dino:
         if self.y >= GROUND_LEVEL - self.height - 40:
             self.y = min(self.y + self.velocity_y, GROUND_LEVEL - self.height)
 
-    def draw(self, ducked):
+    def render(self, ducked):
         if ducked:
             screen.blit(self.duck_image, (self.x, self.y))
             if logging.getLogger().getEffectiveLevel() == logging.DEBUG:

@@ -71,7 +71,7 @@ class Obstacle:
             self.animation_timer += 1000/60
             self.current_frame = int(self.animation_timer / 100) % len(self.frame_images)
 
-    def draw(self):
+    def render(self):
         if self.type == "bird":
             screen.blit(self.frame_images[self.current_frame], (self.x, self.y[0]))
         elif self.type == "double":
