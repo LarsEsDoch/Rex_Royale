@@ -3,33 +3,14 @@ from ..utils import ease_out_sine, ease_out_cubic
 from ..resources import screen, clock, font, font_large, pygame, logging
 
 def draw(self):
+    draw_background(self)
+def draw_background(self):
     if not self.background_flip:
         screen.blit(self.background_night_flipped, (self.background_x, 0))
         screen.blit(self.background_night, (self.background_x + SCREEN_WIDTH + 800, 0))
     else:
         screen.blit(self.background_night, (self.background_x, 0))
         screen.blit(self.background_night_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
-
-    if not self.background_flip_2:
-        screen.blit(self.background_night_2_flipped, (self.background_x_2, 410))
-        screen.blit(self.background_night_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
-    else:
-        screen.blit(self.background_night_2, (self.background_x_2, 410))
-        screen.blit(self.background_night_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
-
-    if not self.background_flip_3:
-        screen.blit(self.background_night_3_flipped, (self.background_x_3, 500))
-        screen.blit(self.background_night_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
-    else:
-        screen.blit(self.background_night_3, (self.background_x_3, 500))
-        screen.blit(self.background_night_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
-
-    if not self.background_flip_4:
-        screen.blit(self.background_night_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
-        screen.blit(self.background_night_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
-    else:
-        screen.blit(self.background_night_4, (self.background_x_4, GROUND_LEVEL - 80))
-        screen.blit(self.background_night_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
 
     self.background_day.set_alpha(int(self.night_to_day_transition_progress * 255))
     self.background_day_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
@@ -40,6 +21,13 @@ def draw(self):
         screen.blit(self.background_day, (self.background_x, 0))
         screen.blit(self.background_day_flipped, (self.background_x + SCREEN_WIDTH + 800, 0))
 
+    if not self.background_flip_2:
+        screen.blit(self.background_night_2_flipped, (self.background_x_2, 410))
+        screen.blit(self.background_night_2, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+    else:
+        screen.blit(self.background_night_2, (self.background_x_2, 410))
+        screen.blit(self.background_night_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
+
     self.background_day_2.set_alpha(int(self.night_to_day_transition_progress * 255))
     self.background_day_2_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
     if not self.background_flip_2:
@@ -49,6 +37,13 @@ def draw(self):
         screen.blit(self.background_day_2, (self.background_x_2, 410))
         screen.blit(self.background_day_2_flipped, (self.background_x_2 + SCREEN_WIDTH + 800, 410))
 
+    if not self.background_flip_3:
+        screen.blit(self.background_night_3_flipped, (self.background_x_3, 500))
+        screen.blit(self.background_night_3, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+    else:
+        screen.blit(self.background_night_3, (self.background_x_3, 500))
+        screen.blit(self.background_night_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+
     self.background_day_3.set_alpha(int(self.night_to_day_transition_progress * 255))
     self.background_day_3_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))
     if not self.background_flip_3:
@@ -57,6 +52,13 @@ def draw(self):
     else:
         screen.blit(self.background_day_3, (self.background_x_3, 500))
         screen.blit(self.background_day_3_flipped, (self.background_x_3 + SCREEN_WIDTH + 800, 500))
+
+    if not self.background_flip_4:
+        screen.blit(self.background_night_4_flipped, (self.background_x_4, GROUND_LEVEL - 80))
+        screen.blit(self.background_night_4, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
+    else:
+        screen.blit(self.background_night_4, (self.background_x_4, GROUND_LEVEL - 80))
+        screen.blit(self.background_night_4_flipped, (self.background_x_4 + SCREEN_WIDTH + 800, GROUND_LEVEL - 80))
 
     self.background_day_4.set_alpha(int(self.night_to_day_transition_progress * 255))
     self.background_day_4_flipped.set_alpha(int(self.night_to_day_transition_progress * 255))

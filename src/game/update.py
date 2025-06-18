@@ -6,6 +6,7 @@ from ..config import SCREEN_WIDTH, SPEED_INCREMENT
 from ..powerUp import PowerUp
 from ..obstacle import Obstacle
 from ..resources import logging, clock, GAME_OVER_SOUND, IMMORTALITY_SOUND, CLAIM_COIN_SOUND, COLLIDE_FIREBALL_SOUND
+from ..utils import ease_out_cubic
 
 
 def update(self):
@@ -68,7 +69,7 @@ def update(self):
         self.obstacles.append(Obstacle(self.score, self.power_up_type))
         logging.debug(f"Placed new obstacle")
 
-    if -300 >= self.background_x:
+    if -400 >= self.background_x:
         self.night_to_day_transition = True
 
     if self.background_x <= -500 and (
