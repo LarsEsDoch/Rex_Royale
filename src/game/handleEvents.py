@@ -86,8 +86,11 @@ def handleEvents(self):
                     SELECT_SOUND.play()
                     logging.info("Exit")
                 else:
+                    self.last_played_title = "pause_music.wav"
+                    self.music_positon_game += pygame.mixer.music.get_pos() / 1000
                     pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
-                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
+                    IMMORTALITY_SOUND.stop()
                     SELECT_SOUND.set_volume(self.sound_volume)
                     SELECT_SOUND.play()
                     logging.info("Paused")
@@ -95,6 +98,11 @@ def handleEvents(self):
             if event.key == pygame.K_F1:
                 self.show_list = not self.show_list
                 logging.info(f"Toggle high score list")
+                self.last_played_title = "pause_music.wav"
+                self.music_positon_game += pygame.mixer.music.get_pos() / 1000
+                pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+                pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
+                IMMORTALITY_SOUND.stop()
                 SELECT_SOUND.set_volume(self.sound_volume)
                 SELECT_SOUND.play()
                 logging.info("Paused")
@@ -103,7 +111,8 @@ def handleEvents(self):
             if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
                 if not self.unlocked_user and self.username_existing:
                     if self.press_to_return >= 5:
-                        self.reset()
+                        self.music_positon_pause += pygame.mixer.music.get_pos() / 1000
+                        self.reset(False)
                         self.accounts_reset()
                         SELECT_SOUND.set_volume(self.sound_volume)
                         SELECT_SOUND.play()
@@ -111,7 +120,7 @@ def handleEvents(self):
                     self.press_to_return += 1
                     return
 
-                self.reset()
+                self.reset(False)
                 self.accounts_reset()
                 SELECT_SOUND.set_volume(self.sound_volume)
                 SELECT_SOUND.play()
@@ -119,7 +128,8 @@ def handleEvents(self):
 
             if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
                 self.save_scores()
-                self.reset()
+                self.reset(True)
+                self.pause = False
                 SELECT_SOUND.set_volume(self.sound_volume)
                 SELECT_SOUND.play()
                 logging.info("Reset Score")
@@ -127,12 +137,17 @@ def handleEvents(self):
             if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                 if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
                     self.pause = False
+                    self.show_list = False
+                    self.music_positon_pause += pygame.mixer.music.get_pos() / 1000
+                    self.last_played_title = "game_music.wav"
                     pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
-                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
+                    self.save_scores()
+                    self.holding_mouse = False
                     logging.info("Resumed")
                 elif self.game_over:
                     if self.game_over_fade_in >= 1:
-                        self.reset()
+                        self.reset(False)
                         SELECT_SOUND.set_volume(self.sound_volume)
                         SELECT_SOUND.play()
                         logging.info("Reset Score")

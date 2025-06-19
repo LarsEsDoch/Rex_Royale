@@ -100,13 +100,18 @@ class Game:
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.02
 
+        self.music_positon_game = 0
+        self.music_positon_pause = 0
+        self.last_played_title = "pause_music.wav"
+
         pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(-1, fade_ms=500)
+
         self.music_volume = 0.2
         self.sound_volume = 0.2
         logging.info("Prepared game")
 
-    def reset(self):
+    def reset(self, game_music):
         self.running = True
         self.game_over = False
         self.score = 0
@@ -151,8 +156,11 @@ class Game:
         self.night_to_day_transition_progress = 0
         self.night_to_day_transition_speed = 0.01
 
-        pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
-        pygame.mixer.music.play(-1)
+        self.music_positon_game = 0
+        if game_music:
+            self.last_played_title = "game_music.wav"
+            pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
+            pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
 
         logging.info("Game was reset and prepared")
 
@@ -168,9 +176,13 @@ class Game:
         self.unlocked_user = False
         self.show_list = False
         self.pause = True
+        self.music_volume = 0.2
+        self.sound_volume = 0.2
 
-        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
-        pygame.mixer.music.play(-1)
+        if self.last_played_title == "game_music.wav":
+            self.last_played_title = "pause_music.wav"
+            pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+            pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
 
         logging.info("Accounts were reset")
 
@@ -224,15 +236,17 @@ class Game:
 
                 pygame.display.flip()
                 clock.tick(1)
-                self.reset()
+                self.reset(False)
                 self.accounts_reset()
                 clock.tick(self.fps)
                 return
         self.pause = False
         self.checked_username = True
         self.unlocked_user = True
+        self.music_positon_pause +=  pygame.mixer.music.get_pos() / 1000
+        self.last_played_title = "game_music.wav"
         pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
         logging.info(f"Started game")
 
     def create_password(self):

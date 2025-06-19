@@ -172,6 +172,7 @@ def update(self):
                 logging.info(f"Multiplicator power up")
             elif power_up.type == "immortality":
                 self.power_up_type = "immortality"
+                self.music_positon_game += pygame.mixer.music.get_pos() / 1000
                 pygame.mixer.music.stop()
                 IMMORTALITY_SOUND.set_volume(self.music_volume)
                 IMMORTALITY_SOUND.play()
@@ -190,8 +191,9 @@ def update(self):
         self.power_up_timer += 1
         if self.power_up_timer > 15 * 60:
             if self.power_up_type == "immortality":
+                self.last_played_title = "game_music.wav"
                 pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
-                pygame.mixer.music.play(-1)
+                pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
             self.power_up_timer = random.randint(30 * 60, 45 * 60)
             self.power_up_timer = -self.power_up_timer
             self.power_up_type = None

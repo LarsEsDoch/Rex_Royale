@@ -28,7 +28,7 @@ def render(self):
 
     render_user_info(self, color)
 
-    if (not self.pause or not self.game_over) and self.control_info_time >= 0 and self.show_control_info:
+    if not self.pause and self.control_info_time >= 0 and self.show_control_info:
         render_control_info()
 
     if not self.pause and not self.game_over and self.score < 6000:
