@@ -196,20 +196,24 @@ class Game:
         if not self.username in scores:
             scores[self.username] = {
                 "score": self.score,
+                "music_volume": round(self.music_volume, 2),
+                "sound_volume": round(self.sound_volume, 2),
                 "password": self.hashed_password
             }
             logging.info(f"Created new account: {self.username}")
-        elif self.score > scores[self.username]["score"]:
-            scores[self.username]["score"] = self.score
-            scores[self.username]["password"] = self.hashed_password
+        else:
+            scores[self.username]["music_volume"] = round(self.music_volume, 2)
+            scores[self.username]["sound_volume"] = round(self.sound_volume, 2)
 
-        if not self.username in scores or self.score > self.high_score:
+        if self.score > self.high_score:
+            scores[self.username]["score"] = self.score
+            self.high_score = self.score
+            logging.info(f"Saved highscore ({self.score}) for user ({self.username}) out of storage")
+
+        if self.password != "":
             with open("./saves/highscores.json", "w") as file:
                 json.dump(scores, file, indent=4)
-            logging.info(f"Saved highscore: {self.score} for user: {self.username}")
-            self.high_score = self.score
-        else:
-            logging.info(f"No new highscore: user: {self.username}")
+            logging.info(f"Saved volume settings")
 
     def load_scores(self):
         if os.path.exists("./saves/highscores.json"):
@@ -230,6 +234,16 @@ class Game:
             if self.hashed_password == self.accounts[self.username]["password"]:
                 self.high_score = self.accounts[self.username]["score"]
                 logging.info(f"Loaded highscore ({self.high_score}) for user ({self.username}) out of storage")
+                if "music_volume" in self.accounts[self.username]:
+                    self.music_volume = self.accounts[self.username]["music_volume"]
+                    logging.info(f"Loaded music volume ({self.music_volume}) for user ({self.username}) out of storage")
+                else:
+                    self.music_volume = 0.2
+                if "sound_volume" in self.accounts[self.username]:
+                    self.sound_volume = self.accounts[self.username]["sound_volume"]
+                    logging.info(f"Loaded sound volume ({self.sound_volume}) for user ({self.username}) out of storage")
+                else:
+                    self.sound_volume = 0.2
             else:
                 logging.info("Wrong password")
 
