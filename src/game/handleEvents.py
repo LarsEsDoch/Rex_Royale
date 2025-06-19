@@ -20,6 +20,43 @@ def handleEvents(self):
                 self.target_high_score_list_y -= 40
                 logging.debug("Mouse scrolled down")
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.pause and not self.game_over and self.unlocked_user and event.button == 1:
+                mouse_x = pygame.mouse.get_pos()[0]
+                mouse_y = pygame.mouse.get_pos()[1]
+
+                if SCREEN_WIDTH // 2 - 250 <= mouse_x <= SCREEN_WIDTH // 2 + 250:
+
+                    if SCREEN_HEIGHT // 2 - 105 <= mouse_y <= SCREEN_HEIGHT // 2 - 105 + 30:
+                        self.holding_mouse_music_control = True
+                        logging.debug("Holding Music volume")
+                    elif SCREEN_HEIGHT // 2 - 5 <= mouse_y <= SCREEN_HEIGHT // 2 - 5 + 30:
+                        self.holding_mouse_sound_control = True
+                        logging.debug("Holding Sound volume")
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            if self.pause and not self.game_over and self.unlocked_user and event.button == 1:
+                if self.holding_mouse_sound_control:
+                    SELECT_SOUND.set_volume(self.sound_volume)
+                    SELECT_SOUND.play()
+                self.holding_mouse_music_control = False
+                self.holding_mouse_sound_control = False
+                logging.debug("Mouse released")
+                return
+
+        if self.holding_mouse_music_control or self.holding_mouse_sound_control:
+            mouse_x = pygame.mouse.get_pos()[0]
+
+            offset = mouse_x - SCREEN_WIDTH // 2 - 250
+            percentage = max(min(100 + (offset / 500) * 100, 100), 0)
+
+            if self.holding_mouse_music_control:
+                self.music_volume = percentage / 100
+                logging.debug(f"Set music volume: {percentage:.2f}%")
+            else:
+                self.sound_volume = percentage / 100
+                logging.debug(f"Set sound volume: {percentage:.2f}%")
+
         if event.type == pygame.KEYDOWN:
             if logging.getLogger().isEnabledFor(logging.DEBUG):
                 if event.key == pygame.K_q:

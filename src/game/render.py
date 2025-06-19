@@ -163,6 +163,7 @@ def render_game_over_screen(self):
 
 def render_pause_screen(self):
     screen.fill(BLACK)
+    render_volume_sliders(self)
     game_text = font_large.render("Rex Royale", True, WHITE)
     pause_text = font.render("Paused", True, WHITE)
     continue_text = font.render("Press space to continue", True, WHITE)
@@ -271,3 +272,22 @@ def render_high_score_list(self):
         score_text = font.render(f"{username}: {score['score']}", True, color)
         screen.blit(score_text,
                     score_text.get_rect(center=(SCREEN_WIDTH // 2, account * 50 + 120 + self.high_score_list_y)))
+
+def render_volume_sliders(self):
+    music_volume_text = font.render("Music Volume", True, WHITE)
+    screen.blit(music_volume_text, music_volume_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 150)))
+    music_volume_text_value = font_small.render(f"{int(self.music_volume * 100)}%", True, WHITE)
+    screen.blit(music_volume_text_value, music_volume_text_value.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 120)))
+
+    pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - 250, SCREEN_HEIGHT // 2 - 105, 500, 30), 2)
+    pygame.draw.rect(screen, GRAY, (SCREEN_WIDTH // 2 - 248, SCREEN_HEIGHT // 2 - 103, 496 * self.music_volume, 26))
+    pygame.draw.rect(screen, WHITE, ((SCREEN_WIDTH // 2 - 250) + 500 * self.music_volume - 5, SCREEN_HEIGHT // 2 - 107, 10, 34))
+
+    sound_volume_text = font.render("SFX Volume", True, WHITE)
+    screen.blit(sound_volume_text, sound_volume_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
+    sound_volume_text_value = font_small.render(f"{int(self.sound_volume * 100)}%", True, WHITE)
+    screen.blit(sound_volume_text_value, sound_volume_text_value.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 20)))
+
+    pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - 250, SCREEN_HEIGHT // 2 - 5, 500, 30), 2)
+    pygame.draw.rect(screen, GRAY, (SCREEN_WIDTH // 2 - 248, SCREEN_HEIGHT // 2 - 3, 496 * self.sound_volume, 26))
+    pygame.draw.rect(screen, WHITE,((SCREEN_WIDTH // 2 - 250) + 500 * self.sound_volume - 5, SCREEN_HEIGHT // 2 - 7, 10, 34))

@@ -109,6 +109,9 @@ class Game:
 
         self.music_volume = 0.2
         self.sound_volume = 0.2
+        self.holding_mouse_music_control = False
+        self.holding_mouse_sound_control = False
+
         logging.info("Prepared game")
 
     def reset(self, game_music):
