@@ -22,6 +22,7 @@ logging.info("Set window icon")
 clock = pygame.time.Clock()
 logging.info("Initialized clock")
 
+font_small = pygame.font.Font(None, 24)
 font = pygame.font.Font(None, 36)
 font_large = pygame.font.Font(None, 48)
 logging.info("Set font")

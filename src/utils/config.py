@@ -20,6 +20,7 @@ FULLSCREEN = False
 logging.info("Initialized screen dimensions")
 
 WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
 BLACK = (40, 40, 40)
 BROWN = (150, 100, 50)
 GOLD = (255, 215, 0)

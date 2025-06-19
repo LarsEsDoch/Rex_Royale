@@ -3,9 +3,9 @@ import hashlib
 import os
 import json
 
-from . import handleEvents
-from . import update
-from . import render
+import handleEvents
+import update
+import render
 from src.utils.config import SCREEN_WIDTH, BLACK, OBSTACLE_SPEED, RED, SCREEN_HEIGHT
 from src.utils.resources import screen, clock, font, pygame, logging, BACKGROUNDS_DAY, BACKGROUNDS_NIGHT, \
     GAME_OVER_IMAGE
@@ -88,7 +88,7 @@ class Game:
         self.progress_birds = 0
         self.birds_score = 5000
         self.progress_day = 0
-        self.day_score = 5600
+        self.day_score = 5300
         self.progress_sky = 0
         self.sky_score = 10000
         self.progress_smoothed = 0
@@ -108,7 +108,6 @@ class Game:
 
     def reset(self):
         self.running = True
-        self.pause = False
         self.game_over = False
         self.score = 0
         self.obstacle_speed = self.original_obstacle_speed
@@ -143,7 +142,7 @@ class Game:
         self.progress_birds = 0
         self.birds_score = 5000
         self.progress_day = 0
-        self.day_score = 5600
+        self.day_score = 5300
         self.progress_sky = 0
         self.sky_score = 10000
         self.progress_smoothed = 0

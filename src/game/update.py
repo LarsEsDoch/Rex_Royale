@@ -10,6 +10,11 @@ from src.utils.utils import ease_out_cubic
 
 
 def update(self):
+    if self.music_positon_game >= 108.877:
+        self.music_positon_game = 0
+    if self.music_positon_pause >= 240.0:
+        self.music_positon_pause = 0
+
     self.cursor_tick += 1
     if self.cursor_tick >= 60:
         self.cursor_tick = 0

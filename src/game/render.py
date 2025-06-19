@@ -1,6 +1,6 @@
-from src.utils.config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GOLD, SILVER, BRONZE, BLUE, SCREEN_HEIGHT
+from src.utils.config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GOLD, SILVER, BRONZE, BLUE, SCREEN_HEIGHT, GRAY
 from src.utils.utils import ease_out_sine
-from src.utils.resources import screen, clock, font, font_large, pygame, logging
+from src.utils.resources import screen, clock, font, font_large, pygame, logging, font_small
 
 def render(self):
     render_background(self)
@@ -17,19 +17,19 @@ def render(self):
 
     color = WHITE if self.pause or self.game_over else BLACK
 
+    if self.power_up_type is not None and not self.game_over:
+        render_power_up_info(self, color)
+
     if self.game_over:
         render_game_over_screen(self)
 
     if self.pause:
-        render_pause_screen()
+        render_pause_screen(self)
 
     render_user_info(self, color)
 
     if (not self.pause or not self.game_over) and self.control_info_time >= 0 and self.show_control_info:
         render_control_info()
-
-    if self.power_up_type is not None:
-        render_power_up_info(self)
 
     if not self.pause and not self.game_over and self.score < 6000:
         render_progress_bars(self)
@@ -138,7 +138,7 @@ def render_game_over_screen(self):
     scaled_width = int(scaled_height * aspect_ratio)
 
     game_over_screen = pygame.transform.scale(self.game_over_image,
-                                              (min(scaled_width, 1100), min(scaled_height, 600)))
+                                              (min(scaled_width, 1119), min(scaled_height, 624)))
     game_over_screen.set_alpha(opacity)
     screen.blit(game_over_screen, game_over_screen.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
 
@@ -161,7 +161,7 @@ def render_game_over_screen(self):
         screen.blit(change_account_text,
                     change_account_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 330)))
 
-def render_pause_screen():
+def render_pause_screen(self):
     screen.fill(BLACK)
     game_text = font_large.render("Rex Royale", True, WHITE)
     pause_text = font.render("Paused", True, WHITE)
@@ -171,12 +171,12 @@ def render_pause_screen():
     hard_restart_text = font.render("Press backspace to change account", True, WHITE)
     high_score_text = font.render("Press F1 to see highscores", True, WHITE)
     screen.blit(game_text, game_text.get_rect(center=(SCREEN_WIDTH // 2, 50)))
-    screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
-    screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
-    screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
-    screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
-    screen.blit(hard_restart_text, hard_restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
-    screen.blit(high_score_text, high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
+    screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100 - 100)))
+    screen.blit(continue_text, continue_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50 + 100)))
+    screen.blit(escape_text, escape_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
+    screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50 + 100)))
+    screen.blit(hard_restart_text, hard_restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100 + 100)))
+    screen.blit(high_score_text, high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150 + 100)))
 
 def render_user_info(self, color):
     score_text = font.render(f"Score: {self.score}", True, color)
@@ -196,15 +196,15 @@ def render_control_info():
     control_info_text_4 = font.render("Escape to pause the game", True, BLACK)
     screen.blit(control_info_text_4, (SCREEN_WIDTH - control_info_text_4.get_width() - 20, 275))
 
-def render_power_up_info(self):
-    power_up_text = font.render(f"Power Up: {self.power_up_type}", True, BLACK)
+def render_power_up_info(self, color):
+    power_up_text = font.render(f"Power Up: {self.power_up_type}", True, color)
     screen.blit(power_up_text, (10, 85))
     rect_surface = pygame.Surface((SCREEN_WIDTH // 4, 30), pygame.SRCALPHA)
     rect_surface.set_alpha(128)
     rect_surface.fill(WHITE)
     screen.blit(rect_surface, (10, 120))
 
-    pygame.draw.rect(screen, BLACK,
+    pygame.draw.rect(screen, color,
                      (10, 120, (1 - (self.power_up_timer / (60 * 15))) * SCREEN_WIDTH // 4, 30))
     pygame.draw.rect(screen, WHITE, (10, 120, SCREEN_WIDTH // 4, 30), 2)
 
@@ -266,9 +266,8 @@ def render_high_score_list(self):
     screen.blit(header_text, header_text.get_rect(center=(SCREEN_WIDTH // 2, 50 + self.high_score_list_y)))
     accounts = sorted(self.accounts.items(), key=lambda x: x[1]["score"], reverse=True)
     for account, (username, score) in enumerate(accounts):
-        prefix = "👑 " if account <= 2 else ""
         colors = {2: BRONZE, 1: SILVER, 0: GOLD}
         color = colors.get(account, WHITE)
-        score_text = font.render(f"{prefix}{username}: {score['score']}", True, color)
+        score_text = font.render(f"{username}: {score['score']}", True, color)
         screen.blit(score_text,
                     score_text.get_rect(center=(SCREEN_WIDTH // 2, account * 50 + 120 + self.high_score_list_y)))

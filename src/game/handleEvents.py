@@ -1,7 +1,6 @@
-from src.utils.config import SCREEN_HEIGHT
+from src.utils.config import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.entities.fireball import Fireball
-from src.utils.resources import pygame, SHOT_FIREBALL_SOUND, SELECT_SOUND
-from src.utils.resources import logging
+from src.utils.resources import pygame, SHOT_FIREBALL_SOUND, SELECT_SOUND, IMMORTALITY_SOUND, logging
 
 def handleEvents(self):
     for event in pygame.event.get():
@@ -98,6 +97,7 @@ def handleEvents(self):
                 logging.info(f"Toggle high score list")
                 SELECT_SOUND.set_volume(self.sound_volume)
                 SELECT_SOUND.play()
+                logging.info("Paused")
                 return
 
             if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
@@ -136,7 +136,7 @@ def handleEvents(self):
                         SELECT_SOUND.set_volume(self.sound_volume)
                         SELECT_SOUND.play()
                         logging.info("Reset Score")
-                else:
+                elif self.unlocked_user:
                     logging.debug("Jump")
                     if self.dino.y > 50:
                         self.dino.start_jump(self.power_up_type, self.sound_volume)
