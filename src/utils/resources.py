@@ -1,6 +1,6 @@
 import pygame
 
-from src.utils.config import SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, logging
+from src.utils.config import SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, logging, BLACK, WHITE
 from src.utils.utils import load_frames_scaled, load_frame, load_frames
 
 pygame.init()
@@ -27,11 +27,12 @@ font = pygame.font.Font(None, 36)
 font_large = pygame.font.Font(None, 48)
 logging.info("Set font")
 
-screen.fill((5, 5, 5))
-text = font.render("Loading...", True, (255, 255, 255))
+screen.fill(BLACK)
+text = font.render("Loading...", True, WHITE)
 text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
 screen.blit(text, text_rect)
-logging.info("rendered text")
+pygame.display.flip()
+logging.info("Rendered loading text")
 
 GAME_OVER_IMAGE = load_frame("./assets/textures/texts/game_over.png", (1200, 675))
 BACKGROUNDS_DAY = load_frames("./assets/textures/backgrounds/day/day_background_*.png", 4)

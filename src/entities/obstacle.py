@@ -95,7 +95,7 @@ class Obstacle:
             mask_surface.set_colorkey((0,0,0))
             screen.blit(mask_surface, (self.x, self.y[0]))
 
-    def off_screen(self):
+    def conquered(self):
         if self.type == "double":
             return self.x + self.width[0]*2 < 50
         else:

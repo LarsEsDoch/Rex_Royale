@@ -2,11 +2,11 @@ import os
 import argparse
 
 from src.utils import config
-from src.utils.config import logging, FRAME_RATE, DINO_VELOCITY, GRAVITY, OBSTACLE_SPEED
+from src.utils.config import logging, FRAME_RATE, DINO_VELOCITY, GRAVITY, OBSTACLE_SPEED, DIFFICULTY_SPEEDS, \
+    DIFFICULTY_GRAVITIES, DIFFICULTY_VELOCITIES
 from src.game.game import Game
 
 def validate_resources():
-    logging.info("Validating resources...")
     required_files = [
         "./assets/textures/backgrounds/day/day_background_0.png",
         "./assets/textures/backgrounds/day/day_background_1.png",
@@ -63,7 +63,6 @@ def validate_resources():
         "./assets/textures/power_ups/fireball/fireball_2.png",
         "./assets/textures/power_ups/fireball/fireball_3.png",
         "./assets/textures/power_ups/fireball/fireball_4.png"]
-
     missing_files = [file for file in required_files if not os.path.exists(file)]
 
     if missing_files:
@@ -87,24 +86,9 @@ if __name__ == "__main__":
 
     validate_resources()
 
-    difficulty_speeds = {
-        "easy": 5,
-        "normal": OBSTACLE_SPEED,
-        "hard": 9
-    }
-    difficulty_gravity = {
-        "easy": 0.4,
-        "normal": GRAVITY,
-        "hard": 0.9
-    }
-    difficulty_velocity = {
-        "easy": -18,
-        "normal": DINO_VELOCITY,
-        "hard": -16
-    }
-    custom_obstacle_speed = difficulty_speeds[args.difficulty]
-    config.GRAVITY = difficulty_gravity[args.difficulty]
-    config.VELOCITY = difficulty_velocity[args.difficulty]
+    custom_obstacle_speed = DIFFICULTY_SPEEDS[args.difficulty]
+    config.GRAVITY = DIFFICULTY_GRAVITIES[args.difficulty]
+    config.VELOCITY = DIFFICULTY_VELOCITIES[args.difficulty]
     logging.info(f"Set obstacle speed to: {config.OBSTACLE_SPEED}")
     fps = args.fps
 
@@ -112,5 +96,4 @@ if __name__ == "__main__":
     logging.info(f"Running the game at {args.fps} FPS")
 
     logging.info("Starting the game...")
-
     Game(args.show_fps, custom_obstacle_speed, fps).run()

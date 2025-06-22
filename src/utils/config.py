@@ -3,6 +3,7 @@ import os
 
 from datetime import datetime
 
+os.makedirs("./logs", exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
@@ -38,4 +39,19 @@ OBSTACLE_SPEED = 7
 DINO_VELOCITY = -17
 SPEED_INCREMENT = 0.001
 FRAME_RATE = 60
+DIFFICULTY_SPEEDS = {
+    "easy": 5,
+    "normal": OBSTACLE_SPEED,
+    "hard": 9
+}
+DIFFICULTY_GRAVITIES = {
+    "easy": 0.4,
+    "normal": GRAVITY,
+    "hard": 0.9
+}
+DIFFICULTY_VELOCITIES = {
+    "easy": -18,
+    "normal": DINO_VELOCITY,
+    "hard": -16
+}
 logging.info("Initialized game constants")

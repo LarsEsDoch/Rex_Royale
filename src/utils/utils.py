@@ -1,3 +1,5 @@
+import hashlib
+
 from src.utils.config import logging
 from src.utils.resources import pygame
 
@@ -32,3 +34,8 @@ def load_frame(frame_path, size):
     image = pygame.image.load(frame_path)
     image = pygame.transform.scale(image, size).convert_alpha()
     return image
+
+def hash_password(password):
+    hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+    logging.debug(f"Hashed password: {hashed_password}")
+    return hashed_password

@@ -34,6 +34,5 @@ class PowerUp:
     def complete_off_screen(self):
         return self.x + self.width < -200
 
-
     def collides_with(self, dino):
         return self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y)) is not None

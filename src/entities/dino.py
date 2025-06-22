@@ -64,7 +64,6 @@ class Dino:
                 mask_surface.set_colorkey((0,0,0))
                 screen.blit(mask_surface, (self.x, self.y))
 
-
     def start_jump(self, power_up_type, sound_volume):
         if power_up_type == "fly" and self.y >= GROUND_LEVEL - self.height - 10:
             self.jump = True
