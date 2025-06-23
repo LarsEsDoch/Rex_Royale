@@ -9,7 +9,6 @@ from src.game import render
 from src.utils.config import OBSTACLE_SPEED
 from src.utils.resources import clock, pygame, logging, BACKGROUNDS_DAY, BACKGROUNDS_NIGHT, GAME_OVER_IMAGE
 from src.entities.dino import Dino
-from src.utils.utils import hash_password
 
 
 class Game:

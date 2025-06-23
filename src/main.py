@@ -1,8 +1,11 @@
 import os
 import argparse
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.utils import config
-from src.utils.config import logging, FRAME_RATE, DINO_VELOCITY, GRAVITY, OBSTACLE_SPEED, DIFFICULTY_SPEEDS, \
+from src.utils.config import logging, FRAME_RATE, DIFFICULTY_SPEEDS, \
     DIFFICULTY_GRAVITIES, DIFFICULTY_VELOCITIES
 from src.game.game import Game
 

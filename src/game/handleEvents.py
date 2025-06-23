@@ -240,7 +240,7 @@ def jump(self):
         logging.info("Resumed")
     elif self.game_over:
         if self.game_over_fade_in >= 1:
-            self.reset(False)
+            self.reset(True)
             SELECT_SOUND.set_volume(self.sound_volume)
             SELECT_SOUND.play()
             logging.info("Reset Score")
