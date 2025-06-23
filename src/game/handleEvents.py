@@ -89,7 +89,7 @@ def event_key_down(self, event):
     if event.key == pygame.K_BACKSPACE and self.game_over and self.username_existing or event.key == pygame.K_BACKSPACE and self.pause and self.username_existing and self.password.strip() == "" or event.key == pygame.K_BACKSPACE and self.pause and self.unlocked_user:
         complete_reset(self)
 
-    if event.key == pygame.K_RETURN and self.game_over or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
+    if event.key == pygame.K_RETURN and self.game_over and self.game_over_fade_in >= 1 or event.key == pygame.K_RETURN and self.pause and self.unlocked_user:
         score_reset(self)
 
     if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
@@ -197,10 +197,11 @@ def toggle_high_score_list(self):
         logging.info(f"Show high score list")
     else:
         logging.info(f"Hide high score list")
-    self.last_played_title = "pause_music.wav"
-    self.music_positon_game += pygame.mixer.music.get_pos() / 1000
-    pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
-    pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
+    if not self.last_played_title == "pause_music.wav":
+        self.last_played_title = "pause_music.wav"
+        self.music_positon_game += pygame.mixer.music.get_pos() / 1000
+        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+        pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
     IMMORTALITY_SOUND.stop()
     SELECT_SOUND.set_volume(self.sound_volume)
     SELECT_SOUND.play()
