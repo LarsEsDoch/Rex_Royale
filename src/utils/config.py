@@ -13,6 +13,33 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
+
+class CustomFormatter(logging.Formatter):
+    white = "\x1b[37;20m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    dark_red = "\x1b[31;1m"
+    bold_dark_red = "\x1b[31;1;1m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s - %(levelname)s: %(message)s"
+
+    FORMATS = {
+        logging.DEBUG: red + format + reset,
+        logging.INFO: white + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: dark_red + format + reset,
+        logging.CRITICAL: bold_dark_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+ch = logging.StreamHandler()
+ch.setFormatter(CustomFormatter())
+logging.getLogger().handlers[1] = ch
+
 logging.info("Started logging")
 
 SCREEN_WIDTH = 1280
