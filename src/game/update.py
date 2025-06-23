@@ -41,9 +41,9 @@ def update(self):
 
 def update_music(self):
     if self.music_positon_game >= 108.877:
-        self.music_positon_game = 0
+        self.music_positon_game -= 108.877
     if self.music_positon_pause >= 240.0:
-        self.music_positon_pause = 0
+        self.music_positon_pause -= 240.0
     pygame.mixer.music.set_volume(self.music_volume)
 
 def update_pause_values(self):
@@ -170,7 +170,7 @@ def update_obstacles(self):
         self.obstacle_speed += SPEED_INCREMENT
 
 def update_power_ups(self):
-    if not self.obstacles or self.obstacles[-1].x <= SCREEN_WIDTH - 300:
+    if not self.obstacles or self.obstacles[-1].x <= SCREEN_WIDTH - 400 - self.spacing:
         self.power_up_spacing = True
     else:
         self.power_up_spacing = False
