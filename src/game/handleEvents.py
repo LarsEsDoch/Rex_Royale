@@ -94,6 +94,8 @@ def event_key_down(self, event):
 
     if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
         jump(self)
+    print(self.music_positon_game)
+    print(self.spacing)
 
     if (event.key == pygame.K_DOWN or event.key == pygame.K_LSHIFT) and not self.pause and not self.game_over:
         self.ducked = True
