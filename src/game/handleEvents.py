@@ -214,7 +214,8 @@ def toggle_high_score_list(self):
     IMMORTALITY_SOUND.stop()
     SELECT_SOUND.set_volume(self.sound_volume)
     SELECT_SOUND.play()
-    logging.info("Paused")
+    if not self.game_over:
+        logging.info("Paused")
     return
 
 
