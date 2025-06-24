@@ -25,6 +25,7 @@ class Dino:
         self.gravity_multiplier = 1.1
         logging.info("Initialized dino")
 
+
     def update(self, score, sound_volume):
         self.animation_timer += 1000/60
         if self.y >= GROUND_LEVEL - self.height - 10:
@@ -50,6 +51,7 @@ class Dino:
         if self.y >= GROUND_LEVEL - self.height - 40:
             self.y = min(self.y + self.velocity_y, GROUND_LEVEL - self.height)
 
+
     def render(self, ducked):
         if ducked:
             screen.blit(self.duck_image, (self.x, self.y))
@@ -63,6 +65,7 @@ class Dino:
                 mask_surface = self.masks[self.current_frame].to_surface()
                 mask_surface.set_colorkey((0,0,0))
                 screen.blit(mask_surface, (self.x, self.y))
+
 
     def start_jump(self, power_up_type, sound_volume):
         if power_up_type == "fly" and self.y >= GROUND_LEVEL - self.height - 10:

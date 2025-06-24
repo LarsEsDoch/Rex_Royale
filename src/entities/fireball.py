@@ -2,7 +2,7 @@ from src.utils.config import SCREEN_WIDTH
 from src.utils.resources import FIREBALL_FRAMES, screen, logging, pygame
 
 
-class Fireball():
+class Fireball:
     def __init__(self, y):
         self.x = 200
         self.y = y + 20
@@ -12,10 +12,12 @@ class Fireball():
         self.current_frame = 0
         self.masks = [pygame.mask.from_surface(image) for image in self.frames]
 
+
     def update(self):
         self.x += 5
         self.animation_timer += 1000/60
         self.current_frame = int(self.animation_timer / 100) % len(self.frames)
+
 
     def render(self):
         screen.blit(self.frames[self.current_frame], (self.x, self.y))
@@ -24,8 +26,10 @@ class Fireball():
             mask_surface.set_colorkey((0, 0, 0))
             screen.blit(mask_surface, (self.x, self.y))
 
+
     def complete_off_screen(self):
         return self.x + self.width > SCREEN_WIDTH + 200
+
 
     def collides_with(self, obstacle):
         if obstacle.type == "double":

@@ -5,6 +5,7 @@ from src.utils.resources import COIN_IMAGES, screen, logging, pygame
 
 
 class PowerUp:
+
     def __init__(self, score):
         if score < 5000:
             self.type = random.choice(["fly", "immortality", "fireball"])
@@ -21,8 +22,10 @@ class PowerUp:
         self.y_velocity_boost = 0.5
         logging.debug("Placed power up")
 
+
     def update(self, speed):
         self.x -= speed
+
 
     def render(self):
         screen.blit(self.image, (self.x, self.y))
@@ -31,8 +34,10 @@ class PowerUp:
             mask_surface.set_colorkey((0,0,0))
             screen.blit(mask_surface, (self.x, self.y))
 
+
     def complete_off_screen(self):
         return self.x + self.width < -200
+
 
     def collides_with(self, dino):
         return self.mask.overlap(dino.masks[dino.current_frame], (dino.x - self.x, dino.y - self.y)) is not None

@@ -2,6 +2,7 @@ from src.utils.config import SCREEN_WIDTH, BLACK, GROUND_LEVEL, WHITE, BROWN, GO
 from src.utils.utils import ease_out_sine
 from src.utils.resources import screen, clock, font, font_large, pygame, logging, font_small
 
+
 def render(self):
     render_background(self)
 
@@ -39,7 +40,7 @@ def render(self):
     else:
         cursor = " "
 
-    if not self.username_existing and not self.unlocked_user and not self.checked_username:
+    if not self.username_existing and not self.unlocked_user:
         render_username_gui(self, cursor)
 
     if not self.unlocked_user and self.username_existing:
@@ -53,6 +54,7 @@ def render(self):
         screen.blit(fps_text, (SCREEN_WIDTH - 110, 10))
 
     pygame.display.flip()
+
 
 def render_background(self):
     if not self.background_flip:
@@ -114,6 +116,7 @@ def render_background(self):
     if logging.root.level == logging.DEBUG:
         pygame.draw.line(screen, BLACK, (0, GROUND_LEVEL), (SCREEN_WIDTH, GROUND_LEVEL), 2)
 
+
 def render_game_over_screen(self):
     rect_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     rect_surface.set_alpha(self.game_over_fade_in * 255)
@@ -152,6 +155,7 @@ def render_game_over_screen(self):
         screen.blit(change_account_text,
                     change_account_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 330)))
 
+
 def render_pause_screen(self):
     screen.fill(BLACK)
     render_volume_sliders(self)
@@ -170,6 +174,7 @@ def render_pause_screen(self):
     screen.blit(hard_restart_text, hard_restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100 + 100)))
     screen.blit(high_score_text, high_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150 + 100)))
 
+
 def render_user_info(self, color):
     score_text = font.render(f"Score: {self.score}", True, color)
     screen.blit(score_text, (10, 10))
@@ -177,6 +182,7 @@ def render_user_info(self, color):
     screen.blit(username_text, (10, 35))
     highest_score_text = font.render(f"High Score: {max(self.score, self.high_score)}", True, color)
     screen.blit(highest_score_text, (10, 60))
+
 
 def render_control_info():
     control_info_text = font.render("Space or Arrow Up to jump", True, BLACK)
@@ -187,6 +193,7 @@ def render_control_info():
     screen.blit(control_info_text_3, (SCREEN_WIDTH - control_info_text_3.get_width() - 20, 250))
     control_info_text_4 = font.render("Escape to pause the game", True, BLACK)
     screen.blit(control_info_text_4, (SCREEN_WIDTH - control_info_text_4.get_width() - 20, 275))
+
 
 def render_power_up_info(self, color):
     power_up_text = font.render(f"Power Up: {self.power_up_type}", True, color)
@@ -199,6 +206,7 @@ def render_power_up_info(self, color):
     pygame.draw.rect(screen, color,
                      (10, 120, (1 - (self.power_up_timer / (60 * 15))) * SCREEN_WIDTH // 4, 30))
     pygame.draw.rect(screen, WHITE, (10, 120, SCREEN_WIDTH // 4, 30), 2)
+
 
 def render_progress_bars(self):
     rect_surface = pygame.Surface((SCREEN_WIDTH // 2, 50), pygame.SRCALPHA)
@@ -214,6 +222,7 @@ def render_progress_bars(self):
     #                  (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, self.progress_sky * SCREEN_WIDTH // 2, 50))
     pygame.draw.rect(screen, WHITE, (SCREEN_WIDTH // 2 - SCREEN_WIDTH // 4, 10, SCREEN_WIDTH // 2, 50), 2)
 
+
 def render_username_gui(self, cursor):
     screen.fill(BLACK)
 
@@ -225,6 +234,7 @@ def render_username_gui(self, cursor):
     screen.blit(pause_text, pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
     screen.blit(username_text, username_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
     screen.blit(enter_text, enter_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
+
 
 def render_password_gui(self, cursor):
     screen.fill(BLACK)
@@ -250,6 +260,7 @@ def render_password_gui(self, cursor):
     screen.blit(restart_text, restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)))
     screen.blit(return_text, return_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)))
 
+
 def render_high_score_list(self):
     screen.fill(BLACK)
     game_text = font.render("Rex Royale", True, WHITE)
@@ -263,6 +274,7 @@ def render_high_score_list(self):
         score_text = font.render(f"{username}: {score['score']}", True, color)
         screen.blit(score_text,
                     score_text.get_rect(center=(SCREEN_WIDTH // 2, account * 50 + 120 + self.high_score_list_y)))
+
 
 def render_volume_sliders(self):
     music_volume_text = font.render("Music Volume", True, WHITE)

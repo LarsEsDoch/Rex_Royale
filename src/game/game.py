@@ -45,7 +45,6 @@ class Game:
         self.password = ""
         self.hashed_password = ""
         self.username_existing = False
-        self.checked_username = False
         self.unlocked_user = False
 
         self.show_list = False
@@ -119,6 +118,7 @@ class Game:
 
         logging.info("Prepared game")
 
+
     def reset(self, game_music):
         self.running = True
         self.game_over = False
@@ -173,6 +173,7 @@ class Game:
 
         logging.info("Prepared game for restart")
 
+
     def accounts_reset(self):
         self.accounts = {}
         self.load_scores()
@@ -181,7 +182,6 @@ class Game:
         self.password = ""
         self.hashed_password = ""
         self.username_existing = False
-        self.checked_username = False
         self.unlocked_user = False
         self.press_to_return = 0
         self.pause = True
@@ -194,6 +194,7 @@ class Game:
             pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
 
         logging.info("Accounts were reset")
+
 
     def save_scores(self):
         if self.username.strip() == "":
@@ -222,13 +223,15 @@ class Game:
                 json.dump(scores, file, indent=4)
             logging.info(f"Saved volume settings")
 
+
     def load_scores(self):
         if os.path.exists("./saves/highscores.json"):
-            with open("./saves/highscores.json", "r") as file:
+            with open("./saves/highscores.json") as file:
                 self.accounts = json.load(file)
             logging.info(f"Loaded all accounts")
         else:
             logging.info("No accounts found")
+
 
     def run(self):
         while self.running:

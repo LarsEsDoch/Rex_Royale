@@ -3,6 +3,7 @@ from src.entities.fireball import Fireball
 from src.utils.resources import pygame, SHOT_FIREBALL_SOUND, SELECT_SOUND, IMMORTALITY_SOUND, logging
 from src.game import update
 
+
 def handleEvents(self):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -26,12 +27,14 @@ def handleEvents(self):
             if (event.key == pygame.K_DOWN or event.key == pygame.K_LSHIFT) and not self.pause and not self.game_over:
                 self.ducked = False
 
+
 def exit_window(self):
     self.running = False
     self.save_scores()
     SELECT_SOUND.set_volume(self.sound_volume)
     SELECT_SOUND.play()
     logging.info("Exit")
+
 
 def event_mouse_button_down(self, event):
     if self.show_list:
@@ -56,6 +59,7 @@ def event_mouse_button_down(self, event):
                 self.holding_mouse_sound_control = True
                 logging.debug("Holding Sound volume")
 
+
 def event_mouse_button_up(self, event):
     if self.pause and not self.game_over and self.unlocked_user and event.button == 1:
         if self.holding_mouse_sound_control:
@@ -65,6 +69,7 @@ def event_mouse_button_up(self, event):
         self.holding_mouse_sound_control = False
         logging.debug("Mouse released")
         return
+
 
 def update_volume(self):
     mouse_x = pygame.mouse.get_pos()[0]
@@ -78,6 +83,7 @@ def update_volume(self):
     else:
         self.sound_volume = percentage / 100
         logging.debug(f"Set sound volume: {percentage:.2f}%")
+
 
 def event_key_down(self, event):
     if event.key == pygame.K_ESCAPE:
@@ -105,8 +111,9 @@ def event_key_down(self, event):
     if not self.username_existing:
         username_input(self, event)
 
-    if self.username_existing and not self.checked_username:
+    if self.username_existing and not self.unlocked_user:
         password_input(self, event)
+
 
 def event_debug(self, event):
     if event.key == pygame.K_q:
@@ -132,40 +139,41 @@ def event_debug(self, event):
         logging.debug(f"Freeze: {self.freeze}")
     if event.key == pygame.K_1:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 1
+            obstacle.x -= 1
         logging.debug(f"Obstacle jump: 1")
     if event.key == pygame.K_2:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 2
+            obstacle.x -= 2
         logging.debug(f"Obstacle jump: 2")
     if event.key == pygame.K_3:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 5
+            obstacle.x -= 5
         logging.debug(f"Obstacle jump: 5")
     if event.key == pygame.K_4:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 10
+            obstacle.x -= 10
         logging.debug(f"Obstacle jump: 10")
     if event.key == pygame.K_5:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 20
+            obstacle.x -= 20
         logging.debug(f"Obstacle jump: 20")
     if event.key == pygame.K_6:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 50
+            obstacle.x -= 50
         logging.debug(f"Obstacle jump: 50")
     if event.key == pygame.K_7:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 100
+            obstacle.x -= 100
         logging.debug(f"Obstacle jump: 100")
     if event.key == pygame.K_8:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 200
+            obstacle.x -= 200
         logging.debug(f"Obstacle jump: 200")
     if event.key == pygame.K_9:
         for obstacle in self.obstacles:
-            obstacle.x = obstacle.x - 500
+            obstacle.x -= 500
         logging.debug(f"Obstacle jump: 500")
+
 
 def event_escape(self):
     if self.show_list:
@@ -191,6 +199,7 @@ def event_escape(self):
         SELECT_SOUND.play()
         logging.info("Paused")
 
+
 def toggle_high_score_list(self):
     self.show_list = not self.show_list
     if self.show_list:
@@ -208,6 +217,7 @@ def toggle_high_score_list(self):
     logging.info("Paused")
     return
 
+
 def complete_reset(self):
     if self.press_to_return >= 5 or (self.unlocked_user and self.username_existing):
         self.music_positon_pause += pygame.mixer.music.get_pos() / 1000
@@ -220,6 +230,7 @@ def complete_reset(self):
         self.press_to_return += 1
         return
 
+
 def score_reset(self):
     self.save_scores()
     self.reset(True)
@@ -228,8 +239,9 @@ def score_reset(self):
     SELECT_SOUND.play()
     logging.info("Reset Score")
 
+
 def jump(self):
-    if self.pause and self.username_existing and self.checked_username and self.unlocked_user:
+    if self.pause and self.username_existing and self.unlocked_user:
         self.pause = False
         self.show_list = False
         self.music_positon_pause += pygame.mixer.music.get_pos() / 1000
@@ -250,18 +262,19 @@ def jump(self):
         if self.dino.y > 50:
             self.dino.start_jump(self.power_up_type, self.sound_volume)
 
+
 def add_fireball(self):
     self.fireballs.append(Fireball(self.dino.y))
     SHOT_FIREBALL_SOUND.set_volume(self.sound_volume)
     SHOT_FIREBALL_SOUND.play()
     logging.debug("Fireball spawned")
 
+
 def username_input(self, event):
     if event.key == pygame.K_RETURN and self.username.strip() != "":
         self.username_existing = True
         SELECT_SOUND.set_volume(self.sound_volume)
         SELECT_SOUND.play()
-        update.check_username(self)
         logging.info(f"Got username: {self.username}")
     elif event.key == pygame.K_BACKSPACE:
         self.username = self.username[:-1]
@@ -270,6 +283,7 @@ def username_input(self, event):
         self.username += event.unicode
         logging.debug(f"Key pressed: {event.key}")
     self.cursor_tick = 0
+
 
 def password_input(self, event):
     if event.key == pygame.K_RETURN and self.password.strip() != "":

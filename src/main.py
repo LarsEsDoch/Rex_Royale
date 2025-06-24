@@ -9,6 +9,7 @@ from src.utils.config import logging, FRAME_RATE, DIFFICULTY_SPEEDS, \
     DIFFICULTY_GRAVITIES, DIFFICULTY_VELOCITIES
 from src.game.game import Game
 
+
 def validate_resources():
     required_files = [
         "./assets/textures/backgrounds/day/day_background_0.png",
@@ -72,6 +73,7 @@ def validate_resources():
         logging.error(f"Missing required game files: {', '.join(missing_files)}")
         exit(1)
     logging.info("All resources validated successfully.")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the Dino Game")

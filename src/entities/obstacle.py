@@ -62,6 +62,7 @@ class Obstacle:
         self.animation_timer = 0
         self.got_counted = False
 
+
     def update(self, speed):
         if self.type == "bird":
             self.x -= speed * 1.75
@@ -70,6 +71,7 @@ class Obstacle:
         if self.type == "bird":
             self.animation_timer += 1000/60
             self.current_frame = int(self.animation_timer / 100) % len(self.frame_images)
+
 
     def render(self):
         if self.type == "bird":
@@ -95,17 +97,20 @@ class Obstacle:
             mask_surface.set_colorkey((0,0,0))
             screen.blit(mask_surface, (self.x, self.y[0]))
 
+
     def conquered(self):
         if self.type == "double":
             return self.x + self.width[0]*2 < 50
         else:
             return self.x + self.width[0] < 50
 
+
     def complete_off_screen(self):
         if self.type == "double":
             return self.x + self.width[0]*2 < -200
         else:
             return self.x + self.width[0] < -200
+
 
     def collides_with(self, dino, ducked):
         if ducked:
