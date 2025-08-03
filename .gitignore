@@ -2,3 +2,8 @@ saves/highscores.json
 .idea/
 logs/
 __pycache__/
+build/
+main.spec
+dist/
+
+
