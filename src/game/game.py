@@ -9,6 +9,7 @@ from src.game import render
 from src.utils.config import OBSTACLE_SPEED
 from src.utils.resources import clock, pygame, logging, BACKGROUNDS_DAY, BACKGROUNDS_NIGHT, GAME_OVER_IMAGE
 from src.entities.dino import Dino
+from src.utils.utils import resource_path
 
 
 class Game:
@@ -109,7 +110,7 @@ class Game:
         self.music_positon_game = 0
         self.music_positon_pause = 0
         self.last_played_title = "pause_music.wav"
-        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+        pygame.mixer.music.load(resource_path('./assets/sounds/music/pause_music.wav'))
         pygame.mixer.music.play(-1, fade_ms=500)
         self.music_volume = 0.2
         self.sound_volume = 0.2
@@ -168,7 +169,7 @@ class Game:
         self.music_positon_game = 0
         if game_music:
             self.last_played_title = "game_music.wav"
-            pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
+            pygame.mixer.music.load(resource_path('./assets/sounds/music/game_music.wav'))
             pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
 
         logging.info("Prepared game for restart")
@@ -190,7 +191,7 @@ class Game:
 
         if self.last_played_title == "game_music.wav":
             self.last_played_title = "pause_music.wav"
-            pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+            pygame.mixer.music.load(resource_path('./assets/sounds/music/pause_music.wav'))
             pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
 
         logging.info("Accounts were reset")

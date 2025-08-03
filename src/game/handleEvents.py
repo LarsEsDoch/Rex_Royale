@@ -2,6 +2,7 @@ from src.utils.config import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.entities.fireball import Fireball
 from src.utils.resources import pygame, SHOT_FIREBALL_SOUND, SELECT_SOUND, IMMORTALITY_SOUND, logging
 from src.game import update
+from src.utils.utils import resource_path
 
 
 def handleEvents(self):
@@ -192,7 +193,7 @@ def event_escape(self):
     else:
         self.last_played_title = "pause_music.wav"
         self.music_positon_game += pygame.mixer.music.get_pos() / 1000
-        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+        pygame.mixer.music.load(resource_path('./assets/sounds/music/pause_music.wav'))
         pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
         IMMORTALITY_SOUND.stop()
         SELECT_SOUND.set_volume(self.sound_volume)
@@ -209,7 +210,7 @@ def toggle_high_score_list(self):
     if not self.last_played_title == "pause_music.wav":
         self.last_played_title = "pause_music.wav"
         self.music_positon_game += pygame.mixer.music.get_pos() / 1000
-        pygame.mixer.music.load('./assets/sounds/music/pause_music.wav')
+        pygame.mixer.music.load(resource_path('./assets/sounds/music/pause_music.wav'))
         pygame.mixer.music.play(-1, start=self.music_positon_pause, fade_ms=500)
     IMMORTALITY_SOUND.stop()
     SELECT_SOUND.set_volume(self.sound_volume)
@@ -247,7 +248,7 @@ def jump(self):
         self.show_list = False
         self.music_positon_pause += pygame.mixer.music.get_pos() / 1000
         self.last_played_title = "game_music.wav"
-        pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
+        pygame.mixer.music.load(resource_path('./assets/sounds/music/game_music.wav'))
         pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
         self.save_scores()
         self.holding_mouse = False

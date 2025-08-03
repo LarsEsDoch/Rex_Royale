@@ -89,7 +89,8 @@ if __name__ == "__main__":
         logging.getLogger().setLevel(logging.DEBUG)
         logging.info("Debug mode enabled")
 
-    validate_resources()
+    if not getattr(sys, 'frozen', False):
+        validate_resources()
 
     custom_obstacle_speed = DIFFICULTY_SPEEDS[args.difficulty]
     config.GRAVITY = DIFFICULTY_GRAVITIES[args.difficulty]

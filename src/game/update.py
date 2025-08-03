@@ -5,7 +5,7 @@ from src.entities.powerUp import PowerUp
 from src.entities.obstacle import Obstacle
 from src.utils.resources import logging, clock, GAME_OVER_SOUND, IMMORTALITY_SOUND, CLAIM_COIN_SOUND, \
     COLLIDE_FIREBALL_SOUND, screen, font, pygame
-from src.utils.utils import ease_out_cubic, hash_password
+from src.utils.utils import ease_out_cubic, hash_password, resource_path
 
 
 def update(self):
@@ -244,7 +244,7 @@ def update_active_power_up(self):
     if self.power_up_timer > 15 * 60:
         if self.power_up_type == "immortality":
             self.last_played_title = "game_music.wav"
-            pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
+            pygame.mixer.music.load(resource_path('./assets/sounds/music/game_music.wav'))
             pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
         self.power_up_timer = random.randint(30 * 60, 45 * 60)
         self.power_up_timer = -self.power_up_timer
@@ -286,6 +286,6 @@ def unlock_user(self):
     self.unlocked_user = True
     self.music_positon_pause += pygame.mixer.music.get_pos() / 1000
     self.last_played_title = "game_music.wav"
-    pygame.mixer.music.load('./assets/sounds/music/game_music.wav')
+    pygame.mixer.music.load(resource_path('./assets/sounds/music/game_music.wav'))
     pygame.mixer.music.play(-1, start=self.music_positon_game, fade_ms=500)
     logging.info(f"Started game")

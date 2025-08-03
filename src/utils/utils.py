@@ -1,4 +1,6 @@
 import hashlib
+import os
+import sys
 
 from src.utils.config import logging
 from src.utils.resources import pygame
@@ -39,3 +41,12 @@ def hash_password(password):
     hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
     logging.debug(f"Hashed password: {hashed_password}")
     return hashed_password
+
+def resource_path(rel_path):
+    if getattr(sys, 'frozen', False):
+        # Wenn .exe (PyInstaller)
+        base_path = sys._MEIPASS
+    else:
+        # Wenn .py: Nimm den Ordner über 'src'
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+    return os.path.normpath(os.path.join(base_path, rel_path))
